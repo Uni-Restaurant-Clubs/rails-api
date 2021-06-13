@@ -15,7 +15,7 @@ class Address < ApplicationRecord
   enum country: { "United States" => 0 }
 
   def full_address
-    [apt_suite_number, street_number, street_name, street_type, city, state,
+    [apt_suite_number, street_number, street_name, city, state,
      country, zipcode].compact.join(', ')
   end
 end

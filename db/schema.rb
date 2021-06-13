@@ -42,10 +42,12 @@ ActiveRecord::Schema.define(version: 2021_06_13_175021) do
     t.string "zipcode"
     t.float "latitude"
     t.float "longitude"
+    t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["city"], name: "index_addresses_on_city"
     t.index ["country"], name: "index_addresses_on_country"
+    t.index ["restaurant_id"], name: "index_addresses_on_restaurant_id"
     t.index ["street_type"], name: "index_addresses_on_street_type"
   end
 
@@ -67,7 +69,6 @@ ActiveRecord::Schema.define(version: 2021_06_13_175021) do
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.integer "address_id"
     t.text "manager_info"
     t.string "primary_phone_number"
     t.string "primary_email"
@@ -80,7 +81,6 @@ ActiveRecord::Schema.define(version: 2021_06_13_175021) do
     t.string "google_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["address_id"], name: "index_restaurants_on_address_id"
     t.index ["status"], name: "index_restaurants_on_status"
   end
 

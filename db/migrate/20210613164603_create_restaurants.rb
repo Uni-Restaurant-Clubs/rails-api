@@ -3,7 +3,6 @@ class CreateRestaurants < ActiveRecord::Migration[6.1]
     create_table :restaurants do |t|
       t.string :name
       t.text :description
-      t.integer :address_id
       t.text :manager_info
       t.string :primary_phone_number
       t.string :primary_email
@@ -17,7 +16,6 @@ class CreateRestaurants < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
-    add_index :restaurants, :address_id
     add_index :restaurants, :status
   end
 end

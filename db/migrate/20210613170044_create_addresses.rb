@@ -13,11 +13,13 @@ class CreateAddresses < ActiveRecord::Migration[6.1]
       t.string :zipcode
       t.float :latitude
       t.float :longitude
+      t.integer :restaurant_id
 
       t.timestamps
     end
     add_index :addresses, :street_type
     add_index :addresses, :city
     add_index :addresses, :country
+    add_index :addresses, :restaurant_id
   end
 end
