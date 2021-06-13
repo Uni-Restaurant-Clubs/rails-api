@@ -7,11 +7,13 @@ class Address < ApplicationRecord
 
   geocoded_by :full_address
   reverse_geocoded_by :latitude, :longitude, :address => :geocoded_address
-  after_validation :geocode, reverse_geocode,
+  after_validation :geocode, :reverse_geocode,
                    :if => lambda{ |obj| obj.full_address_changed? }
 
-  enum city: { united_states: 0 }
-  enum country: { united_states: 0 }
+  enum city: { "College Station" => 0 }
+  enum state: { "Texas" => 0 }
+  enum country: { "United States" => 0 }
+
   def full_address
     [apt_suite_number, street_number, street_name, street_type, city, state,
      country, zipcode].compact.join(', ')
