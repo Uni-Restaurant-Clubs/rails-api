@@ -9,8 +9,9 @@ class CreateRestaurants < ActiveRecord::Migration[6.1]
       t.string :primary_email
       t.text :other_contact_info
       t.text :managers
-      t.integer :status
+      t.integer :status, default: 0
       t.text :notes
+      t.datetime :scheduled_review_date_and_time
       t.string :website_url
       t.string :google_url
 
