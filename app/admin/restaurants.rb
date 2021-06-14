@@ -21,9 +21,35 @@ ActiveAdmin.register Restaurant do
     column :address do |restaurant|
       restaurant.address.try(:geocoded_address)
     end
+    column :street_name do |restaurant|
+      restaurant.address.try(:street_name)
+    end
     column :status
     column :created_at
     actions
+  end
+
+  show do
+    attributes_table do
+      row :name
+      row :status
+      row :description
+      row :notes
+      row :address do |restaurant|
+        restaurant.address.try(:geocoded_address)
+      end
+      row :street_name do |restaurant|
+        restaurant.address.try(:street_name)
+      end
+
+      row :scheduled_review_date_and_time
+      row :manager_info
+      row :primary_phone_number
+      row :primary_email
+      row :other_contact_info
+      row :website_url
+      row :google_url
+    end
   end
 
   form do |f|
