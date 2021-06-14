@@ -5,7 +5,7 @@ ActiveAdmin.register Restaurant do
                 :primary_phone_number, :primary_email, :other_contact_info,
                 :managers, :status, :notes, :scheduled_review_date_and_time,
                 :website_url, :google_url,
-                addresses_attributes: [:id, :apt_suite_number, :street_number,
+                address_attributes: [:id, :apt_suite_number, :street_number,
                                        :street_name, :street_type, :city,
                                        :state, :country, :zipcode,
                                        :instructions]]
@@ -18,7 +18,7 @@ ActiveAdmin.register Restaurant do
     id_column
     column :name
     column :description
-    column :full_address do |restaurant|
+    column :address do |restaurant|
       restaurant.address.try(:geocoded_address)
     end
     column :status
@@ -43,12 +43,11 @@ ActiveAdmin.register Restaurant do
     end
     f.inputs 'Address' do
       f.has_many :address, heading: false,
-                              allow_destroy: true,
                               remove_record: false do |a|
         a.input :instructions
         a.input :apt_suite_number
         a.input :street_number
-        a.input :street_name
+        a.input :street_name, label: "Street Name. Add type; street, avenue, circle ...)"
         a.input :city
         a.input :state
         a.input :country
