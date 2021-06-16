@@ -2,7 +2,7 @@ class GooglePlaces
 
   API_KEY = ENV["GOOGLE_API_KEY"]
 
-  def self.get_google_restaurants
+  def self.get_google_restaurants(pagetoken=nil)
     # lat long for Beverly Estates Bryan, TX 77802
     lat = "30.6362"
     lng = "-96.3352"
@@ -11,7 +11,9 @@ class GooglePlaces
     "location=#{lat},#{lng}&" +
     "radius=#{meter_radius}&" +
     "type=restaurant&" +
+    "fields=place_id&" +
     "key=#{API_KEY}"
+    url += "&pagetoken=#{pagetoken}" if pagetoken
 
     begin
       return HTTParty.get(url, {}).parsed_response
@@ -20,9 +22,6 @@ class GooglePlaces
     end
   end
 
-  def self.import_google_restaurant_data
-    self.get_google_restaurants
-  end
 =begin
 response has next_page_token
 data.deep_symbolize_keys!
@@ -55,8 +54,8 @@ data[:results].first
  :vicinity=>"103 College Ave, College Station"}
 =end
 
-  def self.get_restaurant_details
-    place_id = "ChIJdfyNs5WDRoYRhNRuk-DLX1E"
+  def self.get_restaurant_details(place_id)
+    #place_id = "ChIJdfyNs5WDRoYRhNRuk-DLX1E"
     url = "https://maps.googleapis.com/maps/api/place/details/json?" +
           "place_id=#{place_id}&" +
           "key=#{API_KEY}"
@@ -64,9 +63,31 @@ data[:results].first
       return HTTParty.get(url, {}).parsed_response
     rescue Exception => e
       puts e
+      return nil
     end
   end
 
+  def self.import_details_for_all_restaurants(pagetoken=nil)
+    data = self.get_google_restaurants(pagetoken)
+    data.deep_symbolize_keys!
+    data[:results].each do |rest|
+      place_id = rest[:place_id]
+      if place_id
+        details = self.get_restaurant_details(place_id)
+        Restaurant.import_restaurant_details_from_google(details)
+      end
+    end
+    pagetoken = data[:next_page_token]
+    if pagetoken
+      puts "#######################################################"
+      puts "#######################################################"
+      puts "#######################################################"
+      puts pagetoken
+      puts "#######################################################"
+      puts "#######################################################"
+    end
+    self.import_details_for_all_restaurants(pagetoken) if pagetoken
+  end
 =begin
 {"html_attributions"=>[],
  "result"=>

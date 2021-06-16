@@ -68,8 +68,14 @@ ActiveRecord::Schema.define(version: 2021_06_13_175021) do
 
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
+    t.string "google_icon"
     t.text "description"
     t.text "manager_info"
+    t.string "google_place_id"
+    t.string "google_business_status"
+    t.string "google_rating_avg"
+    t.string "google_ratings_total"
+    t.text "google_all_details_json"
     t.string "primary_phone_number"
     t.string "primary_email"
     t.text "other_contact_info"
@@ -78,9 +84,10 @@ ActiveRecord::Schema.define(version: 2021_06_13_175021) do
     t.text "notes"
     t.datetime "scheduled_review_date_and_time"
     t.string "website_url"
-    t.string "google_url"
+    t.string "google_map_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["google_place_id"], name: "index_restaurants_on_google_place_id", unique: true
     t.index ["status"], name: "index_restaurants_on_status"
   end
 
