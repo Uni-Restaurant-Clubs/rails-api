@@ -34,5 +34,16 @@ module UniRestaurantClubs
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.hosts << ENV["CONFIG_HOSTS"]
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins ENV["CORS_ORIGINS"]
+        resource(
+          '*',
+          headers: :any,
+          methods: [:get, :patch, :put, :delete, :post, :options]
+          )
+      end
+    end
   end
 end
