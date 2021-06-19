@@ -11,7 +11,6 @@ class GooglePlaces
     "location=#{lat},#{lng}&" +
     "radius=#{meter_radius}&" +
     "type=restaurant&" +
-    "fields=place_id&" +
     "key=#{API_KEY}"
     url += "&pagetoken=#{pagetoken}" if pagetoken
 
@@ -67,17 +66,19 @@ data[:results].first
     end
   end
 
-  def self.import_details_for_all_restaurants(pagetoken=nil)
+  def self.import_details_for_all_restaurants(place_ids=[], pagetoken=nil)
     data = self.get_google_restaurants(pagetoken)
     data.deep_symbolize_keys!
     data[:results].each do |rest|
       place_id = rest[:place_id]
       if place_id
-        details = self.get_restaurant_details(place_id)
-        Restaurant.import_restaurant_details_from_google(details)
+        place_ids << place_id
+        #details = self.get_restaurant_details(place_id)
+        #Restaurant.import_restaurant_details_from_google(details)
       end
     end
     pagetoken = data[:next_page_token]
+    binding.pry
     if pagetoken
       puts "#######################################################"
       puts "#######################################################"
@@ -85,8 +86,10 @@ data[:results].first
       puts pagetoken
       puts "#######################################################"
       puts "#######################################################"
+      self.import_details_for_all_restaurants(place_ids, pagetoken)
+    else
+      puts place_ids
     end
-    self.import_details_for_all_restaurants(pagetoken) if pagetoken
   end
 =begin
 {"html_attributions"=>[],
