@@ -2,15 +2,21 @@ class GooglePlaces
 
   API_KEY = ENV["GOOGLE_API_KEY"]
 
-  def self.get_google_restaurants(pagetoken=nil)
+  # PRICING
+  # https://developers.google.com/maps/billing/gmp-billing#nearby-search
+  # degrees, minutes, seconds to decimal
+  # https://www.fcc.gov/media/radio/dms-decimal
+  # find lat lng bounding box here: https://boundingbox.klokantech.com/
+  def self.get_google_restaurants(lat, lng, pagetoken=nil)
     # lat long for Beverly Estates Bryan, TX 77802
-    lat = "30.6362"
-    lng = "-96.3352"
-    meter_radius = "16093" #10 miles
+    #lat = "30.6362"
+    #lng = "-96.3352"
+    meter_radius = "1609" #1 mile
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
     "location=#{lat},#{lng}&" +
     "radius=#{meter_radius}&" +
     "type=restaurant&" +
+    "fields=place_id&" +
     "key=#{API_KEY}"
     url += "&pagetoken=#{pagetoken}" if pagetoken
 
@@ -73,12 +79,11 @@ data[:results].first
       place_id = rest[:place_id]
       if place_id
         place_ids << place_id
-        #details = self.get_restaurant_details(place_id)
-        #Restaurant.import_restaurant_details_from_google(details)
+        details = self.get_restaurant_details(place_id)
+        Restaurant.import_restaurant_details_from_google(details)
       end
     end
     pagetoken = data[:next_page_token]
-    binding.pry
     if pagetoken
       puts "#######################################################"
       puts "#######################################################"
@@ -91,6 +96,54 @@ data[:results].first
       puts place_ids
     end
   end
+
+  def self.get_restaurants_from_north_to_south(lat_max, lat_min, lng)
+    # 20 miles = 105,600 feet / 1000 feet = 105.6 times API will be called
+    # 269,852 / 105.6 = 2555.42 distance moved each time
+    # 105.6 * 3 pages = 316.8
+    # 316.8 * 105.6 = 33,454.08 times called in total / 1000
+    # = 33.45 * $32 = $1070 when seperating by 1000 feet
+    lat = lat_max
+    distance_to_move = 2555.42
+    until lat <= lat_min
+      self.get_restaurants_for_lat_lng(lat, lng)
+      if lat - distance_to_move < lat_min
+        lat -= lat_min
+      else
+        lat -= distance_to_move
+      end
+    end
+  end
+
+  def self.get_restaurants_for_area(lat_max=nil, lat_min=nil,
+                                    lng_max=nil, lng_min=nil)
+    # lat/lng box
+    # north west point 30.748374, -96.462306 (462306 - 192454 = 269,852 lng diff)
+    # north east point 30.748374, -96.192454 (748374 - 532459 = 215,915 lat diff)
+    # south east point 30.532459, -96.192454
+    # south west point 30.532459, -96.462306
+    lat_max = 30.748374
+    lat_min = 30.532459
+    lng_max = -96.192454
+    lng_min = -96.462306
+    distance_to_move = 2555.42
+    # start at lat/lng max
+    # 20 miles = 105,600 feet / 1000 feet = 105.6 times API will be called
+    # 269,852 / 105.6 = 2555.42 distance moved each time
+    # go down lat
+    # keep removing 500 until get at bottom
+    lng = lng_max
+    until lng <= lng_min
+      self.get_restaurants_from_north_to_south(lat_max, lat_min, lng)
+      if lng - distance_to_move < lng_min
+        lng -= lng_min
+      else
+        lng -= distance_to_move
+      end
+    end
+
+  end
+
 =begin
 {"html_attributions"=>[],
  "result"=>
@@ -161,54 +214,7 @@ data[:results].first
       "photo_reference"=>
        "ATtYBwK_IhuaIQSpVVFlZNye8pfJ9G_Z_3qk27XS3CSA3c_2nf3qy6o_YoAP2d0eNHK2hbClzEse6i-3z6iXGey1lpXf20OsGbZeBPbumit5QZt6uWoSs0sWrFgBQ-PQoZJrwyuw8kyzNSXDO_zcEpoj2OaIDOOiu0wspS3UlYlgaGvHcF-V",
       "width"=>500},
-     {"height"=>1597,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/111320475762480081354\">IHOP</a>"],
-      "photo_reference"=>
-       "ATtYBwIMoQWQDovstuukekCjwFrgxQRvcxjjh2hDtiuySCMr8xTm9J7Yi2Gf1yZzwZFEIHq4ACTOeiXmca-81JydAXv7sqagNqBsS3yglJvU-mUJiTUHAtcXjWbV4XAnz-x1NJnU67txeSYQro2N_-NQUrsWKrbLiwjbbukkQPrvgFa_NIDr",
-      "width"=>2400},
-     {"height"=>1600,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/111320475762480081354\">IHOP</a>"],
-      "photo_reference"=>
-       "ATtYBwJNamhinjxxEwIz7Dg5AonYvObBghJrnTHAeIlDcMhslgcmw5kZyzcsfkqgc1b2IldeO2rQrO3AhyiMcsVO7HhcgkHH7bLyACWAGUTgkatekp2TeGrwecAlJRoDA-MJ0kjJwtiJov5c4M0c7261Ht6EMHl6aZq_P3jYOy6qbV_Btax8",
-      "width"=>2400},
-     {"height"=>1600,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/111320475762480081354\">IHOP</a>"],
-      "photo_reference"=>
-       "ATtYBwK7lPVc7Nc710e1AhlivWKVFol1NGfD8G7RMjnWv-rHTZrcr93BV3kXX0ag8rDjr1FZSZhy8_YONx8-cdBaNHdt0N-GC7C76p-Vck8lyelF8ZnO9pZZMx01_m_NXtuHRfdNQeaMhb_1iS4w1inoY4BzyKYIr9STuaJVyew_hlMJs_f8",
-      "width"=>2400},
-     {"height"=>4032,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/104548543359481593697\">SIRENIA CEBRERO</a>"],
-      "photo_reference"=>
-       "ATtYBwLBY8pcY4-oDWYJFJJSpBwFVWJx6SpteJb5tq5NGxXAcIHfOJuLFVXCfKGDUweEr9BaMzvp701IcbdiKSddmrE9pt5AkmrxE_gKAJVcF_5nMqbVguNohigX6XlkB4fr3zMU7uUUxRQ6dLipUSEGwr5A6u5a2AqLjYtnKMq2aiBiBTIW",
-      "width"=>3024},
-     {"height"=>1600,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/111320475762480081354\">IHOP</a>"],
-      "photo_reference"=>
-       "ATtYBwLdbm5roe6zR4fPCPH3E5m2fvecEZ_2wD3dKQDaVYLailXxl-mHo9RyjMyFrW03TJlbG4d53tVGQzDC7W9edP8aUlw-4qYo7PRQi5KHbjIikl4v5DAzC2uV82q1BCjMokCD1Ir7g79NljDZeDO670MuPsVf9Ps9XDEs8hylY8BYNEFL",
-      "width"=>2400},
-     {"height"=>4074,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/109239011364864713570\">Nusrat Trisha</a>"],
-      "photo_reference"=>
-       "ATtYBwIVPRh59hHEJ_yVVEPe1cSrEyR845w97F5Xqw7ZWt-mI4YyU-sZfIhzirNwUOAxwp-Ba21eG2SOhR-ZKVZgIKUjiYqDl4TR_NNKrGjfjZVYOFvY1SWkxctsLHOOkb7JadYUdUq79KeUZQDvNnApiVm6Z1JprOFvCVZYcdxkv7vPhtQl",
-      "width"=>3056},
-     {"height"=>3056,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/109239011364864713570\">Nusrat Trisha</a>"],
-      "photo_reference"=>
-       "ATtYBwKtq4WyIiadPkN9RVvumlCG6GhhzOyjMsKYKskb94ox4eYmUJapW2WvLa88KyhjzlykPn6NY1-JQt_Y30gnIvCNeGhdLl7gF9E5dvzS875HDIvypN2d766qNQNNbfb8hZKDx9_ljRNZevQnkw7-rQAmihl4e3BReVNhcrCWb_JhLZTn",
-      "width"=>4074},
-     {"height"=>4032,
-      "html_attributions"=>
-       ["<a href=\"https://maps.google.com/maps/contrib/115263790490418167061\">Anjushree Iyer</a>"],
-      "photo_reference"=>
-       "ATtYBwJVPru5erm3fosVfyFBqABAWLFb7ENi2KvO1TH_90k6_XxO3fek8b6Pb1UyC9KavzVlMM8U7l8C3KNTbD2cZuZGlfoUBMaPK5RmoIsTsAih3KRm0yMExIjCEFRQacD2AViSDnr0FdUSfPmEuRMdhc2MwHNoU-f_5z-DIdmmtEV1U_Oq",
-      "width"=>3024}],
+   ],
    "place_id"=>"ChIJdfyNs5WDRoYRhNRuk-DLX1E",
    "plus_code"=>
     {"compound_code"=>"JMF5+3C College Station, TX, USA",
@@ -243,40 +249,7 @@ data[:results].first
       "text"=>
        "Staff was wonderful. No gluten free product available even though it was on the menu.",
       "time"=>1599846189},
-     {"author_name"=>"Lucas Tjom",
-      "author_url"=>
-       "https://www.google.com/maps/contrib/111839444353873440854/reviews",
-      "language"=>"en",
-      "profile_photo_url"=>
-       "https://lh3.googleusercontent.com/a/AATXAJy2UK23Z29tPVVv3rb-PGZLhg8vW-LN9hV13Mb5=s128-c0x00000000-cc-rp-mo",
-      "rating"=>2,
-      "relative_time_description"=>"a month ago",
-      "text"=>
-       "Good food, but told us it would be 25 minutes to get a table. That’s fine, but It ended up taking 40+ minutes to get the table. Should not have waited and just gotten better food.\n" +
-       "Also took like 20 minutes to get our check after we were done eating.",
-      "time"=>1620460230},
-     {"author_name"=>"Alvaro Jaramillo",
-      "author_url"=>
-       "https://www.google.com/maps/contrib/117360225365500843039/reviews",
-      "language"=>"en",
-      "profile_photo_url"=>
-       "https://lh3.googleusercontent.com/a-/AOh14Gh9hYhwqTlvJ2afkHfIR19131CqC8E7olJYZ2mZOA=s128-c0x00000000-cc-rp-mo-ba4",
-      "rating"=>5,
-      "relative_time_description"=>"2 months ago",
-      "text"=>
-       "First time at this location and really enjoyed it. Special shout out to our server, Jordan, he was really kind and accommodating. The food was great, the hashbrowns and pancakes were really good!! The bacon burger also had nice flavors to it.",
-      "time"=>1618096118},
-     {"author_name"=>"Jenn Satterwhite",
-      "author_url"=>
-       "https://www.google.com/maps/contrib/109696724125032730853/reviews",
-      "language"=>"en",
-      "profile_photo_url"=>
-       "https://lh3.googleusercontent.com/a-/AOh14Gjnl3FjkWRn7-cfpUCVSaieqFoPMxfqN_I2CrQB3mQ=s128-c0x00000000-cc-rp-mo-ba4",
-      "rating"=>4,
-      "relative_time_description"=>"a month ago",
-      "text"=>
-       "Very friendly staff! Prompt service. Good food. Great place to pop in for a casual IHOP meal. It’s smaller than most IHOPs but that adds to the uniqueness.",
-      "time"=>1620765635}],
+   ],
    "types"=>["restaurant", "food", "point_of_interest", "establishment"],
    "url"=>"https://maps.google.com/?cid=5863629405266302084",
    "user_ratings_total"=>1171,
