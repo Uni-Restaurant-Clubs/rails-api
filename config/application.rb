@@ -34,7 +34,7 @@ module UniRestaurantClubs
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-    config.hosts << ENV["CONFIG_HOSTS"]
+    config.hosts << ENV["CONFIG_HOSTS"] if Rails.env.development?
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins ENV["CORS_ORIGINS"]
