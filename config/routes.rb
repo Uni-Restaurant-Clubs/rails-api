@@ -7,8 +7,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:create] do
           collection do
+            # CONFIRM EMAIL ADDRESS
             get 'confirm_email/:token', to: "users#confirm_email",
                  as: :confirm_email
+            post 'resend_confirm_email/:token', to: "users#resend_confirm_email",
+                 as: :resend_confirm_email
+
             # PASSWORD RESET
             # User has entered email. We send email to confirm
             post 'send_password_reset_email',
@@ -18,8 +22,8 @@ Rails.application.routes.draw do
             get 'initiate_password_reset', to: "users#initiate_password_reset",
                  as: :initiate_password_reset
             # User has submitted a new password
-            post '', to: "users#initiate_password_reset",
-                 as: :initiate_password_reset
+            post '', to: "users#update_password",
+                 as: :update_password
           end
       end
     end
