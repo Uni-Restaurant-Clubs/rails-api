@@ -36,7 +36,6 @@ class Api::V1::SessionsController < Api::V1::ApiApplicationController
       json = { error: true, message: "token doesn't exist" }.to_json
       render json: json, status: :bad_request
     end
-
   end
 
 end
