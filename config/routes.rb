@@ -9,6 +9,17 @@ Rails.application.routes.draw do
           collection do
             get 'confirm_email/:token', to: "users#confirm_email",
                  as: :confirm_email
+            # PASSWORD RESET
+            # User has entered email. We send email to confirm
+            post 'send_password_reset_email',
+                 to: "users#send_password_reset_email",
+                 as: :send_password_reset_email
+            # User has confirmed email so we can now initiate password reset
+            get 'initiate_password_reset', to: "users#initiate_password_reset",
+                 as: :initiate_password_reset
+            # User has submitted a new password
+            post '', to: "users#initiate_password_reset",
+                 as: :initiate_password_reset
           end
       end
     end
