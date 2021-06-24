@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :trackable
 
+  has_many :sessions
+
   def self.create_new_token(token_name="confirmation_token")
     loop do
       token = SecureRandom.hex(15)
