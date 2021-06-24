@@ -1,0 +1,11 @@
+%p
+  Hello
+  = "#{@user.email},"
+%br
+%p Welcome to Uni Restaurant Clubs. We are very excited to have you as a member!!
+%p
+  Please confirm your email address
+  = link_to 'by clicking here.', @confirm_url
+%p
+  If you did not sign up for Uni Restaurant Clubs then please disregard this email.
+
