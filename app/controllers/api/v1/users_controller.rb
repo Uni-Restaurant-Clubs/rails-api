@@ -26,7 +26,7 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     if !user
       json = { error: true,
                message: "there is no user with that email" }.to_json
-      render json: json, status: 400
+      render json: json, status: 404
     else
       user.reset_password_confirm_email_token =
         User.create_new_token("reset_password_confirm_email_token")
@@ -36,6 +36,8 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
         UserMailer.with(user: user).send_reset_password_confirmation_email.deliver_later
         render json: {}, status: 204
       else
+        # TODO handle error (airbrake)
+        # use default airbrake
         json = { error: true, message: user.errors.full_messages }.to_json
         render json: json, status: 400
       end
@@ -47,26 +49,32 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     user = User.find_by(email: params[:email])
 
     error = false
+    code = 204
     if !params[:email]
       error = "email required"
+      code = 400
     elsif !user
       error = "no user with that email"
+      code = 404
     elsif user.confirmed_at
       error = "user already confirmed"
+      code = 410
     end
 
     if error
       json = { error: true, message: error }.to_json
-      render json: json, status: 400
+      render json: json, status: code
     else
-      if user.save
+      if user.save!
         user.confirmation_token = User.create_new_token("confirmation_token")
         user.confirmation_sent_at = Time.now
         UserMailer.with(user: user).confirmation_email.deliver_later
         render json: {}, status: 204
       else
+        # TODO handle error (airbrake)
+        # use default airbrake
         json = { error: true, message: user.errors.full_messages }.to_json
-        render json: json, status: :bad_request
+        render json: json, status: 500
       end
     end
 
@@ -87,18 +95,14 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     end
 
     if error
-      json = { error: true, message: error }.to_json
-      render json: json, status: 400
+      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/confirm_email/?error=#{error}"
     else
       user.confirmed_at = Time.now
       user.confirmation_token = nil
       user.confirmation_sent_at = nil
-      if user.save
-        render json: {}, status: 204
-      else
-        json = { error: true, message: user.errors.full_messages }.to_json
-        render json: json, status: 500
-      end
+      user.save!
+      redirect_to ENV["FRONTEND_WEB_URL"] +
+                    "/confirm_email?success=true"
     end
   end
 
@@ -115,19 +119,16 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
       error = "token expired"
     end
 
-    #TODO: look up how to redirect to url
     if error
-      redirect_to: ENV["FRONTEND_WEB_URL"] + "?error=#{error}"
+      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/enter_new_password?error=#{error}"
     else
       user.reset_password_confirm_email_token = nil
       user.reset_password_confirm_email_token_sent_at = nil
       user.reset_password_token = User.create_new_token("reset_password_token")
       user.reset_password_sent_at = Time.now
-      if user.save
-        redirect_to: ENV["FRONTEND_WEB_URL"] + "?token=#{user.reset_password_token}"
-      else
-        redirect_to: ENV["FRONTEND_WEB_URL"] + "?error=could not update user"
-      end
+      user.save!
+        redirect_to "#{ENV["FRONTEND_WEB_URL"]}/enter_new_password"+
+          "?token=#{user.reset_password_token}"
     end
   end
 
@@ -137,28 +138,29 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     expired = Time.now.to_i > (user.reset_password_sent_at + 2.hours).to_i
 
     error = false
+    code = 204
     if !token || !user
       error = "token invalid"
+      code = 403
     elsif expired
       error = "token expired"
+      code = 410
     elsif !params[:password] || params[:password].count < 6
       error = "password needs to be at least 6 characters"
+      code = 400
     end
 
     if error
       json = { error: true, message: error }.to_json
       render json: json, status: 400
     else
+      user.failed_attempts = 0
+      user.locked_at = nil
       user.reset_password_token = nil
       user.reset_password_sent_at = nil
-      # TODO: look up how to update password
       user.password = params[:password]
-      if user.save
-        render json: {}, status: 204
-      else
-        json = { error: true, message: user.errors.full_messages }.to_json
-        render json: json, status: 500
-      end
+      user.save!
+      render json: {}, status: 204
     end
   end
 
