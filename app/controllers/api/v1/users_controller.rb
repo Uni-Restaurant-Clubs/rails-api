@@ -4,7 +4,7 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     user_data = {
       email: params[:email],
       password: params[:password],
-      password_confirmation: params[:user][:password],
+      password_confirmation: params[:password],
     }
     user = User.new(user_data)
     user.confirmation_token = User.create_new_token("confirmation_token")
