@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2021_06_24_225116) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_confirm_email_token"
-    t.string "reset_password_confirm_email_token_sent_at"
+    t.datetime "reset_password_confirm_email_token_sent_at"
     t.datetime "remember_created_at"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
