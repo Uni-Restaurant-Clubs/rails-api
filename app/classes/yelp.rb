@@ -80,7 +80,7 @@ class Yelp
     restaurant_ids = []
     restaurant_count = 0
     while restaurants_left
-      offset = restaurant_ids.count
+      offset = restaurant_ids.length
       data = self.get_restaurants_subset(offset)
       data.deep_symbolize_keys!
       if data.first.second.any?
