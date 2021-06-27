@@ -7,6 +7,8 @@ class Restaurant < ApplicationRecord
 
   enum status: { not_contacted: 0, contacted_needs_follow_up: 1, declined: 2,
                  accepted: 3, review_scheduled: 4, reviewed: 5, archived: 6 }
+  enum operational_status: { unknown: 0, temporarily_closed: 1,
+                             permanently_closed: 2, currently_active: 3 }
 
   accepts_nested_attributes_for :address, :allow_destroy => true
 
