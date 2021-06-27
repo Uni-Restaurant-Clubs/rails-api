@@ -6,10 +6,13 @@ class CreateAddresses < ActiveRecord::Migration[6.1]
       t.string :apt_suite_number
       t.string :street_number
       t.string :street_name
+      t.string :address_1
+      t.string :address_2
+      t.string :address_3
       t.integer :street_type
-      t.integer :city
-      t.integer :state
-      t.integer :country
+      t.string :city
+      t.string :state
+      t.string :country
       t.string :zipcode
       t.float :latitude
       t.float :longitude
@@ -17,7 +20,6 @@ class CreateAddresses < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
-    add_index :addresses, :street_type
     add_index :addresses, :city
     add_index :addresses, :country
     add_index :addresses, :restaurant_id

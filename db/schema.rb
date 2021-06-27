@@ -35,10 +35,13 @@ ActiveRecord::Schema.define(version: 2021_06_24_225116) do
     t.string "apt_suite_number"
     t.string "street_number"
     t.string "street_name"
+    t.string "address_1"
+    t.string "address_2"
+    t.string "address_3"
     t.integer "street_type"
-    t.integer "city"
-    t.integer "state"
-    t.integer "country"
+    t.string "city"
+    t.string "state"
+    t.string "country"
     t.string "zipcode"
     t.float "latitude"
     t.float "longitude"
@@ -48,7 +51,6 @@ ActiveRecord::Schema.define(version: 2021_06_24_225116) do
     t.index ["city"], name: "index_addresses_on_city"
     t.index ["country"], name: "index_addresses_on_country"
     t.index ["restaurant_id"], name: "index_addresses_on_restaurant_id"
-    t.index ["street_type"], name: "index_addresses_on_street_type"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -68,27 +70,25 @@ ActiveRecord::Schema.define(version: 2021_06_24_225116) do
 
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
-    t.string "google_icon"
     t.text "description"
-    t.text "manager_info"
-    t.string "google_place_id"
-    t.string "google_business_status"
-    t.string "google_rating_avg"
-    t.string "google_ratings_total"
-    t.text "google_all_details_json"
+    t.string "yelp_id"
+    t.string "yelp_alias"
+    t.string "image_url"
+    t.string "yelp_url"
     t.string "primary_phone_number"
     t.string "primary_email"
+    t.text "manager_info"
+    t.integer "operational_status"
     t.text "other_contact_info"
-    t.text "managers"
     t.integer "status", default: 0
     t.text "notes"
     t.datetime "scheduled_review_date_and_time"
     t.string "website_url"
-    t.string "google_map_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["google_place_id"], name: "index_restaurants_on_google_place_id", unique: true
+    t.index ["operational_status"], name: "index_restaurants_on_operational_status"
     t.index ["status"], name: "index_restaurants_on_status"
+    t.index ["yelp_id"], name: "index_restaurants_on_yelp_id", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|

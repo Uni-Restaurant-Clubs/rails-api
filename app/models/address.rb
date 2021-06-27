@@ -7,12 +7,8 @@ class Address < ApplicationRecord
 
   #before_save :geocode, :reverse_geocode, if: :address_changed
 
-  enum city: { "College Station" => 0 }
-  enum state: { "Texas" => 0 }
-  enum country: { "United States" => 0 }
-
   def full_address
-    "#{street_number} #{street_name}, #{city}, #{state}, #{country}, #{zipcode}"
+    "#{address_1} #{address_2} #{address_3}, #{city}, #{state}, #{zipcode}"
   end
 
   def address_changed

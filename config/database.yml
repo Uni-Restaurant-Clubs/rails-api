@@ -60,6 +60,8 @@ development:
 test:
   <<: *default
   database: uni_restaurant_clubs_test
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

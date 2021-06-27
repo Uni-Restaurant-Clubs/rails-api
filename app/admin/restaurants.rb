@@ -1,4 +1,5 @@
 ActiveAdmin.register Restaurant do
+  actions :all, :except => [:destroy]
 
   permit_params do
     permitted = [:name, :description, :address_id, :manager_info,
@@ -13,18 +14,23 @@ ActiveAdmin.register Restaurant do
     permitted
   end
 
-  index do
+  index :download_links => false do
     selectable_column
     id_column
     column :name
-    column :description
-    column :address do |restaurant|
-      restaurant.address.try(:geocoded_address)
-    end
-    column :street_name do |restaurant|
-      restaurant.address.try(:street_name)
-    end
+    column :yelp_alias
     column :status
+    column :yelp_url do |restaurant|
+        link_to "Yelp URL", restaurant.yelp_url
+    end
+    column "Image" do |restaurant|
+        image_tag restaurant.image_url, style: 'height:100px;width:auto;'
+    end
+    column :description
+    column :full_address do |restaurant|
+      restaurant.address.try(:full_address)
+    end
+    column :primary_phone_number
     column :created_at
     actions
   end
@@ -32,23 +38,25 @@ ActiveAdmin.register Restaurant do
   show do
     attributes_table do
       row :name
+      row :yelp_alias
       row :status
+      row "Yelp Url" do |restaurant|
+          link_to "Yelp URL", restaurant.yelp_url
+      end
       row :description
+      row "Image" do |restaurant|
+        image_tag restaurant.image_url, style: 'height:300px;width:auto;'
+      end
       row :notes
       row :address do |restaurant|
-        restaurant.address.try(:geocoded_address)
+        restaurant.address.try(:full_address)
       end
-      row :street_name do |restaurant|
-        restaurant.address.try(:street_name)
-      end
-
       row :scheduled_review_date_and_time
       row :manager_info
       row :primary_phone_number
       row :primary_email
       row :other_contact_info
       row :website_url
-      row :google_url
     end
   end
 
@@ -65,19 +73,11 @@ ActiveAdmin.register Restaurant do
       f.input :primary_email
       f.input :other_contact_info
       f.input :website_url
-      f.input :google_url
     end
     f.inputs 'Address' do
       f.has_many :address, heading: false,
                               remove_record: false do |a|
         a.input :instructions
-        a.input :apt_suite_number
-        a.input :street_number
-        a.input :street_name, label: "Street Name. Add type; street, avenue, circle ...)"
-        a.input :city
-        a.input :state
-        a.input :country
-        a.input :zipcode
       end
     end
     f.actions
