@@ -80,12 +80,10 @@ class Yelp
     restaurant_ids = []
     restaurant_count = 0
     while restaurants_left
-      offset = restaurant_ids.length
-      data = self.get_restaurants_subset(offset)
+      data = self.get_restaurants_subset(restaurant_count)
       data.deep_symbolize_keys!
-      if data.first.second.any?
-        data.first.second.each do |restaurant|
-          restaurant_ids << restaurant[:id]
+      if data[0][1].any?
+        data[0][1].each do |restaurant|
           self.import_restaurant_details(restaurant)
           restaurant_count += 1
           puts restaurant_count
