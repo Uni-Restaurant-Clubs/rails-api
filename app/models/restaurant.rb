@@ -10,4 +10,17 @@ class Restaurant < ApplicationRecord
 
   accepts_nested_attributes_for :address, :allow_destroy => true
 
+  scope :franchise, lambda { where(is_franchise: true) }
+  scope :not_franchise, lambda { where(is_franchise: false) }
+
+  def self.categorize_as_franchise
+    names = self.not_franchise.pluck(:name).uniq
+    names.each do |name|
+      restaurants = self.where(name: name)
+      if restaurants.count > 1
+        restaurants.update_all(is_franchise: true)
+      end
+    end
+  end
+
 end

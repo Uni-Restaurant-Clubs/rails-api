@@ -14,14 +14,22 @@ ActiveAdmin.register Restaurant do
     permitted
   end
 
+  scope :all
+  scope :non_franchise, :default => true do |restaurants|
+    restaurants.where(:is_franchise => false)
+  end
+  scope :franchise do |restaurants|
+    restaurants.where(:is_franchise => true)
+  end
   index :download_links => false do
     selectable_column
     id_column
     column :name
     column :yelp_alias
     column :status
+    column :is_franchise
     column :yelp_url do |restaurant|
-        link_to "Yelp URL", restaurant.yelp_url
+        link_to "Yelp URL", restaurant.yelp_url, target: "_blank"
     end
     column "Image" do |restaurant|
         image_tag restaurant.image_url, style: 'height:100px;width:auto;'
@@ -40,8 +48,9 @@ ActiveAdmin.register Restaurant do
       row :name
       row :yelp_alias
       row :status
+      row :is_franchise
       row "Yelp Url" do |restaurant|
-          link_to "Yelp URL", restaurant.yelp_url
+          link_to "Yelp URL", restaurant.yelp_url, target: "_blank"
       end
       row :description
       row "Image" do |restaurant|
@@ -65,6 +74,7 @@ ActiveAdmin.register Restaurant do
     f.inputs 'Details' do
       f.input :name
       f.input :description
+      f.input :is_franchise
       f.input :status
       f.input :notes
       f.input :scheduled_review_date_and_time, as: :datepicker

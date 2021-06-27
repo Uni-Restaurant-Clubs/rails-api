@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_24_225116) do
+ActiveRecord::Schema.define(version: 2021_06_27_192419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,8 @@ ActiveRecord::Schema.define(version: 2021_06_24_225116) do
     t.string "website_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_franchise", default: false
+    t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
     t.index ["status"], name: "index_restaurants_on_status"
     t.index ["yelp_id"], name: "index_restaurants_on_yelp_id", unique: true
