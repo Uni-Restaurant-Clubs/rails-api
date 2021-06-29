@@ -165,11 +165,16 @@ results from search
   end
 
   def self.update_details_for_restaurants
-    Restaurant.where.not(yelp_id: nil).each do |restaurant|
+    restaurants = Restaurant.where.not(yelp_id: nil)
+    rest_count = restaurants.count
+    counter = 0
+    restaurants.each do |restaurant|
       data = self.get_restaurant_details(restaurant.yelp_id)
       restaurant.yelp_rating = data[:rating]
       restaurant.yelp_review_count = data[:review_count]
       restaurant.save!
+      counter += 1
+      puts "updated #{counter} out of #{rest_count}"
     end
   end
 

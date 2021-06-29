@@ -36,7 +36,9 @@ ActiveAdmin.register Restaurant do
     selectable_column
     id_column
     column :name
-    column :status
+    column :status do |restaurant|
+      restaurant.status.humanize.downcase
+    end
     column :starred do |restaurant|
       if restaurant.starred
         image_tag "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/star_2b50.png", style: 'height:20px;width:auto;'
@@ -52,7 +54,6 @@ ActiveAdmin.register Restaurant do
     column "Image" do |restaurant|
         image_tag restaurant.image_url, style: 'height:100px;width:auto;'
     end
-    column :notes
     column "city, state" do |restaurant|
       restaurant.address.try(:city_state)
     end
@@ -63,7 +64,9 @@ ActiveAdmin.register Restaurant do
     attributes_table do
       row :name
       row :yelp_alias
-      row :status
+      row :status do |restaurant|
+        restaurant.status.humanize.downcase
+      end
       row :operational_status
       row :starred
       row :urc_rating
