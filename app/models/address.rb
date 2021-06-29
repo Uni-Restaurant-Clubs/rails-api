@@ -11,6 +11,10 @@ class Address < ApplicationRecord
     "#{address_1} #{address_2} #{address_3}, #{city}, #{state}, #{zipcode}"
   end
 
+  def city_state
+    "#{city}, #{state}"
+  end
+
   def address_changed
     street_number_changed? ||
     street_name_changed? ||

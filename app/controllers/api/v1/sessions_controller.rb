@@ -34,12 +34,8 @@ class Api::V1::SessionsController < Api::V1::ApiApplicationController
                             last_used: Time.now,
                             token: Session.create_new_token
                            )
-      if session.save
-        render json: { session_token: session.token }, status: 200
-      else
-        json = { error: true, message: user.errors.full_messages }.to_json
-        render json: json, status: :bad_request
-      end
+      session.save!
+      render json: { session_token: session.token }, status: 200
     end
   end
 

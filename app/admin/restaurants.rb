@@ -1,4 +1,11 @@
 ActiveAdmin.register Restaurant do
+
+  controller do
+    def find_collection(options = {})
+      super.reorder(yelp_rating: :desc, yelp_review_count: :desc)
+    end
+  end
+
   actions :all, :except => [:destroy]
 
   permit_params do
@@ -29,15 +36,15 @@ ActiveAdmin.register Restaurant do
     selectable_column
     id_column
     column :name
-    column :yelp_alias
     column :status
-    column :operational_status
     column :starred do |restaurant|
       if restaurant.starred
-        image_tag "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/star_2b50.png", style: 'height:30px;width:auto;'
+        image_tag "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/star_2b50.png", style: 'height:20px;width:auto;'
       end
     end
     column :urc_rating
+    column :yelp_rating
+    column :yelp_review_count
     column :is_franchise
     column :yelp_url do |restaurant|
         link_to "Yelp URL", restaurant.yelp_url, target: "_blank"
@@ -46,12 +53,9 @@ ActiveAdmin.register Restaurant do
         image_tag restaurant.image_url, style: 'height:100px;width:auto;'
     end
     column :notes
-    column :description
-    column :full_address do |restaurant|
-      restaurant.address.try(:full_address)
+    column "city, state" do |restaurant|
+      restaurant.address.try(:city_state)
     end
-    column :primary_phone_number
-    column :created_at
     actions
   end
 
@@ -63,6 +67,8 @@ ActiveAdmin.register Restaurant do
       row :operational_status
       row :starred
       row :urc_rating
+      row :yelp_rating
+      row :yelp_review_count
       row :is_franchise
       row "Yelp Url" do |restaurant|
           link_to "Yelp URL", restaurant.yelp_url, target: "_blank"

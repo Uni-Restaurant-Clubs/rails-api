@@ -164,6 +164,15 @@ results from search
     end
   end
 
+  def self.update_details_for_restaurants
+    Restaurant.where.not(yelp_id: nil).each do |restaurant|
+      data = self.get_restaurant_details(restaurant.yelp_id)
+      restaurant.yelp_rating = data[:rating]
+      restaurant.yelp_review_count = data[:review_count]
+      restaurant.save!
+    end
+  end
+
 =begin
 {:id=>"rOfX5ve4f1PbShG-H6d5Fw",
  :alias=>"mess-college-station",
