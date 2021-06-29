@@ -9,6 +9,9 @@ class Restaurant < ApplicationRecord
                  accepted: 3, review_scheduled: 4, reviewed: 5, archived: 6 }
   enum operational_status: { unknown: 0, temporarily_closed: 1,
                              permanently_closed: 2, currently_active: 3 }
+  enum urc_rating: { "not rated" => 0, "horrible stay away" => 1,
+                     "not very nice" => 2, "ok nothing special" => 3,
+                     "cool place" => 4, "amazing place" => 5 }
 
   accepts_nested_attributes_for :address, :allow_destroy => true
 

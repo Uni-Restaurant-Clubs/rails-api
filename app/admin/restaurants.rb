@@ -6,6 +6,7 @@ ActiveAdmin.register Restaurant do
                 :primary_phone_number, :primary_email, :other_contact_info,
                 :operational_status, :website_url, :is_franchise,
                 :managers, :status, :notes, :scheduled_review_date_and_time,
+                :starred, :urc_rating,
                 address_attributes: [:id, :apt_suite_number, :street_number,
                                        :street_name, :street_type, :city,
                                        :state, :country, :zipcode,
@@ -15,7 +16,10 @@ ActiveAdmin.register Restaurant do
   end
 
   scope :all
-  scope :non_franchise, :default => true do |restaurants|
+  scope :non_franchise_starred, :default => true do |restaurants|
+    restaurants.where(is_franchise: false, starred: true)
+  end
+  scope :non_franchise do |restaurants|
     restaurants.where(:is_franchise => false)
   end
   scope :franchise do |restaurants|
@@ -28,6 +32,12 @@ ActiveAdmin.register Restaurant do
     column :yelp_alias
     column :status
     column :operational_status
+    column :starred do |restaurant|
+      if restaurant.starred
+        image_tag "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/star_2b50.png", style: 'height:30px;width:auto;'
+      end
+    end
+    column :urc_rating
     column :is_franchise
     column :yelp_url do |restaurant|
         link_to "Yelp URL", restaurant.yelp_url, target: "_blank"
@@ -51,6 +61,8 @@ ActiveAdmin.register Restaurant do
       row :yelp_alias
       row :status
       row :operational_status
+      row :starred
+      row :urc_rating
       row :is_franchise
       row "Yelp Url" do |restaurant|
           link_to "Yelp URL", restaurant.yelp_url, target: "_blank"
@@ -80,6 +92,8 @@ ActiveAdmin.register Restaurant do
       f.input :is_franchise
       f.input :status
       f.input :operational_status
+      f.input :starred
+      f.input :urc_rating
       f.input :notes
       f.input :scheduled_review_date_and_time, as: :datepicker
       f.input :manager_info
