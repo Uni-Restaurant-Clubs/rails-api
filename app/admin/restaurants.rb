@@ -39,6 +39,7 @@ ActiveAdmin.register Restaurant do
     column :status do |restaurant|
       restaurant.status.humanize.downcase
     end
+    column :primary_phone_number
     column :starred do |restaurant|
       if restaurant.starred
         image_tag "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/star_2b50.png", style: 'height:20px;width:auto;'

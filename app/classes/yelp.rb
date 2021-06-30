@@ -172,6 +172,7 @@ results from search
       data = self.get_restaurant_details(restaurant.yelp_id)
       restaurant.yelp_rating = data[:rating]
       restaurant.yelp_review_count = data[:review_count]
+      restaurant.primary_phone_number = data[:display_phone]
       restaurant.save!
       counter += 1
       puts "updated #{counter} out of #{rest_count}"
