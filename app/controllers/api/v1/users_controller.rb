@@ -68,14 +68,14 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     end
 
     if error
-      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/confirm_email/?error=#{error}"
+      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/login/?error=#{error}"
     else
       user.confirmed_at = Time.now
       user.confirmation_token = nil
       user.confirmation_sent_at = nil
       user.save!
       redirect_to ENV["FRONTEND_WEB_URL"] +
-                    "/confirm_email?success=true"
+                    "/login?email_confirmed=true"
     end
   end
 
@@ -126,8 +126,8 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
       user.reset_password_token = User.create_new_token("reset_password_token")
       user.reset_password_sent_at = Time.now
       user.save!
-        redirect_to "#{ENV["FRONTEND_WEB_URL"]}/enter_new_password"+
-          "?token=#{user.reset_password_token}"
+      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/enter_new_password"+
+        "?token=#{user.reset_password_token}"
     end
   end
 
