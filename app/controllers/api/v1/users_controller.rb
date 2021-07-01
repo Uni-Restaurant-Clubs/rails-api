@@ -108,7 +108,7 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
   def initiate_password_reset
     token = params[:token]
     user = User.find_by(reset_password_confirm_email_token: token)
-    expired = (user.reset_password_confirm_email_token_sent_at + 2.hours).to_i < Time.now.to_i
+    expired = (user.reset_password_confirm_email_token_sent_at + 2.hours).to_i < Time.now.to_i if user
     error = false
     if !token || !user
       error = "token invalid"
