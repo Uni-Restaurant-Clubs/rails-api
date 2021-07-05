@@ -13,7 +13,7 @@ ActiveAdmin.register Restaurant do
                 :primary_phone_number, :primary_email, :other_contact_info,
                 :operational_status, :website_url, :is_franchise,
                 :managers, :status, :notes, :scheduled_review_date_and_time,
-                :starred, :urc_rating,
+                :starred, :urc_rating, :follow_up_reason,
                 address_attributes: [:id, :apt_suite_number, :street_number,
                                        :street_name, :street_type, :city,
                                        :state, :country, :zipcode,
@@ -21,6 +21,13 @@ ActiveAdmin.register Restaurant do
     #permitted << :other if params[:action] == 'create' && current_user.admin?
     permitted
   end
+
+  preserve_default_filters!
+  filter :follow_up_reason, as: :select, collection: Restaurant.follow_up_reasons
+  filter :status, as: :select, collection: Restaurant.statuses
+  filter :operational_status, as: :select,
+         collection: Restaurant.operational_statuses
+  filter :urc_rating, as: :select, collection: Restaurant.urc_ratings
 
   scope :all
   scope :non_franchise_starred, :default => true do |restaurants|
@@ -39,6 +46,7 @@ ActiveAdmin.register Restaurant do
     column :status do |restaurant|
       restaurant.status.humanize.downcase
     end
+    column :follow_up_reason
     column :primary_phone_number
     column :starred do |restaurant|
       if restaurant.starred
@@ -68,6 +76,7 @@ ActiveAdmin.register Restaurant do
       row :status do |restaurant|
         restaurant.status.humanize.downcase
       end
+      row :follow_up_reason
       row :operational_status
       row :starred
       row :urc_rating
@@ -101,6 +110,7 @@ ActiveAdmin.register Restaurant do
       f.input :description
       f.input :is_franchise
       f.input :status
+      f.input :follow_up_reason
       f.input :operational_status
       f.input :starred
       f.input :urc_rating

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_29_223720) do
+ActiveRecord::Schema.define(version: 2021_07_05_214625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,8 @@ ActiveRecord::Schema.define(version: 2021_06_29_223720) do
     t.integer "urc_rating", default: 0
     t.float "yelp_rating"
     t.bigint "yelp_review_count", default: 0
+    t.integer "follow_up_reason"
+    t.index ["follow_up_reason"], name: "index_restaurants_on_follow_up_reason"
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
     t.index ["starred"], name: "index_restaurants_on_starred"
