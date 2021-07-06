@@ -3,8 +3,7 @@ class Api::V1::ApiApplicationController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def authenticate_api_user!
-    # TODO get from header
-    token = params[:token]
+    token = request.headers['Authorization'].split(' ').last rescue nil
     session = Session.find_by(token: token)
 
     if session && session.user

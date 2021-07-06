@@ -54,8 +54,6 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     elsif expired = Time.now.to_i > (user.confirm_uni_email_sent_at +
                                      7.days).to_i
       error = "token expired"
-    elsif user.confirmed_at
-      error = "already confirmed"
     end
 
     if error
