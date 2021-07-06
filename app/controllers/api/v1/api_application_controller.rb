@@ -2,7 +2,7 @@ class Api::V1::ApiApplicationController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
-  def authenticate_api_user
+  def authenticate_api_user!
     # TODO get from header
     token = params[:token]
     session = Session.find_by(token: token)
@@ -12,15 +12,16 @@ class Api::V1::ApiApplicationController < ApplicationController
         session.destroy
         json = { error: true,
                  message: "Session has expired. User must login again" }.to_json
-        render json: json, status: :unauthorized and return
+        render json: json, status: 401 and return
       else
         session.update(last_used: Time.now)
-        @current_api_user = session.user
+        @current_user = session.user
       end
     else
-      json = { error: true, message: "Session token is required" }.to_json
+      message = "Access token is missing or invalid"
+      json = { error: true, message: message }.to_json
       # TODO get status for unauthorized
-      render json: json, status: :unauthorized and return
+      render json: json, status: 401 and return
     end
   end
 

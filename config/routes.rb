@@ -13,7 +13,11 @@ Rails.application.routes.draw do
                  as: :confirm_email
             post 'resend_confirm_email', to: "users#resend_confirm_email",
                  as: :resend_confirm_email
-
+            # CONFIRM UNI EMAIL ADDRESS
+            get 'confirm_uni_email/:token', to: "users#confirm_uni_email",
+                 as: :confirm_uni_email
+            post 'send_confirm_uni_email', to: "users#send_confirm_uni_email",
+                 as: :send_confirm_uni_email
             # PASSWORD RESET
             # User has entered email. We send email to confirm
             post 'send_password_reset_email',
