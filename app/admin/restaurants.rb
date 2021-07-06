@@ -61,7 +61,9 @@ ActiveAdmin.register Restaurant do
         link_to "Yelp URL", restaurant.yelp_url, target: "_blank"
     end
     column "Image" do |restaurant|
+      if restaurant.image_url
         image_tag restaurant.image_url, style: 'height:100px;width:auto;'
+      end
     end
     column "city, state" do |restaurant|
       restaurant.address.try(:city_state)
@@ -88,7 +90,9 @@ ActiveAdmin.register Restaurant do
       end
       row :description
       row "Image" do |restaurant|
-        image_tag restaurant.image_url, style: 'height:300px;width:auto;'
+        if restaurant.image_url
+          image_tag restaurant.image_url, style: 'height:300px;width:auto;'
+        end
       end
       row :notes
       row :address do |restaurant|
