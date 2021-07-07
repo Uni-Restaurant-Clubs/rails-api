@@ -157,7 +157,7 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     end
 
     if error
-      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/enter_email_for_confirmation?error=#{error}"
+      redirect_to "#{ENV["FRONTEND_WEB_URL"]}/forgotPassword?error=#{error}"
     else
       user.confirmed_at = Time.now unless user.confirmed_at
       user.confirmation_token = nil
