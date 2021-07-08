@@ -19,13 +19,8 @@ class Api::V1::ApiApplicationController < ApplicationController
     else
       message = "Access token is missing or invalid"
       json = { error: true, message: message }.to_json
-      # TODO get status for unauthorized
       render json: json, status: 401 and return
     end
-  end
-
-  def current_api_user
-
   end
 
 end
