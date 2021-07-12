@@ -32,6 +32,15 @@ Rails.application.routes.draw do
                  as: :update_password
           end
       end
+      ###########################################
+      # STRIPE
+      ###########################################
+      post 'payments_webhook', to: "payments#webhook",
+           as: :payments_webhook
+      post 'payments_checkout', to: "payments#create_checkout_url",
+           as: :payments_create_checkout_url
+      post 'payments_customer_portal', to: "payments#create_portal_url",
+           as: :payments_create_portal_url
     end
   end
 end
