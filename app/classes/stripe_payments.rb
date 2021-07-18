@@ -1,3 +1,5 @@
+require 'stripe'
+
 class StripePayments
 
   def self.create_checkout_session(price_id)

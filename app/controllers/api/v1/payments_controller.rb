@@ -1,4 +1,6 @@
-class Api::V1::SessionsController < Api::V1::ApiApplicationController
+require 'stripe'
+
+class Api::V1::PaymentsController < Api::V1::ApiApplicationController
 
   before_action :authenticate_api_user!
 
@@ -38,6 +40,7 @@ class Api::V1::SessionsController < Api::V1::ApiApplicationController
   def create_checkout_url
     price_id = params[:price_id]
     session = StripePayments.create_checkout_session(price_id)
+    binding.pry
     if session.try(:url)
       json = { checkout_url: session.url }.to_json
       render json: json, status: 303
