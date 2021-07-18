@@ -39,8 +39,7 @@ class Api::V1::PaymentsController < Api::V1::ApiApplicationController
 
   def create_checkout_url
     price_id = params[:price_id]
-    session = StripePayments.create_checkout_session(price_id)
-    binding.pry
+    session = StripePayments.create_checkout_session(price_id, @current_user)
     if session.try(:url)
       json = { checkout_url: session.url }.to_json
       render json: json, status: 303

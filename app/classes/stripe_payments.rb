@@ -2,15 +2,24 @@ require 'stripe'
 
 class StripePayments
 
-  def self.create_checkout_session(price_id)
+  def self.create_checkout_session(price_id, user)
+    return nil unless price_id && user
+
 		# Set your secret key. Remember to switch to your live secret key in production.
 		# See your keys here: https://dashboard.stripe.com/apikeys
 		Stripe.api_key = ENV["STRIPE_API_KEY"]
+
+    if !user.stripe_customer_id
+      customer = Stripe::Customer.create({ email: user.email })
+      user.stripe_customer_id = customer.id
+      user.save!
+    end
 
 		session = Stripe::Checkout::Session.create({
   		success_url: "#{ENV['FRONTEND_WEB_URL']}/payment_success?session_id={CHECKOUT_SESSION_ID}}",
   		cancel_url: "#{ENV['FRONTEND_WEB_URL']}/payment_cancelled",
   		payment_method_types: ['card'],
+      customer: user.stripe_customer_id,
   		mode: 'subscription',
   		line_items: [{
     		quantity: 1,
