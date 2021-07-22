@@ -7,6 +7,7 @@ class Api::V1::OauthController < ApplicationController
     #identity = Identity.find_or_create_with_user_info(info, params[:provider])
 
     user = User.new
+    user.email = "test" + rand(1..1000000).to_s + "@gmail.com"
     user.save(validate: false)
     session = Session.new(user_id: user.id,
                           last_used: Time.now,
