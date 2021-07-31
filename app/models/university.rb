@@ -6,5 +6,5 @@ class University < ApplicationRecord
 
   enum school_type: { "university" => 0, "college" => 1}
 
-  validates_presence_of :name
+  validates_presence_of :name, :school_type
 end

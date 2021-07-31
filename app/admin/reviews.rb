@@ -1,9 +1,13 @@
 ActiveAdmin.register Review do
-  permit_params = [
-                    image_attributes: [
-                      :id, :title, :image
+  actions :all, :except => [:destroy]
+  permit_params do
+    permit_params = [
+                      image_attributes: [
+                        :id, :title, :image
+                      ]
                     ]
-                  ]
+    permit_params
+  end
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
