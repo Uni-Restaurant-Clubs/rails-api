@@ -1,7 +1,7 @@
 class Api::V1::SessionsController < Api::V1::ApiApplicationController
 
   def create
-    email = params[:email]
+    email = params[:email].strip rescue nil
     password = params[:password]
     user = User.find_by(email: email)
     if !email || !password
