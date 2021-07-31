@@ -10,7 +10,7 @@ if !AdminUser.find_by(email: "test@admin.com")
                   password_confirmation: 'q1w2e3r4') if Rails.env.development?
 end
 
-University.find_or_create_by(name: "Texas A&M", school_type: "university")
+uni = University.find_or_create_by!(name: "Texas A&M", school_type: "university")
 
 photographer_data = {
   first_name: "Mr",
@@ -18,9 +18,9 @@ photographer_data = {
   email: "test@photography.com",
   phone: "555 555 5555",
   drive_folder_url: "https://drive.com/folder_name",
-  university_id: 2
+  university_id: uni.id
 }
-Photographer.find_or_create_by(photographer_data)
+Photographer.find_or_create_by!(photographer_data)
 
 writer_data = {
   first_name: "Mr",
@@ -28,6 +28,27 @@ writer_data = {
   email: "test@writer.com",
   phone: "555 555 5555",
   drive_folder_url: "https://drive.com/folder_name",
-  university_id: 2
+  university_id: uni.id
 }
-Writer.find_or_create_by(writer_data)
+Writer.find_or_create_by!(writer_data)
+
+restaurant_data = {
+  name: "Best restaurant ever",
+  description: "this is the best restaurant ever",
+  primary_phone_number: "555 555 5555",
+  primary_email: "manager@gmail.com",
+  manager_info: "Mr manager",
+  operational_status: "unknown",
+  other_contact_info: "",
+  status: "not contacted",
+  notes: "the best",
+  website_url: "google.com",
+  is_franchise: false,
+  starred: true,
+  urc_rating: "ok nothing special",
+  yelp_rating: nil,
+  yelp_review_count: 0,
+  follow_up_reason: "need to contact marketing team"
+}
+
+Restaurant.find_or_create_by!(restaurant_data)

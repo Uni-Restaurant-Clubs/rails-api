@@ -155,10 +155,17 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
   end
 
   create_table "reviews", force: :cascade do |t|
+    t.datetime "reviewed_at"
+    t.integer "writer_id"
+    t.integer "photographer_id"
+    t.integer "university_id"
     t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["photographer_id"], name: "index_reviews_on_photographer_id"
     t.index ["restaurant_id"], name: "index_reviews_on_restaurant_id"
+    t.index ["university_id"], name: "index_reviews_on_university_id"
+    t.index ["writer_id"], name: "index_reviews_on_writer_id"
   end
 
   create_table "sessions", force: :cascade do |t|
