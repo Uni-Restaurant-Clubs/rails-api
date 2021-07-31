@@ -1,12 +1,15 @@
 class CreateImages < ActiveRecord::Migration[6.1]
   def change
-    create_table :image do |t|
+    create_table :images do |t|
       t.string  :title
-      t.bigint  :imageable_id
-      t.string  :imageable_type
+      t.integer :photographer_id
+      t.integer :review_id
+      t.integer :restaurant_id
 
       t.timestamps
     end
-    add_index :image, [:imageable_type, :imageable_id]
+    add_index :images, :photographer_id
+    add_index :images, :review_id
+    add_index :images, :restaurant_id
   end
 end

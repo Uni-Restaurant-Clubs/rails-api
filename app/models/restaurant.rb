@@ -3,6 +3,7 @@ class Restaurant < ApplicationRecord
   has_one :address, dependent: :destroy
 
   has_many :reviews, dependent: :destroy
+  has_many :images, dependent: :destroy
 
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true

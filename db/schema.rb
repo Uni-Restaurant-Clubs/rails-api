@@ -96,13 +96,16 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "image", force: :cascade do |t|
+  create_table "images", force: :cascade do |t|
     t.string "title"
-    t.bigint "imageable_id"
-    t.string "imageable_type"
+    t.integer "photographer_id"
+    t.integer "review_id"
+    t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["imageable_type", "imageable_id"], name: "index_image_on_imageable_type_and_imageable_id"
+    t.index ["photographer_id"], name: "index_images_on_photographer_id"
+    t.index ["restaurant_id"], name: "index_images_on_restaurant_id"
+    t.index ["review_id"], name: "index_images_on_review_id"
   end
 
   create_table "photographers", force: :cascade do |t|
