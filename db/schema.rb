@@ -172,8 +172,10 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
 
   create_table "universities", force: :cascade do |t|
     t.string "name"
+    t.integer "school_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_type"], name: "index_universities_on_school_type"
   end
 
   create_table "users", force: :cascade do |t|

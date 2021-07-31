@@ -1,4 +1,7 @@
 ActiveAdmin.register University do
-  permit_params = [:name]
+  actions :all, :except => [:destroy]
+  permit_params do
+    [:name, :school_type]
+  end
 
 end
