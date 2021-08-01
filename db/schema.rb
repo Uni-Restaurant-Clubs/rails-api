@@ -98,15 +98,11 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
 
   create_table "images", force: :cascade do |t|
     t.string "title"
-    t.integer "photographer_id"
     t.boolean "featured", default: false
     t.integer "review_id"
-    t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["featured"], name: "index_images_on_featured"
-    t.index ["photographer_id"], name: "index_images_on_photographer_id"
-    t.index ["restaurant_id"], name: "index_images_on_restaurant_id"
     t.index ["review_id"], name: "index_images_on_review_id"
   end
 
@@ -162,6 +158,10 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
     t.integer "photographer_id"
     t.integer "university_id"
     t.integer "restaurant_id"
+    t.text "full_article"
+    t.text "medium_article"
+    t.text "small_article"
+    t.string "article_title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["photographer_id"], name: "index_reviews_on_photographer_id"

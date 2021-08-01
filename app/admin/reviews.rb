@@ -4,7 +4,8 @@ ActiveAdmin.register Review do
   permit_params do
     permitted = [
                   :restaurant_id, :university_id, :writer_id, :photographer_id,
-                  :reviewed_at,
+                  :reviewed_at, :full_article, :medium_article, :small_article,
+                  :article_title,
                   images_attributes: [
                     :id, :title, :photo, :featured
                   ]
@@ -35,6 +36,10 @@ ActiveAdmin.register Review do
       row :writer
       row :photographer
       row :reviewed_at
+      row :article_title
+      row (:full_article) { |review| raw(review.full_article) }
+      row (:medium_article) { |review| raw(review.full_article) }
+      row (:small_article) { |review| raw(review.full_article) }
       table_for review.images do
         column "Title" do |image|
           image.title
@@ -58,6 +63,10 @@ ActiveAdmin.register Review do
       f.input :photographer
       f.input :university
       f.input :reviewed_at, as: :date_time_picker
+      f.input :article_title
+      f.input :full_article, as: :quill_editor
+      f.input :medium_article, as: :quill_editor
+      f.input :small_article, as: :quill_editor
     end
     f.inputs 'Image' do
       f.has_many :images, heading: false,

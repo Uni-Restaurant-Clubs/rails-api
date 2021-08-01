@@ -27,6 +27,7 @@ gem "image_processing", ">= 1.2"
 gem "aws-sdk-s3", require: false
 gem 'active_admin_datetimepicker'
 gem 'stripe', '~> 5.37'
+gem 'activeadmin_quill_editor', '~> 0.3.4'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
