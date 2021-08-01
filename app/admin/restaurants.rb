@@ -119,7 +119,7 @@ ActiveAdmin.register Restaurant do
       f.input :starred
       f.input :urc_rating
       f.input :notes
-      f.input :scheduled_review_date_and_time, as: :datepicker
+      f.input :scheduled_review_date_and_time, as: :date_time_picker
       f.input :manager_info
       f.input :primary_phone_number
       f.input :primary_email

@@ -20,7 +20,7 @@ photographer_data = {
   drive_folder_url: "https://drive.com/folder_name",
   university_id: uni.id
 }
-Photographer.find_or_create_by!(photographer_data)
+photographer = Photographer.find_or_create_by!(photographer_data)
 
 writer_data = {
   first_name: "Mr",
@@ -30,7 +30,7 @@ writer_data = {
   drive_folder_url: "https://drive.com/folder_name",
   university_id: uni.id
 }
-Writer.find_or_create_by!(writer_data)
+writer = Writer.find_or_create_by!(writer_data)
 
 restaurant_data = {
   name: "Best restaurant ever",
@@ -51,4 +51,14 @@ restaurant_data = {
   follow_up_reason: "need to contact marketing team"
 }
 
-Restaurant.find_or_create_by!(restaurant_data)
+restaurant = Restaurant.find_or_create_by!(restaurant_data)
+
+review_data = {
+  reviewed_at: Time.new,
+  writer_id: writer.id,
+  photographer_id: photographer.id,
+  university_id: uni.id,
+  restaurant_id: restaurant.id
+}
+
+Review.find_or_create_by!(review_data)

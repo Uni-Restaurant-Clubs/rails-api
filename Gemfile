@@ -25,6 +25,7 @@ gem 'rack-cors'
 gem 'haml-rails'
 gem "image_processing", ">= 1.2"
 gem "aws-sdk-s3", require: false
+gem 'active_admin_datetimepicker'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
