@@ -1,26 +1,20 @@
 class Image < ApplicationRecord
-  belongs_to :review
+  belongs_to :review, optional: true
+  belongs_to :writer, optional: true
+  belongs_to :photographer, optional: true
+
   # cheat sheet for resizing
   # https://dev.to/mikerogers0/resize-images-with-active-storage-in-rails-481n
-  has_one_attached :photo do |attachable|
-    attachable.variant :medium, resize: "250x250"
-    attachable.variant :large, resize: "500x500"
-  end
+  has_one_attached :photo
 
   scope :featured, -> {
     where(featured: true)
   }
 
-  def thumb
-    self.photo.variant(resize_to_fit: [200,200], format: :jpg)
-  end
+  enum image_type: { "profile" => 0, "review" => 1}
 
-  def medium
-    self.photo.variant(resize_to_fit: [250,250], format: :jpg)
-  end
-
-  def large
-    self.photo.variant(resize_to_fit: [700,700], format: :jpg)
+  def resize_to_fit(size)
+    self.photo.variant(resize_to_fit: [size, size], format: :jpg)
   end
 
 end

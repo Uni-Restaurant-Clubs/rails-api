@@ -18,4 +18,5 @@ ActiveAdmin.register Image do
   belongs_to :review
   belongs_to :restaurant
   belongs_to :photographer
+  belongs_to :writer
 end

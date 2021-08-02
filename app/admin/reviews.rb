@@ -7,7 +7,7 @@ ActiveAdmin.register Review do
                   :reviewed_at, :full_article, :medium_article, :small_article,
                   :article_title,
                   images_attributes: [
-                    :id, :title, :photo, :featured
+                    :id, :title, :photo, :featured, :image_type
                   ]
                 ]
     permitted
@@ -73,6 +73,7 @@ ActiveAdmin.register Review do
                               remove_record: true do |a|
         a.input :title
         a.input :featured
+        a.input :image_type, :input_html => { :value => "review" }, as: :hidden
         a.input :photo, as: :file
       end
     end

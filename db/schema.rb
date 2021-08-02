@@ -100,10 +100,16 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
     t.string "title"
     t.boolean "featured", default: false
     t.integer "review_id"
+    t.integer "writer_id"
+    t.integer "photographer_id"
+    t.integer "image_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["featured"], name: "index_images_on_featured"
+    t.index ["image_type"], name: "index_images_on_image_type"
+    t.index ["photographer_id"], name: "index_images_on_photographer_id"
     t.index ["review_id"], name: "index_images_on_review_id"
+    t.index ["writer_id"], name: "index_images_on_writer_id"
   end
 
   create_table "photographers", force: :cascade do |t|
@@ -111,6 +117,11 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
     t.string "last_name"
     t.string "email"
     t.string "phone"
+    t.string "blog_url"
+    t.string "facebook_url"
+    t.string "instagram_url"
+    t.string "website_url"
+    t.text "biography"
     t.string "drive_folder_url"
     t.integer "university_id"
     t.datetime "created_at", precision: 6, null: false
@@ -226,6 +237,11 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
     t.string "last_name"
     t.string "email"
     t.string "phone"
+    t.string "blog_url"
+    t.string "facebook_url"
+    t.string "instagram_url"
+    t.string "website_url"
+    t.text "biography"
     t.string "drive_folder_url"
     t.integer "university_id"
     t.datetime "created_at", precision: 6, null: false
