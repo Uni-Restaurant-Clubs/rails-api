@@ -19,7 +19,9 @@ class Restaurant < ApplicationRecord
                      "cool place" => 4, "amazing place" => 5 }
   enum follow_up_reason: { "need to contact marketing team" => 0,
                            "no answer" => 1, "phone disconnected" => 2,
-                           "said to phone back" => 3, other: 4}
+                           "said to phone back" => 3, other: 4,
+                           "Manager Not Available" => 5,
+                           "Phone Number Busy" => 6}
 
   accepts_nested_attributes_for :address, :allow_destroy => true
 
