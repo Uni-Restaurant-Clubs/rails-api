@@ -5,9 +5,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+return if Rails.env.production?
+
 if !AdminUser.find_by(email: "test@admin.com")
   AdminUser.create!(email: 'test@admin.com', password: 'q1w2e3r4',
-                  password_confirmation: 'q1w2e3r4') if Rails.env.development?
+                  password_confirmation: 'q1w2e3r4')
 end
 
 uni = University.find_or_create_by!(name: "Texas A&M", school_type: "university")
