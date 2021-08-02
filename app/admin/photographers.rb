@@ -27,6 +27,7 @@ ActiveAdmin.register Photographer do
       column :facebook_url
       column :instagram_url
       column :website_url
+      column :drive_folder_url
     actions
   end
 
@@ -41,6 +42,7 @@ ActiveAdmin.register Photographer do
       row :facebook_url
       row :instagram_url
       row :website_url
+      row :drive_folder_url
       row (:biography) { |photographer| raw(photographer.biography) }
       row :profile_image do |photographer|
         if photographer.image
@@ -62,6 +64,7 @@ ActiveAdmin.register Photographer do
       f.input :facebook_url
       f.input :instagram_url
       f.input :website_url
+      f.input :drive_folder_url
       f.input :biography, as: :quill_editor
     end
     f.inputs 'Image' do
