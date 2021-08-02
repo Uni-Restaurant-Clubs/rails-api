@@ -10,6 +10,26 @@ ActiveAdmin.register Photographer do
       ]]
   end
 
+  index do
+    selectable_column
+    id_column
+      column :first_name
+      column :last_name
+      column :university
+      column :profile_image do |photographer|
+        if photographer.image
+          image_tag url_for(photographer.image.resize_to_fit(75))
+        end
+      end
+      column :email
+      column :phone
+      column :blog_url
+      column :facebook_url
+      column :instagram_url
+      column :website_url
+    actions
+  end
+
   show do
     attributes_table do
       row :first_name

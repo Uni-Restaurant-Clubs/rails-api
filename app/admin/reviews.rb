@@ -49,7 +49,7 @@ ActiveAdmin.register Review do
         end
         column "Image" do |image|
           image.title
-          image_tag url_for(image.large)
+          image_tag url_for(image.resize_to_fit(800))
         end
       end
     end

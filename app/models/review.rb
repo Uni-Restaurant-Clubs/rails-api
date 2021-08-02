@@ -9,4 +9,8 @@ class Review < ApplicationRecord
                         :photographer_id
 
   accepts_nested_attributes_for :images, :allow_destroy => true
+
+  def limit_words
+    #full_article.split("<p>").first.split
+  end
 end
