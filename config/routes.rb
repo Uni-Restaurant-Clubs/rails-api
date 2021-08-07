@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       post 'oauth/apple' => 'oauth#connect'
 
       resources :sessions, only: [:create, :destroy]
+      resources :reviews, only: [:show]
       resources :users, only: [:create] do
           collection do
             # CONFIRM EMAIL ADDRESS

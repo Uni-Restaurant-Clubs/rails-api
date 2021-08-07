@@ -38,8 +38,8 @@ ActiveAdmin.register Review do
       row :reviewed_at
       row :article_title
       row (:full_article) { |review| raw(review.full_article) }
-      row (:medium_article) { |review| raw(review.full_article) }
-      row (:small_article) { |review| raw(review.full_article) }
+      row (:medium_article) { |review| raw(review.medium_article) }
+      row (:small_article) { |review| raw(review.small_article) }
       table_for review.images do
         column "Title" do |image|
           image.title
