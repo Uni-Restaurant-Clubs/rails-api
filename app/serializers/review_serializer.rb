@@ -10,7 +10,7 @@ class ReviewSerializer < ActiveModel::Serializer
     object.images.map do |image|
       {
         name: image.title,
-        photo: image.resize_to_fit(500).try(:processed).try(:url)
+        photo: image.resize_to_fit(1000).try(:processed).try(:url)
       }
     end
   end
@@ -24,7 +24,7 @@ class ReviewSerializer < ActiveModel::Serializer
 
     def photo
       if object.image
-        object.image.resize_to_fit(500).try(:processed).try(:url)
+        object.image.resize_to_fit(800).try(:processed).try(:url)
       end
     end
 
