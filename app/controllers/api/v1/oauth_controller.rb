@@ -3,7 +3,8 @@ class Api::V1::OauthController < ApplicationController
 
   def connect
     params[:provider] = get_provider
-    #info = OauthService.get_token_and_user_info(params)
+    token_info, user_info = OauthService.get_token_and_user_info(params)
+    binding.pry
     #identity = Identity.find_or_create_with_user_info(info, params[:provider])
 
     user = User.new
@@ -21,7 +22,7 @@ class Api::V1::OauthController < ApplicationController
   private
 
     def get_provider
-      @provider = request.env['PATH_INFO'].split("/")[1]
+      @provider = request.env['PATH_INFO'].split("/api/v1/oauth/")[1]
     end
 
 end

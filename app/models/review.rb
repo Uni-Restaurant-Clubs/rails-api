@@ -13,4 +13,8 @@ class Review < ApplicationRecord
   def limit_words
     #full_article.split("<p>").first.split
   end
+
+  def featured_photo
+    self.images.featured.first
+  end
 end

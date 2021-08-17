@@ -1,10 +1,15 @@
 class ReviewSerializer < ActiveModel::Serializer
-  attributes :id, :reviewed_at, :article, :photos
+  attributes :id, :reviewed_at, :article, :photos, :article_title,
+             :featured_photo
 
   belongs_to :writer
   belongs_to :photographer
   belongs_to :restaurant
   belongs_to :university
+
+  def article_title
+    object.article_title&.capitalize
+  end
 
   def photos
     object.images.map do |image|
@@ -12,6 +17,18 @@ class ReviewSerializer < ActiveModel::Serializer
         name: image.title,
         photo: image.resize_to_fit(1000).try(:processed).try(:url)
       }
+    end
+  end
+
+  def featured_photo
+    photo = object.featured_photo
+    if photo
+      {
+        name: photo.title,
+        photo: photo.resize_to_fit(1000).try(:processed).try(:url)
+      }
+    else
+      { name: "", photo: "" }
     end
   end
 
@@ -24,7 +41,7 @@ class ReviewSerializer < ActiveModel::Serializer
 
     def photo
       if object.image
-        object.image.resize_to_fit(800).try(:processed).try(:url)
+        object.image.resize_to_fit(1000).try(:processed).try(:url)
       end
     end
 

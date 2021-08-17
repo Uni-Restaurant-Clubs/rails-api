@@ -23,7 +23,7 @@ ActiveAdmin.register Review do
     column :reviewed_at
     column :featured_image do |review|
       if review.images.featured.any?
-        image_tag url_for(review.images.featured.first.thumb)
+        image_tag url_for(review.images.featured.first.resize_to_fit(100))
       end
     end
     actions

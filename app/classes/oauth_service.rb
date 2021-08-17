@@ -1,5 +1,4 @@
 class OauthService
-=begin
   include HTTParty
 
   # uncomment this when want to debug
@@ -8,18 +7,20 @@ class OauthService
   def self.get_token_from_code(params, provider)
 		options = {
   		body: {
-        code: params[:code],
+        code: params[:authorization_code],
         grant_type: "authorization_code",
-        redirect_uri: ENV["APP_HOST"] + "/#{params[:provider]}/",
-        client_id: ENV["#{provider}_CLIENT_ID"]
+        redirect_uri: ENV["#{provider}_REDIRECT_URI"],
+        client_id: ENV["#{provider}_CLIENT_ID"],
+        client_secret: ENV["#{provider}_CLIENT_SECRET"]
   		}
 		}
 
-    self.post(ENV["#{provider}_AUTHORIZATION_URL"], options)
+    url = ENV["#{provider}_AUTHORIZATION_URL"]
+    self.post(url, options)
   end
 
   def self.get_user_info(token_info, provider)
-    url = ENV["#{provider}_PATIENT_URL"] + token_info["patient"]
+    url = ENV["#{provider}_API_URI"]
     headers = {
       "Authorization" => "Bearer " + token_info["access_token"],
       "Accept" => "application/json"
@@ -30,8 +31,7 @@ class OauthService
   def self.get_token_and_user_info(params)
     provider = params[:provider].upcase
     token_info = self.get_token_from_code(params, provider)
-    self.get_user_info(token_info, provider).deep_symbolize_keys
+    return token_info, self.get_user_info(token_info, provider).deep_symbolize_keys
   end
-=end
 
 end
