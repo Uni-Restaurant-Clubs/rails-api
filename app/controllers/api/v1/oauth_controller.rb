@@ -5,7 +5,9 @@ class Api::V1::OauthController < ApplicationController
     params[:provider] = get_provider
     token_info, user_info = OauthService.get_token_and_user_info(params)
     binding.pry
-    identity = Identity.find_or_create_with_user_info(info, params[:provider])
+    identity = Identity.find_or_create_with_user_info(token_info,
+                                                      user_info,
+                                                      params[:provider])
 
     user = User.new
     user.email = "test" + rand(1..1000000).to_s + "@gmail.com"

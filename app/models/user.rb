@@ -14,4 +14,15 @@ class User < ApplicationRecord
     end
   end
 
+  def self.create_from_identity_info(info)
+    user_data = {
+      email: info[:email],
+      first_name: info[:first_name],
+      last_name: info[:last_name],
+      locale: info[:locale],
+      confirmed_at: Time.now
+    }
+    self.create!(user_data)
+  end
+
 end

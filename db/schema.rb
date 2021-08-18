@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_18_014834) do
+ActiveRecord::Schema.define(version: 2021_08_18_033140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -250,6 +250,9 @@ ActiveRecord::Schema.define(version: 2021_08_18_014834) do
     t.string "pending_uni_email"
     t.datetime "confirm_uni_email_sent_at"
     t.string "stripe_customer_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "locale"
     t.index ["confirm_uni_email_token"], name: "index_users_on_confirm_uni_email_token"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
