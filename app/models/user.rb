@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable
 
   has_many :sessions
+  has_many :identities
 
   def self.create_new_token(token_name="confirmation_token")
     loop do

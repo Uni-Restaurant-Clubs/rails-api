@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_31_165142) do
+ActiveRecord::Schema.define(version: 2021_08_18_014834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,31 @@ ActiveRecord::Schema.define(version: 2021_07_31_165142) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "identities", force: :cascade do |t|
+    t.integer "user_id"
+    t.text "external_user_id"
+    t.integer "provider"
+    t.string "email"
+    t.boolean "verified_email"
+    t.string "name"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "picture"
+    t.string "locale"
+    t.text "access_token"
+    t.datetime "expires_at"
+    t.text "refresh_token"
+    t.text "scope"
+    t.string "token_type"
+    t.text "id_token"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_identities_on_email"
+    t.index ["provider", "external_user_id"], name: "index_identities_on_provider_and_external_user_id", unique: true
+    t.index ["provider"], name: "index_identities_on_provider"
+    t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
   create_table "images", force: :cascade do |t|
