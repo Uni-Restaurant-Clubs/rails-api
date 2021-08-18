@@ -22,7 +22,15 @@ class User < ApplicationRecord
       locale: info[:locale],
       confirmed_at: Time.now
     }
-    self.create!(user_data)
+    user = self.new(user_data)
+    if user.save
+      return user
+    else
+      Airbrake.notify("user couldn't be created from identity info",
+                      { info: info,
+                        user_errors: user.errors.full_messages })
+      return false
+    end
   end
 
 end

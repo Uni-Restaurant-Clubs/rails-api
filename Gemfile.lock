@@ -80,6 +80,10 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
+    airbrake (11.0.3)
+      airbrake-ruby (~> 5.1)
+    airbrake-ruby (5.2.1)
+      rbtree3 (~> 0.5)
     arbre (1.4.0)
       activesupport (>= 3.0.0, < 6.2)
       ruby2_keywords (>= 0.0.2, < 1.0)
@@ -264,6 +268,7 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rbtree3 (0.6.0)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -331,6 +336,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.10.12)
   activeadmin (~> 2.9)
   activeadmin_quill_editor (~> 0.3.4)
+  airbrake (~> 11.0, >= 11.0.3)
   aws-sdk-s3
   bootsnap (>= 1.4.4)
   byebug

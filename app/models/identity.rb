@@ -6,7 +6,7 @@ class Identity < ApplicationRecord
 
   enum provider: { google: 0, facebook: 1, apple: 2 }
 
-  def self.update_from_info(token_info, user_info, provider)
+  def update_from_info(token_info, user_info, provider)
     identity_data = {
       first_name: user_info[:first_name],
       last_name: user_info[:last_name],
@@ -19,7 +19,17 @@ class Identity < ApplicationRecord
       token_type: token_info[:token_type],
       id_token: token_info[:id_token]
     }
-    self.update!(identity_data)
+    updated = self.update(identity_data)
+    if updated
+      return self
+    else
+      Airbrake.notify("identity couldn't update",
+                      { user_info: user_info,
+                        provider: provider,
+                        token_info: token_info })
+      return false
+    end
+
   end
 
   def self.create_from_info(user_id, token_info, user_info, provider)
@@ -40,7 +50,18 @@ class Identity < ApplicationRecord
       token_type: token_info[:token_type],
       id_token: token_info[:id_token]
     }
-    self.create!(identity_data)
+    identity = self.new(identity_data)
+    if identity.save
+      return identity
+    else
+      Airbrake.notify("identity couldn't be created",
+                      { user_info: user_info,
+                        user_id: user_id,
+                        provider: provider,
+                        token_info: token_info,
+                        identity_errors: identity.errors.full_messages })
+      return false
+    end
   end
 
   def self.normalize_user_info(info, provider)
@@ -76,29 +97,42 @@ class Identity < ApplicationRecord
     user_info = self.normalize_user_info(user_info, provider)
     token_info = self.normalize_token_info(token_info, provider)
 
+    if !user_info[:external_user_id] || !provider
+      Airbrake.notify("external_user_id or provider is missing",
+                      { user_info: user_info,
+                        token_info: token_info,
+                        provider: provider})
+      return nil
+    end
+
     # search identity with provider and external_user_id
     identity = Identity.find_by(external_user_id: user_info[:external_user_id],
                                 provider: provider)
     # if exists then update values and return identity
     if identity
-      identity.update_from_info(token_info)
+      identity = identity.update_from_info(token_info)
       return identity
     else
       # if no identity found then search by email
       email = user_info[:email]
-      #TODO return error if no email
+      if !email
+        Airbrake.notify("oauth user_info has no email",
+                        { user_info: user_info,
+                          token_info: token_info,
+                          provider: provider})
+        return nil
+      end
       user = User.find_by('lower(email) = ?', email&.downcase)
       if user
         # if user found then create new identity for that user
         identity = self.create_from_info(user.id, token_info, user_info, provider)
-        #TODO make sure identity was created
-
+        return identity
       else
         # if no user found then create a user and an identity
         user = User.create_from_identity_info(user_info)
-        #TODO make sure user was created return error if not
+        return nil unless user
         identity = self.create_from_info(user.id, token_info, user_info, provider)
-        #TODO make sure identity was created return error if not
+        return identity
       end
     end
   end

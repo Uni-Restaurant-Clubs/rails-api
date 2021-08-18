@@ -29,6 +29,7 @@ gem 'active_admin_datetimepicker'
 gem 'stripe', '~> 5.37'
 gem 'activeadmin_quill_editor', '~> 0.3.4'
 gem 'active_model_serializers', '~> 0.10.12'
+gem 'airbrake', '~> 11.0', '>= 11.0.3'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
