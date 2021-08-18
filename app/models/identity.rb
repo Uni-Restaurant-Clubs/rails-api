@@ -1,5 +1,5 @@
 class Identity < ApplicationRecord
-  belongs_to "identity"
+  belongs_to :user
 
   validates_presence_of :user_id, :external_user_id, :provider
   validates_uniqueness_of :provider, scope: :external_user_id
@@ -82,7 +82,7 @@ class Identity < ApplicationRecord
     if provider == "google"
       return {
         access_token: info[:access_token],
-        expires_at: Time.now + info[:expires_in]&.seconds,
+        expires_at: Time.now + info[:expires_in].to_i&.seconds,
         refresh_token: info[:refresh_token],
         scope: info[:scope],
         token_type: info[:token_type],
@@ -94,9 +94,14 @@ class Identity < ApplicationRecord
   def self.find_or_create_with_user_info(token_info,
                                          user_info,
                                          provider)
+
+    # Normalize data
+    token_info.deep_symbolize_keys!
+    user_info.deep_symbolize_keys!
     user_info = self.normalize_user_info(user_info, provider)
     token_info = self.normalize_token_info(token_info, provider)
 
+    # Check for external_user_id and provider
     if !user_info[:external_user_id] || !provider
       Airbrake.notify("external_user_id or provider is missing",
                       { user_info: user_info,
@@ -110,10 +115,10 @@ class Identity < ApplicationRecord
                                 provider: provider)
     # if exists then update values and return identity
     if identity
-      identity = identity.update_from_info(token_info)
+      identity = identity.update_from_info(token_info, user_info, provider)
       return identity
     else
-      # if no identity found then search by email
+      # if no identity found then search for a user by email
       email = user_info[:email]
       if !email
         Airbrake.notify("oauth user_info has no email",

@@ -23,7 +23,7 @@ class User < ApplicationRecord
       confirmed_at: Time.now
     }
     user = self.new(user_data)
-    if user.save
+    if user.save(validate: false)
       return user
     else
       Airbrake.notify("user couldn't be created from identity info",

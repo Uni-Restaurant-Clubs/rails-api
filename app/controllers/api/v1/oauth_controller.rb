@@ -4,21 +4,20 @@ class Api::V1::OauthController < ApplicationController
   def connect
     params[:provider] = get_provider
     token_info, user_info = OauthService.get_token_and_user_info(params)
-    binding.pry
     identity = Identity.find_or_create_with_user_info(token_info,
                                                       user_info,
                                                       params[:provider])
 
-    user = User.new
-    user.email = "test" + rand(1..1000000).to_s + "@gmail.com"
-    user.save(validate: false)
-    session = Session.new(user_id: user.id,
-                          last_used: Time.now,
-                          token: Session.create_new_token
-                         )
-    session.save!
-    render json: { session_token: session.token }, status: 200
-
+    if !identity
+      render json: {}, status: 500
+    else
+      session = Session.new(user_id: identity&.user&.id,
+                            last_used: Time.now,
+                            token: Session.create_new_token
+                           )
+      session.save!
+      render json: { session_token: session.token }, status: 200
+    end
   end
 
   private
