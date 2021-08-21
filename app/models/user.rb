@@ -18,10 +18,10 @@ class User < ApplicationRecord
     numbers.join("")
   end
 
-  def create_passwordless_email_code
+  def self.create_passwordless_email_code
     loop do
       code = self.generate_email_code
-      break token unless self.exists?(passwordless_email_code => code)
+      break code unless self.exists?(passwordless_email_code: code)
     end
   end
 
