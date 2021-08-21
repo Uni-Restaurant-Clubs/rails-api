@@ -1,5 +1,12 @@
 class UserMailer < ApplicationMailer
 
+  def send_passwordless_email_code
+    @user = params[:user]
+    @code = @user.passwordless_email_code
+
+    mail to: @user.email, subject: "Login Code"
+  end
+
   def send_confirmation_email
     @user = params[:user]
     @confirm_url = confirm_email_api_v1_users_url(@user.confirmation_token)

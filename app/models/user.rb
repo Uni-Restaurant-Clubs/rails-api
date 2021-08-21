@@ -2,10 +2,28 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :trackable
+         :recoverable, :rememberable, :trackable
 
   has_many :sessions
   has_many :identities
+
+  validates :email, email: true
+  validates_uniqueness_of :passwordless_email_code
+
+  def self.generate_email_code
+    numbers = []
+    6.times do |i|
+      numbers << rand(1...10).round
+    end
+    numbers.join("")
+  end
+
+  def create_passwordless_email_code
+    loop do
+      code = self.generate_email_code
+      break token unless self.exists?(passwordless_email_code => code)
+    end
+  end
 
   def self.create_new_token(token_name="confirmation_token")
     loop do

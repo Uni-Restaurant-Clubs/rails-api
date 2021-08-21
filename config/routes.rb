@@ -15,6 +15,17 @@ Rails.application.routes.draw do
       resources :reviews, only: [:show, :index]
       resources :users, only: [:create] do
           collection do
+            # START PASSWORDLESS SIGNIN
+            post 'passwordless_signin_email', to: "users#passwordless_signin_email",
+                 as: :passwordless_signin_email
+            # PASSWORDLESS SIGNIN CODE CONFIRM
+            post 'passwordless_signin_confirm',
+                 to: "users#passwordless_signin_confirm",
+                 as: :passwordless_signin_confirm
+            # PASSWORDLESS SIGNIN CODE RESEND
+            post 'resend_passwordless_code',
+                 to: "users#resend_passwordless_signin_code",
+                 as: :resend_passwordless_signin_code
             # CONFIRM EMAIL ADDRESS
             get 'confirm_email/:token', to: "users#confirm_email",
                  as: :confirm_email

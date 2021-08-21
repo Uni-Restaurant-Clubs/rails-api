@@ -21,6 +21,80 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     end
   end
 
+  def passwordless_signin_email
+    user = User.find_or_initialize_by(email: params[:email])
+    user.passwordless_email_code = User.create_passwordless_email_code
+    user.passwordless_email_code_sent_at = Time.now
+    user.confirmation_token = User.create_new_token("confirmation_token")
+    user.confirmation_sent_at = Time.now
+
+    if user.save
+      UserMailer.with(user: user).send_passwordless_email_code.deliver_later
+      render json: { confirmation_token: user.confirmation_token }, status: 200
+    else
+      json = { error: true, message: user.errors.full_messages }.to_json
+      render json: json, status: 400
+    end
+  end
+
+  def resend_passwordless_signin_code
+    error = false
+    code = 204
+    if !params[:email]
+      error = "email required"
+      code = 400
+    end
+
+    if error
+      json = { error: true, message: error }.to_json
+      render json: json, status: code
+    else
+      user = User.find_or_initialize_by(email: params[:email])
+      user.passwordless_email_code = User.create_passwordless_email_code
+      user.passwordless_email_code_sent_at = Time.now
+      user.confirmation_token = User.create_new_token("confirmation_token")
+      user.confirmation_sent_at = Time.now
+
+      user.save!
+      UserMailer.with(user: user).send_passwordless_email_code.deliver_later
+      render json: { confirmation_token: user.confirmation_token }, status: 200
+    end
+
+  end
+
+  def passwordless_signin_confirm
+    confirmation_token = params[:confirmation_token]
+    code = params[:code]
+    user = User.find_by(confirmation_token: token,
+                        passwordless_email_code: code)
+
+    error = false
+    if !token || !code || !user
+      error = "token invalid"
+    elsif expired = Time.now.to_i > (user.confirmation_sent_at + 15.minutes).to_i
+      error = "token expired"
+    elsif expired = Time.now.to_i > (user.passwordless_email_code_sent_at + 15.minutes).to_i
+      error = "token expired"
+    end
+
+    if error
+      json = { error: true, message: error }.to_json
+      render json: json, status: 400
+    else
+      user.passwordless_email_code = nil
+      user.passwordless_email_code_sent_at = nil
+      user.confirmation_token = nil
+      user.confirmation_sent_at = nil
+      user.save!
+      session = Session.new(user_id: user.id,
+                            last_used: Time.now,
+                            token: Session.create_new_token
+                           )
+      session.save!
+      render json: { session_token: session.token }, status: 200
+    end
+  end
+
   def send_confirm_uni_email
 
     user = @current_user
