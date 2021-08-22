@@ -37,33 +37,8 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
     end
   end
 
-  def resend_passwordless_signin_code
-    error = false
-    code = 204
-    if !params[:email]
-      error = "email required"
-      code = 400
-    end
-
-    if error
-      json = { error: true, message: error }.to_json
-      render json: json, status: code
-    else
-      user = User.find_or_initialize_by(email: params[:email])
-      user.passwordless_email_code = User.create_passwordless_email_code
-      user.passwordless_email_code_sent_at = Time.now
-      user.confirmation_token = User.create_new_token("confirmation_token")
-      user.confirmation_sent_at = Time.now
-
-      user.save!
-      UserMailer.with(user: user).send_passwordless_email_code.deliver_later
-      render json: { confirmation_token: user.confirmation_token }, status: 200
-    end
-
-  end
-
   def passwordless_signin_confirm
-    confirmation_token = params[:confirmation_token]
+    token = params[:confirmation_token]
     code = params[:code]
     user = User.find_by(confirmation_token: token,
                         passwordless_email_code: code)
