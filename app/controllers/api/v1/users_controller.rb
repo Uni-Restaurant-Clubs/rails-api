@@ -22,7 +22,7 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
   end
 
   def passwordless_signin_email
-    user = User.find_or_initialize_by(email: params[:email])
+    user = User.find_or_initialize_by(email: params[:email]&.strip&.downcase)
     user.passwordless_email_code = User.create_passwordless_email_code
     user.passwordless_email_code_sent_at = Time.now
     user.confirmation_token = User.create_new_token("confirmation_token")
