@@ -4,8 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable
 
-  has_many :sessions
-  has_many :identities
+  has_many :sessions, dependent: :destroy
+  has_many :identities, dependent: :destroy
 
   validates :email, email: true
   validates_uniqueness_of :passwordless_email_code
