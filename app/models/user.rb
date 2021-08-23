@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_many :identities, dependent: :destroy
 
   validates :email, email: true
-  validates_uniqueness_of :passwordless_email_code
+  validates_uniqueness_of :passwordless_email_code, :allow_blank => true
 
   def self.generate_email_code
     numbers = []
