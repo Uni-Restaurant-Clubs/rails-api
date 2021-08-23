@@ -44,17 +44,21 @@ class Api::V1::UsersController < Api::V1::ApiApplicationController
                         passwordless_email_code: code)
 
     error = false
+    status = 200
     if !token || !code || !user
       error = "token invalid"
+      status = 400
     elsif expired = Time.now.to_i > (user.confirmation_sent_at + 15.minutes).to_i
       error = "token expired"
+      status = 401
     elsif expired = Time.now.to_i > (user.passwordless_email_code_sent_at + 15.minutes).to_i
       error = "token expired"
+      status = 401
     end
 
     if error
       json = { error: true, message: error }.to_json
-      render json: json, status: 400
+      render json: json, status: status
     else
       user.passwordless_email_code = nil
       user.passwordless_email_code_sent_at = nil
