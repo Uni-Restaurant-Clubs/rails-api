@@ -50,12 +50,12 @@ ActiveAdmin.register Photographer do
         end
       end
       row :signed_nda do |photographer|
-        if photographer.signed_nda
+        if photographer.signed_nda&.url
           link_to "Signed NDA", photographer.signed_nda.url, target: "_blank"
         end
       end
       row :signed_agreement do |photographer|
-        if photographer.signed_agreement
+        if photographer.signed_agreement&.url
           link_to "Signed Agreement", photographer.signed_agreement.url, target: "_blank"
         end
       end

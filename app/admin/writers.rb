@@ -50,12 +50,12 @@ ActiveAdmin.register Writer do
         end
       end
       row :signed_nda do |writer|
-        if writer.signed_nda
+        if writer.signed_nda&.url
           link_to("Signed NDA", writer.signed_nda.url, target: "_blank")
         end
       end
       row :signed_agreement do |writer|
-        if writer.signed_agreement
+        if writer.signed_agreement&.url
           link_to("Signed Agreement", writer.signed_agreement.url, target: "_blank")
         end
       end
