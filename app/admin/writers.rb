@@ -3,7 +3,7 @@ ActiveAdmin.register Writer do
   permit_params do
     [:first_name, :last_name, :university_id, :email, :phone,
      :blog_url, :facebook_url, :instagram_url, :website_url,
-     :biography,
+     :biography, :signed_nda, :signed_agreement,
      :drive_folder_url,
       image_attributes: [
         :id, :photo, :image_type
@@ -49,6 +49,16 @@ ActiveAdmin.register Writer do
           image_tag url_for(writer.image.resize_to_fit(400))
         end
       end
+      row :signed_nda do |writer|
+        if writer.signed_nda
+          link_to("Signed NDA", writer.signed_nda.url, target: "_blank")
+        end
+      end
+      row :signed_agreement do |writer|
+        if writer.signed_agreement
+          link_to("Signed Agreement", writer.signed_agreement.url, target: "_blank")
+        end
+      end
     end
   end
 
@@ -66,6 +76,8 @@ ActiveAdmin.register Writer do
       f.input :website_url
       f.input :drive_folder_url
       f.input :biography, as: :quill_editor
+      f.input :signed_nda, as: :file
+      f.input :signed_agreement, as: :file
     end
     f.inputs 'Image' do
       f.has_many :image, heading: false,
