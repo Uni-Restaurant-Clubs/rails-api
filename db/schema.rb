@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_20_230857) do
+ActiveRecord::Schema.define(version: 2021_08_26_175420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,28 @@ ActiveRecord::Schema.define(version: 2021_08_20_230857) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "content_creators", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "public_unique_username"
+    t.string "email"
+    t.string "phone"
+    t.string "blog_url"
+    t.string "facebook_url"
+    t.string "instagram_url"
+    t.string "website_url"
+    t.text "bio"
+    t.string "drive_folder_url"
+    t.integer "university_id"
+    t.integer "creator_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["creator_type"], name: "index_content_creators_on_creator_type"
+    t.index ["email"], name: "index_content_creators_on_email", unique: true
+    t.index ["public_unique_username"], name: "index_content_creators_on_public_unique_username", unique: true
+    t.index ["university_id"], name: "index_content_creators_on_university_id"
+  end
+
   create_table "identities", force: :cascade do |t|
     t.integer "user_id"
     t.text "external_user_id"
@@ -130,6 +152,8 @@ ActiveRecord::Schema.define(version: 2021_08_20_230857) do
     t.integer "image_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "content_creator_id"
+    t.index ["content_creator_id"], name: "index_images_on_content_creator_id"
     t.index ["featured"], name: "index_images_on_featured"
     t.index ["image_type"], name: "index_images_on_image_type"
     t.index ["photographer_id"], name: "index_images_on_photographer_id"

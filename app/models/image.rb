@@ -1,7 +1,7 @@
 class Image < ApplicationRecord
   belongs_to :review, optional: true
-  belongs_to :writer, optional: true
-  belongs_to :photographer, optional: true
+  belongs_to :content_creator, optional: true
+
 
   # cheat sheet for resizing
   # https://dev.to/mikerogers0/resize-images-with-active-storage-in-rails-481n

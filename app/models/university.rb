@@ -1,6 +1,6 @@
 class University < ApplicationRecord
-  has_many :writers
-  has_many :photographers
+  has_many :writers, class_name: 'ContentCreator'
+  has_many :photographers, class_name: 'ContentCreator'
   has_many :restaurants
   has_many :reviews
 
