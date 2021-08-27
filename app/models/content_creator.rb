@@ -15,6 +15,9 @@ class ContentCreator < ApplicationRecord
 
   accepts_nested_attributes_for :image, :allow_destroy => true
 
+  scope :writers, lambda { where(creator_type: "writer") }
+  scope :photographers, lambda { where(creator_type: "photographer") }
+
   def name
     first_name + " " + last_name
   end

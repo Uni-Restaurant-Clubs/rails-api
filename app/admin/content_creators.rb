@@ -10,6 +10,14 @@ ActiveAdmin.register ContentCreator do
       ]]
   end
 
+  scope :all, default: true
+  scope :writers do |content_creators|
+    content_creators.writers
+  end
+  scope :photographers do |content_creators|
+    content_creators.photographers
+  end
+
   index do
     selectable_column
     id_column
