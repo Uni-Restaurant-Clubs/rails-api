@@ -11,7 +11,7 @@ class Image < ApplicationRecord
     where(featured: true)
   }
 
-  enum image_type: { "profile" => 0, "review" => 1}
+  enum image_type: { "profile" => 0, "review" => 1 }
 
   def resize_to_fit(size)
     self.photo.variant(resize_to_fit: [size, size], format: :jpg)
