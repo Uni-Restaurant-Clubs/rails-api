@@ -5,6 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require 'open-uri'
+require 'uri'
+
 return if Rails.env.production?
 
 if !AdminUser.find_by(email: "test@admin.com")
@@ -12,28 +15,57 @@ if !AdminUser.find_by(email: "test@admin.com")
                   password_confirmation: 'q1w2e3r4')
 end
 
-uni = University.find_or_create_by!(name: "Texas A&M", school_type: "university")
+location_code = LocationCode.find_or_create_by!(code: "BR", state: "NY",
+                                                description: "brooklyn")
 
+nda = URI.open('https://urc-public-images.s3.us-east-2.amazonaws.com/fake_agreement.pdf')
+agreement = URI.open('https://urc-public-images.s3.us-east-2.amazonaws.com/fake_agreement.pdf')
+writer_pic = URI.open('https://urc-public-images.s3.us-east-2.amazonaws.com/manar.jpeg')
+photographer_pic = URI.open('https://urc-public-images.s3.us-east-2.amazonaws.com/kirsys.png')
 photographer_data = {
-  first_name: "Mr",
-  last_name: "photographer",
+  first_name: "Kirsys",
+  last_name: "Cresencio",
+  public_unique_username: "kirsys_cresencio",
+  creator_type: "photographer",
+  location_code_id: location_code.id,
   email: "test@photography.com",
   phone: "555 555 5555",
   drive_folder_url: "https://drive.com/folder_name",
-  university_id: uni.id
 }
-photographer = Photographer.find_or_create_by!(photographer_data)
+
+photographer = ContentCreator.find_or_initialize_by(photographer_data)
+photographer.signed_nda.attach(io: nda, filename: "nda.pdf")
+photographer.signed_agreement.attach(io: agreement, filename: "agreement.pdf")
+photographer.save!
+
+image = Image.find_or_initialize_by(content_creator_id: photographer.id)
+image.photo.attach(io: photographer_pic, filename: "photographer.png")
+image.save!
 
 writer_data = {
-  first_name: "Mr",
-  last_name: "writer",
+  first_name: "Manar",
+  last_name: "Elkhayyal",
+  public_unique_username: "manar_elkhayyal",
+  creator_type: "writer",
+  location_code_id: location_code.id,
   email: "test@writer.com",
   phone: "555 555 5555",
   drive_folder_url: "https://drive.com/folder_name",
-  university_id: uni.id
 }
-writer = Writer.find_or_create_by!(writer_data)
 
+nda = URI.open('https://urc-public-images.s3.us-east-2.amazonaws.com/fake_agreement.pdf')
+agreement = URI.open('https://urc-public-images.s3.us-east-2.amazonaws.com/fake_agreement.pdf')
+
+writer = ContentCreator.find_or_initialize_by(writer_data)
+writer.signed_nda.attach(io: nda, filename: "nda.pdf")
+writer.signed_agreement.attach(io: agreement, filename: "agreement.pdf")
+writer.save!
+
+image = Image.find_or_initialize_by(content_creator_id: writer.id)
+image.photo.attach(io: writer_pic, filename: "writer.jpeg")
+image.save!
+
+=begin
 restaurant_data = {
   name: "Best restaurant ever",
   description: "this is the best restaurant ever",
@@ -64,3 +96,4 @@ review_data = {
 }
 
 Review.find_or_create_by!(review_data)
+=end
