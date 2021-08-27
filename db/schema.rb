@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_26_214149) do
+ActiveRecord::Schema.define(version: 2021_08_27_193829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,8 +112,10 @@ ActiveRecord::Schema.define(version: 2021_08_26_214149) do
     t.integer "creator_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "location_code_id"
     t.index ["creator_type"], name: "index_content_creators_on_creator_type"
     t.index ["email"], name: "index_content_creators_on_email", unique: true
+    t.index ["location_code_id"], name: "index_content_creators_on_location_code_id"
     t.index ["public_unique_username"], name: "index_content_creators_on_public_unique_username", unique: true
     t.index ["university_id"], name: "index_content_creators_on_university_id"
   end
@@ -159,6 +161,16 @@ ActiveRecord::Schema.define(version: 2021_08_26_214149) do
     t.index ["photographer_id"], name: "index_images_on_photographer_id"
     t.index ["review_id"], name: "index_images_on_review_id"
     t.index ["writer_id"], name: "index_images_on_writer_id"
+  end
+
+  create_table "location_codes", force: :cascade do |t|
+    t.string "code"
+    t.integer "state"
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["code"], name: "index_location_codes_on_code", unique: true
+    t.index ["state"], name: "index_location_codes_on_state"
   end
 
   create_table "restaurants", force: :cascade do |t|

@@ -3,7 +3,7 @@ ActiveAdmin.register ContentCreator do
   permit_params do
     [:first_name, :last_name, :university_id, :email, :phone,
      :blog_url, :facebook_url, :instagram_url, :website_url,
-     :bio, :signed_nda, :signed_agreement,
+     :bio, :signed_nda, :signed_agreement, :location_code_id,
      :drive_folder_url, :public_unique_username, :creator_type,
       image_attributes: [
         :id, :photo, :image_type
@@ -22,6 +22,7 @@ ActiveAdmin.register ContentCreator do
     selectable_column
     id_column
       column :creator_type
+      column :location_code
       column :public_unique_username
       column :first_name
       column :last_name
@@ -38,6 +39,7 @@ ActiveAdmin.register ContentCreator do
   show do
     attributes_table do
       row :creator_type
+      row :location_code
       row :public_unique_username
       row :first_name
       row :last_name
@@ -72,6 +74,7 @@ ActiveAdmin.register ContentCreator do
     f.semantic_errors *f.object.errors.keys
     f.inputs 'Details' do
       f.input :creator_type
+      f.input :location_code
       f.input :public_unique_username
       f.input :first_name
       f.input :last_name
