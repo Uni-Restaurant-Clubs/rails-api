@@ -36,23 +36,12 @@ class ReviewSerializer < ActiveModel::Serializer
     object.full_article
   end
 
-  class WriterSerializer < ActiveModel::Serializer
-    attributes :first_name, :last_name, :photo
+  class ContentCreatorSerializer < ActiveModel::Serializer
+    attributes :first_name, :last_name, :photo, :public_unique_username
 
     def photo
       if object.image
         object.image.resize_to_fit(1000).try(:processed).try(:url)
-      end
-    end
-
-  end
-
-  class PhotographerSerializer < ActiveModel::Serializer
-    attributes :first_name, :last_name, :photo
-
-    def photo
-      if object.image
-        object.image.resize_to_fit(500).try(:processed).try(:url)
       end
     end
 
