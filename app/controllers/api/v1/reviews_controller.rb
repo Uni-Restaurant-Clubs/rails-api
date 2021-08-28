@@ -16,7 +16,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       json = { error: true, message: "No reviews found" }.to_json
       render json: json, status: 404
     else
-      render json: reviews, status: 200
+      render json: reviews, status: 200, each_serializer: ReviewIndexSerializer
     end
   end
 
