@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create, :destroy]
       resources :reviews, only: [:show, :index]
+      resources :content_creators, only: [:show]
       resources :users, only: [:create] do
           collection do
             # START PASSWORDLESS SIGNIN

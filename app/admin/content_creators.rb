@@ -2,9 +2,10 @@ ActiveAdmin.register ContentCreator do
   actions :all, :except => [:destroy]
   permit_params do
     [:first_name, :last_name, :university_id, :email, :phone,
-     :blog_url, :facebook_url, :instagram_url, :website_url,
+     :linkedin_url, :facebook_url, :instagram_url, :website_url,
      :bio, :signed_nda, :signed_agreement, :location_code_id,
      :drive_folder_url, :public_unique_username, :creator_type,
+     :youtube_url,
       image_attributes: [
         :id, :photo, :image_type
       ]]
@@ -46,7 +47,8 @@ ActiveAdmin.register ContentCreator do
       row :university
       row :email
       row :phone
-      row :blog_url
+      row :linkedin_url
+      row :youtube_url
       row :facebook_url
       row :instagram_url
       row :website_url
@@ -81,7 +83,8 @@ ActiveAdmin.register ContentCreator do
       f.input :university
       f.input :email
       f.input :phone
-      f.input :blog_url
+      f.input :linkedin_url
+      f.input :youtube_url
       f.input :facebook_url
       f.input :instagram_url
       f.input :website_url

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_27_193829) do
+ActiveRecord::Schema.define(version: 2021_08_29_023019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,7 +102,7 @@ ActiveRecord::Schema.define(version: 2021_08_27_193829) do
     t.string "public_unique_username"
     t.string "email"
     t.string "phone"
-    t.string "blog_url"
+    t.string "linkedin_url"
     t.string "facebook_url"
     t.string "instagram_url"
     t.string "website_url"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 2021_08_27_193829) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "location_code_id"
+    t.string "youtube_url"
     t.index ["creator_type"], name: "index_content_creators_on_creator_type"
     t.index ["email"], name: "index_content_creators_on_email", unique: true
     t.index ["location_code_id"], name: "index_content_creators_on_location_code_id"
