@@ -3,6 +3,8 @@ class ContentCreatorSerializer < ActiveModel::Serializer
              :linkedin_url, :facebook_url, :instagram_url, :website_url,
              :bio, :photo, :public_unique_username, :youtube_url
 
+  has_many :reviews
+
   def photo
     if object.image
       object.image.resize_to_fit(1000).try(:processed).try(:url)
@@ -10,9 +12,15 @@ class ContentCreatorSerializer < ActiveModel::Serializer
   end
 
   class ReviewSerializer < ActiveModel::Serializer
-    attributes :id, :reviewed_at, :article_title, :featured_photo
+    attributes :id, :reviewed_at, :article_title, :photo, :restaurant_name
 
-    belongs_to :restaurant
+    def restaurant_name
+      object.restaurant&.name
+    end
+
+    def photo
+      object.featured_photo&.resize_to_fit(1000)&.processed&.url
+    end
 
     class RestaurantSerializer < ActiveModel::Serializer
       attributes :name

@@ -1,5 +1,7 @@
 class ContentCreator < ApplicationRecord
-  has_many :reviews
+  has_many :reviews, ->(creator) {
+    unscope(:where).where(photographer_id: creator.id).or(where(writer_id: creator.id))
+  }
   has_one :image
   belongs_to :location_code
 
