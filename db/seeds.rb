@@ -8,15 +8,15 @@
 require 'open-uri'
 require 'uri'
 
-return if Rails.env.production?
+if !Rails.env.production?
 
-if !AdminUser.find_by(email: "test@admin.com")
-  AdminUser.create!(email: 'test@admin.com', password: 'q1w2e3r4',
-                  password_confirmation: 'q1w2e3r4')
+  if !AdminUser.find_by(email: "test@admin.com")
+    AdminUser.create!(email: 'test@admin.com', password: 'q1w2e3r4',
+                    password_confirmation: 'q1w2e3r4')
+  end
 end
 
-location_code = LocationCode.find_or_create_by!(code: "BR", state: "NY",
-                                                description: "brooklyn")
+location_code = LocationCode.find_or_create_by!(code: "BR", state: "NY")
 puts "created location code"
 
 time = Time.now
