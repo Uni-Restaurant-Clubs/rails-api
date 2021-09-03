@@ -65,6 +65,7 @@ class Identity < ApplicationRecord
   end
 
   def self.normalize_user_info(info, provider)
+    binding.pry
     if provider == "google"
       return {
         external_user_id: info[:id],
@@ -79,7 +80,18 @@ class Identity < ApplicationRecord
   end
 
   def self.normalize_token_info(info, provider)
-    if provider == "google"
+    bindin.pry
+    if provider == "GOOGLE"
+      return {
+        access_token: info[:access_token],
+        expires_at: Time.now + info[:expires_in].to_i&.seconds,
+        refresh_token: info[:refresh_token],
+        scope: info[:scope],
+        token_type: info[:token_type],
+        id_token: info[:id_token]
+      }
+    elsif provider == "FACEBOOK"
+      binding.pry
       return {
         access_token: info[:access_token],
         expires_at: Time.now + info[:expires_in].to_i&.seconds,

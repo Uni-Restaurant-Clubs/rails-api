@@ -20,9 +20,14 @@ class OauthService
   end
 
   def self.get_user_info(token_info, provider)
+    if provider == "GOOGLE"
+      token = token_info["access_token"]
+    elsif provider == "FACEBOOK"
+      token = token_info["accessToken"]
+    end
     url = ENV["#{provider}_API_URI"]
     headers = {
-      "Authorization" => "Bearer " + token_info["access_token"],
+      "Authorization" => "Bearer " + token,
       "Accept" => "application/json"
     }
     self.get(url, headers: headers)
@@ -30,7 +35,11 @@ class OauthService
 
   def self.get_token_and_user_info(params)
     provider = params[:provider].upcase
-    token_info = self.get_token_from_code(params, provider)
+    if params[:authorization_code]
+      token_info = self.get_token_from_code(params, provider)
+    else
+      token_info = params[:tokenField]
+    end
     return token_info, self.get_user_info(token_info, provider).deep_symbolize_keys
   end
 
