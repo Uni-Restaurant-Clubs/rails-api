@@ -65,7 +65,6 @@ class Identity < ApplicationRecord
   end
 
   def self.normalize_user_info(info, provider)
-    binding.pry
     if provider == "google"
       return {
         external_user_id: info[:id],
@@ -76,12 +75,18 @@ class Identity < ApplicationRecord
         picture: info[:picture],
         locale: info[:locale]
       }
+    elsif provider == "facebook"
+      return {
+        external_user_id: info[:id],
+        email: info[:email],
+        first_name: info[:given_name],
+        last_name: info[:family_name],
+      }
     end
   end
 
   def self.normalize_token_info(info, provider)
-    bindin.pry
-    if provider == "GOOGLE"
+    if provider == "google"
       return {
         access_token: info[:access_token],
         expires_at: Time.now + info[:expires_in].to_i&.seconds,
@@ -90,13 +95,10 @@ class Identity < ApplicationRecord
         token_type: info[:token_type],
         id_token: info[:id_token]
       }
-    elsif provider == "FACEBOOK"
-      binding.pry
+    elsif provider == "facebook"
       return {
-        access_token: info[:access_token],
-        expires_at: Time.now + info[:expires_in].to_i&.seconds,
-        refresh_token: info[:refresh_token],
-        scope: info[:scope],
+        access_token: info[:accessToken],
+        scope: info[:grantedScope],
         token_type: info[:token_type],
         id_token: info[:id_token]
       }
@@ -108,7 +110,7 @@ class Identity < ApplicationRecord
                                          provider)
 
     # Normalize data
-    token_info.deep_symbolize_keys!
+    token_info = token_info.deep_symbolize_keys
     user_info.deep_symbolize_keys!
     user_info = self.normalize_user_info(user_info, provider)
     token_info = self.normalize_token_info(token_info, provider)

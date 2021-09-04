@@ -38,9 +38,19 @@ class OauthService
     if params[:authorization_code]
       token_info = self.get_token_from_code(params, provider)
     else
-      token_info = params[:tokenField]
+      token_info = self.token_parameters(params)
     end
     return token_info, self.get_user_info(token_info, provider).deep_symbolize_keys
   end
+
+  private
+
+    def self.token_parameters(params)
+      params.require(:tokenField).permit(
+        :accessToken,
+        :grantedScopes,
+        :userID
+      ).to_h
+    end
 
 end
