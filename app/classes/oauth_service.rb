@@ -35,7 +35,7 @@ class OauthService
 
   def self.get_token_and_user_info(params)
     provider = params[:provider].upcase
-    if params[:authorization_code]
+    if provider == "GOOGLE"
       token_info = self.get_token_from_code(params, provider)
     else
       token_info = self.token_parameters(params)
@@ -46,7 +46,7 @@ class OauthService
   private
 
     def self.token_parameters(params)
-      params.require(:tokenField).permit(
+      params.require(:token).permit(
         :accessToken,
         :grantedScopes,
         :userID
