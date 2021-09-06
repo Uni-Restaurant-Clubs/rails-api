@@ -14,6 +14,7 @@ class ReviewSerializer < ActiveModel::Serializer
   def photos
     object.images.map do |image|
       {
+        id: image.id,
         name: image.title,
         photo: image.resize_to_fit(1000).try(:processed).try(:url)
       }
@@ -24,6 +25,7 @@ class ReviewSerializer < ActiveModel::Serializer
     photo = object.featured_photo
     if photo
       {
+        id: photo.id,
         name: photo.title,
         photo: photo.resize_to_fit(1000).try(:processed).try(:url)
       }
