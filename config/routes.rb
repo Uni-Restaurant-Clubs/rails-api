@@ -11,6 +11,9 @@ Rails.application.routes.draw do
       post 'oauth/google' => 'oauth#connect'
       post 'oauth/apple' => 'oauth#connect'
 
+      # Contact
+      post 'contact' => 'contact#contact_form'
+
       resources :sessions, only: [:create, :destroy]
       resources :reviews, only: [:show, :index]
       resources :content_creators, only: [:show]

@@ -1,0 +1,26 @@
+%p
+  Hello Team,
+%br
+%p We have a new contact form submission.
+%p Details:
+%ul
+  %li
+    name:
+    = @name
+  %li
+    email address:
+    = @email
+  %li
+    user logged in?:
+    = @current_user_email.present?
+  - if @current_user_email.present?
+    %li
+      logged in user email:
+      = @current_user_email
+
+  %li
+    content:
+    = @text
+
+
+

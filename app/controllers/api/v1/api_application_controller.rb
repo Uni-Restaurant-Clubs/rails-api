@@ -23,4 +23,16 @@ class Api::V1::ApiApplicationController < ApplicationController
     end
   end
 
+  def check_for_api_user
+    token = request.headers['Authorization'].split(' ').last rescue nil
+    session = Session.find_by(token: token)
+
+    if session && session.user
+      unless Time.now > (session.created_at + 1.month)
+        session.update(last_used: Time.now)
+        @current_user = session.user
+      end
+    end
+  end
+
 end
