@@ -4,6 +4,8 @@ class Restaurant < ApplicationRecord
 
   has_many :reviews, dependent: :destroy
   has_many :images, dependent: :destroy
+  has_many :restaurant_category_restaurants, dependent: :destroy
+  has_many :restaurant_categories, through: :restaurant_category_restaurants
 
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
@@ -27,6 +29,21 @@ class Restaurant < ApplicationRecord
 
   scope :franchise, lambda { where(is_franchise: true) }
   scope :not_franchise, lambda { where(is_franchise: false) }
+
+  def add_categories(categories)
+    categories&.each do |category_data|
+      cat_alias = category_data[:alias]
+      title = category_data[:title]
+      category = RestaurantCategory.find_or_initialize_by(alias: cat_alias, title: title)
+      category.save! if category.new_record?
+      rest_cat_rest_data = {
+        restaurant_id: self.id,
+        restaurant_category_id: category.id
+      }
+      rest_cat_rest = RestaurantCategoryRestaurant.find_or_initialize_by(rest_cat_rest_data)
+      rest_cat_rest.save! if rest_cat_rest.new_record?
+    end
+  end
 
   def self.categorize_as_franchise
     names = self.not_franchise.pluck(:name).uniq

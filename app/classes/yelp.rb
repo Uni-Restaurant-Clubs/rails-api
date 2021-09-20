@@ -35,16 +35,13 @@ class Yelp
 
     # YELP RATING
     rest.yelp_rating = result[:rating] if result[:rating]
-
     # YELP REVIEW COUNT
     rest.yelp_review_count = result[:review_count] if result[:review_count]
-
     # YELP PRIMARY PHONE NUMBER
     rest.primary_phone_number = result[:display_phone] if result[:display_phone]
-
     # NAME
     rest.name = result[:name] if result[:name]
-    # NAME
+    # YELP ALIAS
     rest.yelp_alias = result[:alias] if result[:alias]
     rest.status = "not contacted"
     # IMAGE_URL
@@ -56,6 +53,7 @@ class Yelp
     # YELP URL
     rest.yelp_url = result[:url] if result[:url]
     rest.save!
+    rest.add_categories(result[:categories])
 
     address = Address.find_or_initialize_by(restaurant_id: rest.id)
     lat_lng = result[:coordinates]
