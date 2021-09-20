@@ -4,9 +4,9 @@ class Yelp
   # https://www.yelp.com/developers/documentation/v3/get_started
 
   def self.get_restaurants_subset(offset=0)
-    # lat long for Beverly Estates Bryan, TX 77802
-    lat = "30.6362"
-    lng = "-96.3352"
+    # lat long for Brooklyn
+    lat = "40.665475"
+    lng = "-73.945006"
     meter_radius = "40000" #25 miles
     url = "https://api.yelp.com/v3/businesses/search?" +
     "term=restaurants&" +
@@ -32,11 +32,21 @@ class Yelp
   def self.import_restaurant_details(result)
     return unless result && result[:id]
     rest = Restaurant.find_or_initialize_by(yelp_id: result[:id])
+
+    # YELP RATING
+    rest.yelp_rating = result[:rating] if result[:rating]
+
+    # YELP REVIEW COUNT
+    rest.yelp_review_count = result[:review_count] if result[:review_count]
+
+    # YELP PRIMARY PHONE NUMBER
+    rest.primary_phone_number = result[:display_phone] if result[:display_phone]
+
     # NAME
     rest.name = result[:name] if result[:name]
     # NAME
     rest.yelp_alias = result[:alias] if result[:alias]
-    rest.status = "not_contacted"
+    rest.status = "not contacted"
     # IMAGE_URL
     rest.image_url = result[:image_url] if result[:image_url]
     # PHONE NUMBER
@@ -81,8 +91,14 @@ class Yelp
     restaurant_count = 0
     while restaurants_left
       data = self.get_restaurants_subset(restaurant_count)
+      if data["error"]
+        Airbrake.notify("restaurant importing error", {
+          error: data["error"]
+        })
+        break
+      end
       data.deep_symbolize_keys!
-      if data[:businesses].any?
+      if data[:businesses]&.any?
         data[:businesses].each do |restaurant|
           self.import_restaurant_details(restaurant)
           restaurant_count += 1

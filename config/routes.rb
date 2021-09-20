@@ -16,7 +16,12 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create, :destroy]
       resources :reviews, only: [:show, :index]
-      resources :content_creators, only: [:show]
+      resources :content_creators, only: [:show] do
+          collection do
+            # SUBMIT APPLICATION
+            post 'submit_application', to: "content_creators#submit_application"
+          end
+      end
       resources :users, only: [:create] do
           collection do
             # START PASSWORDLESS SIGNIN
