@@ -27,6 +27,7 @@ class Restaurant < ApplicationRecord
 
   accepts_nested_attributes_for :address, :allow_destroy => true
 
+  scope :brooklyn, lambda { joins(:address).where(address: { city: "Brooklyn" }) }
   scope :franchise, lambda { where(is_franchise: true) }
   scope :not_franchise, lambda { where(is_franchise: false) }
 

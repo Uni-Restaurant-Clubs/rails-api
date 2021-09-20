@@ -135,6 +135,7 @@ class Yelp
       lng = location.split(",")[1]
       self.import_all_restaurants(lat, lng, meter_radius)
     end
+    Restaurant.categorize_as_franchise
 
   end
 

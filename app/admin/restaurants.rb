@@ -2,7 +2,7 @@ ActiveAdmin.register Restaurant do
 
   controller do
     def find_collection(options = {})
-      super.reorder(yelp_rating: :desc, yelp_review_count: :desc)
+      super.brooklyn.reorder(yelp_rating: :desc, yelp_review_count: :desc)
     end
   end
 
@@ -29,15 +29,17 @@ ActiveAdmin.register Restaurant do
          collection: Restaurant.operational_statuses
   filter :urc_rating, as: :select, collection: Restaurant.urc_ratings
 
-  scope :all
+  scope :all do |restaurants|
+    restaurants.brooklyn
+  end
   scope :non_franchise_starred, :default => true do |restaurants|
-    restaurants.where(is_franchise: false, starred: true)
+    restaurants.brooklyn.where(is_franchise: false, starred: true)
   end
   scope :non_franchise do |restaurants|
-    restaurants.where(:is_franchise => false)
+    restaurants.brooklyn.where(:is_franchise => false)
   end
   scope :franchise do |restaurants|
-    restaurants.where(:is_franchise => true)
+    restaurants.brooklyn.where(:is_franchise => true)
   end
   index :download_links => false do
     selectable_column
