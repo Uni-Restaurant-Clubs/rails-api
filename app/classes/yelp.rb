@@ -3,11 +3,7 @@ class Yelp
   # https://github.com/Yelp/yelp-fusion/blob/master/fusion/ruby/sample.rb
   # https://www.yelp.com/developers/documentation/v3/get_started
 
-  def self.get_restaurants_subset(offset=0)
-    # lat long for Brooklyn
-    lat = "40.665475"
-    lng = "-73.945006"
-    meter_radius = "40000" #25 miles
+  def self.get_restaurants_subset(lat, lng, meter_radius, offset=0)
     url = "https://api.yelp.com/v3/businesses/search?" +
     "term=restaurants&" +
     "latitude=#{lat}&" +
@@ -82,13 +78,13 @@ class Yelp
   end
 
   # returns 498 vs only 293 for trip advisor
-  def self.import_all_restaurants
+  def self.import_all_restaurants(lat, lng, meter_radius)
 
     restaurants_left = true
     restaurant_ids = []
     restaurant_count = 0
     while restaurants_left
-      data = self.get_restaurants_subset(restaurant_count)
+      data = self.get_restaurants_subset(lat, lng, meter_radius, restaurant_count)
       if data["error"]
         Airbrake.notify("restaurant importing error", {
           error: data["error"]
@@ -103,9 +99,59 @@ class Yelp
           puts restaurant_count
         end
       else
+        puts "no restaurants left"
         restaurants_left = false
       end
     end
+  end
+
+  def self.import_all_locations
+    #meter_radius = "40000" #25 miles
+    #meter_radius = "16093" #10 miles
+    meter_radius = "8047" #5 miles
+    locations = [
+      { lat: "40.602748",
+        lng: "-73.966972",
+        meter_radius: meter_radius
+      },
+      { lat: "40.642878",
+        lng: "-73.995124",
+        meter_radius: meter_radius
+      },
+      { lat: "40.632457",
+        lng: "-73.925429",
+        meter_radius: meter_radius
+      },
+      { lat: "40.653819",
+        lng: "-73.988600",
+        meter_radius: meter_radius
+      },
+      { lat: "40.691055",
+        lng: "-73.961135",
+        meter_radius: meter_radius
+      },
+      { lat: "40.714740",
+        lng: "-73.939506",
+        meter_radius: meter_radius
+      },
+      { lat: "40.679600",
+        lng: "-73.927833",
+        meter_radius: meter_radius
+      },
+      { lat: "40.664497",
+        lng: "-73.887321",
+        meter_radius: meter_radius
+      },
+      { lat: "40.662674",
+        lng: "-73.941909",
+        meter_radius: meter_radius
+      },
+    ]
+    locations.each do |location|
+      self.import_all_restaurants(location[:lat], location[:lng],
+                                  location[:meter_radius])
+    end
+
   end
 
 =begin
