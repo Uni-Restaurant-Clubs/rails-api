@@ -108,48 +108,32 @@ class Yelp
   def self.import_all_locations
     #meter_radius = "40000" #25 miles
     #meter_radius = "16093" #10 miles
-    meter_radius = "8047" #5 miles
+    meter_radius = "4047" #2.5 miles
     locations = [
-      { lat: "40.602748",
-        lng: "-73.966972",
-        meter_radius: meter_radius
-      },
-      { lat: "40.642878",
-        lng: "-73.995124",
-        meter_radius: meter_radius
-      },
-      { lat: "40.632457",
-        lng: "-73.925429",
-        meter_radius: meter_radius
-      },
-      { lat: "40.653819",
-        lng: "-73.988600",
-        meter_radius: meter_radius
-      },
-      { lat: "40.691055",
-        lng: "-73.961135",
-        meter_radius: meter_radius
-      },
-      { lat: "40.714740",
-        lng: "-73.939506",
-        meter_radius: meter_radius
-      },
-      { lat: "40.679600",
-        lng: "-73.927833",
-        meter_radius: meter_radius
-      },
-      { lat: "40.664497",
-        lng: "-73.887321",
-        meter_radius: meter_radius
-      },
-      { lat: "40.662674",
-        lng: "-73.941909",
-        meter_radius: meter_radius
-      },
+      "40.62002515049116,-74.0298833392579",
+      "40.60906817088651,-74.00005499571748",
+      "40.59653267959485,-73.96645785514451",
+      "40.60096045292521,-73.91460790503956",
+      "40.62446507721482,-73.95023032296635",
+      "40.64586242357556,-73.98534714449383",
+      "40.68067877132268,-73.98783204350806",
+      "40.67241356906121,-73.95107781719602",
+      "40.66594962785974,-73.9124599166233",
+      "40.66343358613934,-73.85928939767368",
+      "40.70142500143607,-73.89578332398273",
+      "40.745757307926525,-73.9291515966896",
+      "40.76746333494558,-73.89701571520604",
+      "40.74940637407471,-73.86615040451474",
+      "40.73706570431312,-73.8246041603405",
+      "40.68982275753401,-73.8342468693871",
+      "40.632418240440195,-73.96629088763333",
+      "40.66192168539514,-73.9452677333746",
+      "40.6772683922823,-73.99759503286518"
     ]
     locations.each do |location|
-      self.import_all_restaurants(location[:lat], location[:lng],
-                                  location[:meter_radius])
+      lat = location.split(",")[0]
+      lng = location.split(",")[1]
+      self.import_all_restaurants(lat, lng, meter_radius)
     end
 
   end
