@@ -32,22 +32,38 @@ class Restaurant < ApplicationRecord
   scope :brooklyn, lambda { joins(:address).where(address: { city: "Brooklyn" }) }
   scope :franchise, lambda { where(is_franchise: true) }
   scope :not_franchise, lambda { where(is_franchise: false) }
+  scope :has_photos, -> { where(photographer_handed_in_photos: true) }
+  scope :has_article, -> { where(writer_handed_in_article: true) }
+  scope :doesnt_have_photos, -> { where(photographer_handed_in_photos: false) }
+  scope :doesnt_have_article, -> { where(writer_handed_in_article: false) }
+
+  scope :reviewed_without_content, -> do
+    self.doesnt_have_photos.doesnt_have_article.reviewed
+  end
+
   scope :scheduled_today, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
           DateTime.now.beginning_of_day, DateTime.now.end_of_day)
   end
-  scope :has_photos, -> { where(photographers_handed_in_photos: true) }
-  scope :has_article, -> { where(writer_handed_in_article: true) }
-  scope :reviewed_without_content, -> do
-    self.reviewed.not(has_photos).not(has_article)
-  end
+
   scope :scheduled_tomorrow, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
           (DateTime.now + 1.day).beginning_of_day,
           (DateTime.now + 1.day).end_of_day)
   end
-  scope :not_scheduled_for_today_or_tomorrow, -> do
-    self.not(scheduled_today).not(scheduled_tomorrow)
+  scope :not_scheduled_today, -> do
+    where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
+          DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+  end
+
+  scope :not_scheduled_tomorrow, -> do
+    where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
+          (DateTime.now + 1.day).beginning_of_day,
+          (DateTime.now + 1.day).end_of_day)
+  end
+
+  scope :scheduled_but_not_for_today_or_tomorrow, -> do
+    self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
   end
 
   def add_categories(categories)

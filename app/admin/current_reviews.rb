@@ -76,7 +76,7 @@ ActiveAdmin.register_page "Reviews in progress" do
     columns do
       column do
         panel "Scheduled" do
-          table_for Restaurant.brooklyn.review_scheduled do
+          table_for Restaurant.brooklyn.scheduled_but_not_for_today_or_tomorrow do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Scheduled datetime") do |rest|
               rest.scheduled_review_date_and_time
