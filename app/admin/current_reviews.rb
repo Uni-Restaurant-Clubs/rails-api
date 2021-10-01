@@ -66,8 +66,8 @@ ActiveAdmin.register_page "Reviews in progress" do
             end
             column("Writer Confirmed?") { |rest| rest.writer_confirmed }
             column("Photographer Confirmed?") { |rest| rest.writer_confirmed }
-            column("Need to confirm final datetime with restaurant") do |rest|
-              rest.scheduled_review_date_and_time.blank?
+            column("Final datetime confirmed with restaurant") do |rest|
+              rest.scheduled_review_date_and_time.present?
             end
           end
         end
