@@ -219,26 +219,27 @@ ActiveRecord::Schema.define(version: 2021_10_01_163207) do
     t.datetime "option_1"
     t.datetime "option_2"
     t.datetime "option_3"
-    t.boolean "initial_offer_sent_to_creators"
-    t.boolean "writer_confirmed"
-    t.boolean "photographer_confirmed"
-    t.boolean "restaurant_confirmed_final_time"
-    t.boolean "confirmed_with_restaurant_day_of_review"
-    t.boolean "confirmed_with_writer_day_of_review"
-    t.boolean "confirmed_with_photographer_day_of_review"
-    t.boolean "photographer_handed_in_photos"
+    t.boolean "initial_offer_sent_to_creators", default: false
+    t.boolean "writer_confirmed", default: false
+    t.boolean "photographer_confirmed", default: false
+    t.boolean "restaurant_confirmed_final_time", default: false
+    t.boolean "confirmed_with_restaurant_day_of_review", default: false
+    t.boolean "confirmed_with_writer_day_of_review", default: false
+    t.boolean "confirmed_with_photographer_day_of_review", default: false
+    t.boolean "photographer_handed_in_photos", default: false
     t.datetime "date_photos_received"
-    t.boolean "writer_handed_in_article"
+    t.boolean "writer_handed_in_article", default: false
     t.datetime "date_article_received"
     t.integer "photographer_id"
     t.integer "writer_id"
-    t.index ["accepted_at"], name: "index_restaurants_on_accepted_at"
     t.index ["follow_up_reason"], name: "index_restaurants_on_follow_up_reason"
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
+    t.index ["photographer_id"], name: "index_restaurants_on_photographer_id"
     t.index ["starred"], name: "index_restaurants_on_starred"
     t.index ["status"], name: "index_restaurants_on_status"
     t.index ["urc_rating"], name: "index_restaurants_on_urc_rating"
+    t.index ["writer_id"], name: "index_restaurants_on_writer_id"
     t.index ["yelp_id"], name: "index_restaurants_on_yelp_id", unique: true
     t.index ["yelp_rating"], name: "index_restaurants_on_yelp_rating"
   end

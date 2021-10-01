@@ -114,7 +114,7 @@ ActiveAdmin.register_page "Reviews in progress" do
               end
             end
             column("Photos handed in?") do |rest|
-              rest.photographers_handed_in_photos
+              rest.photographer_handed_in_photos
             end
             column("Article handed in?") do |rest|
               rest.writer_handed_in_article
