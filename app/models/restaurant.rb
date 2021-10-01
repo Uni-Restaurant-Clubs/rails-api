@@ -6,6 +6,8 @@ class Restaurant < ApplicationRecord
   has_many :images, dependent: :destroy
   has_many :restaurant_category_restaurants, dependent: :destroy
   has_many :restaurant_categories, through: :restaurant_category_restaurants
+  belongs_to :writer, class_name: 'ContentCreator', foreign_key: 'writer_id', optional: true
+  belongs_to :photographer, class_name: 'ContentCreator', foreign_key: 'photographer_id', optional: true
 
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
@@ -30,6 +32,18 @@ class Restaurant < ApplicationRecord
   scope :brooklyn, lambda { joins(:address).where(address: { city: "Brooklyn" }) }
   scope :franchise, lambda { where(is_franchise: true) }
   scope :not_franchise, lambda { where(is_franchise: false) }
+  scope :scheduled_today, -> do
+    where('scheduled_review_date_and_time BETWEEN ? AND ?',
+          DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+  end
+  scope :scheduled_tomorrow, -> do
+    where('scheduled_review_date_and_time BETWEEN ? AND ?',
+          (DateTime.now + 1.day).beginning_of_day,
+          (DateTime.now + 1.day).end_of_day)
+  end
+  scope :not_scheduled_for_today_or_tomorrow, -> do
+    self.not(scheduled_today).not(scheduled_tomorrow)
+  end
 
   def add_categories(categories)
     categories&.each do |category_data|

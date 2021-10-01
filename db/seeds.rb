@@ -16,7 +16,8 @@ if !Rails.env.production?
   end
 end
 
-location_code = LocationCode.find_or_create_by!(code: "BR", state: "NY")
+location_code = LocationCode.find_or_create_by!(code: "BR", state: "NY",
+                                                description: "New york")
 puts "created location code"
 
 time = Time.now
@@ -101,6 +102,7 @@ restaurant_data = {
 }
 
 restaurant = Restaurant.find_or_create_by!(restaurant_data)
+Address.find_or_create_by!(restaurant_id: restaurant.id, city: "Brooklyn")
 
 review_data = {
   reviewed_at: time,
@@ -119,6 +121,7 @@ puts "created review"
 number = 1
 featured = false
 
+=begin
 8.times do |i|
   featured = number == 6 ? true : false
   pic = URI.open("https://urc-public-images.s3.us-east-2.amazonaws.com/Cocoa70-#{number}.jpg")
@@ -129,6 +132,7 @@ featured = false
   puts "created image #{number}"
   number += 1
 end
+=end
 
 restaurant_data = {
   name: "Nil Bleu",
@@ -138,7 +142,7 @@ restaurant_data = {
   manager_info: "Mr manager",
   operational_status: "unknown",
   other_contact_info: "",
-  status: "not contacted",
+  status: "accepted",
   notes: "the best",
   website_url: "google.com",
   is_franchise: false,
@@ -150,6 +154,7 @@ restaurant_data = {
 }
 
 restaurant = Restaurant.find_or_create_by!(restaurant_data)
+Address.find_or_create_by!(restaurant_id: restaurant.id, city: "Brooklyn")
 
 review_data = {
   reviewed_at: time,
@@ -168,6 +173,7 @@ puts "created review"
 number = 1
 featured = false
 
+=begin
 number = 2
 14.times do |i|
   featured = number == 15 ? true : false
@@ -179,3 +185,49 @@ number = 2
   puts "created image #{number}"
   number += 1
 end
+=end
+
+restaurant_data = {
+  name: "Pizza joint",
+  description: "this is the best restaurant ever",
+  primary_phone_number: "555 555 5555",
+  primary_email: "manager@gmail.com",
+  manager_info: "Mr manager",
+  operational_status: "unknown",
+  other_contact_info: "",
+  status: "review scheduled",
+  notes: "the best",
+  website_url: "google.com",
+  is_franchise: false,
+  starred: true,
+  urc_rating: "ok nothing special",
+  yelp_rating: nil,
+  yelp_review_count: 0,
+  follow_up_reason: "need to contact marketing team"
+}
+
+restaurant = Restaurant.find_or_create_by!(restaurant_data)
+Address.find_or_create_by!(restaurant_id: restaurant.id, city: "Brooklyn")
+
+restaurant_data = {
+  name: "Pasta Palace",
+  description: "this is the best restaurant ever",
+  primary_phone_number: "555 555 5555",
+  primary_email: "manager@gmail.com",
+  manager_info: "Mr manager",
+  operational_status: "unknown",
+  other_contact_info: "",
+  status: "reviewed",
+  notes: "the best",
+  website_url: "google.com",
+  is_franchise: false,
+  starred: true,
+  urc_rating: "ok nothing special",
+  yelp_rating: nil,
+  yelp_review_count: 0,
+  follow_up_reason: "need to contact marketing team"
+}
+
+restaurant = Restaurant.find_or_create_by!(restaurant_data)
+Address.find_or_create_by!(restaurant_id: restaurant.id, city: "Brooklyn")
+
