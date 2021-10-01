@@ -11,7 +11,7 @@ class AddSchedulingUpdatesToRestaurants < ActiveRecord::Migration[6.1]
     add_column :restaurants, :confirmed_with_restaurant_day_of_review, :boolean
     add_column :restaurants, :confirmed_with_writer_day_of_review, :boolean
     add_column :restaurants, :confirmed_with_photographer_day_of_review, :boolean
-    add_column :restaurants, :photographer_handing_in_photos, :boolean
+    add_column :restaurants, :photographer_handed_in_photos, :boolean
     add_column :restaurants, :date_photos_received, :datetime
     add_column :restaurants, :writer_handed_in_article, :boolean
     add_column :restaurants, :date_article_received, :datetime

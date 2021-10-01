@@ -98,7 +98,7 @@ ActiveAdmin.register_page "Reviews in progress" do
     columns do
       column do
         panel "Recently Reviewed" do
-          table_for Restaurant.brooklyn.reviewed do
+          table_for Restaurant.brooklyn.reviewed_without_content do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Reviewed at") do |rest|
               rest.scheduled_review_date_and_time
@@ -112,6 +112,12 @@ ActiveAdmin.register_page "Reviews in progress" do
               if rest.writer
                 link_to(rest.writer.name, admin_creator_path(rest.writer))
               end
+            end
+            column("Photos handed in?") do |rest|
+              rest.photographers_handed_in_photos
+            end
+            column("Article handed in?") do |rest|
+              rest.writer_handed_in_article
             end
           end
         end

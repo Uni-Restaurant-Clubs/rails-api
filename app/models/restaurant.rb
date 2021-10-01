@@ -36,6 +36,11 @@ class Restaurant < ApplicationRecord
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
           DateTime.now.beginning_of_day, DateTime.now.end_of_day)
   end
+  scope :has_photos, -> { where(photographers_handed_in_photos: true) }
+  scope :has_article, -> { where(writer_handed_in_article: true) }
+  scope :reviewed_without_content, do
+    self.reviewed.not(has_photos).not(has_article)
+  end
   scope :scheduled_tomorrow, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
           (DateTime.now + 1.day).beginning_of_day,
