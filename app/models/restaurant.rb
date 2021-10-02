@@ -38,7 +38,8 @@ class Restaurant < ApplicationRecord
   scope :doesnt_have_article, -> { where(writer_handed_in_article: false) }
 
   scope :reviewed_without_content, -> do
-    self.doesnt_have_photos.doesnt_have_article.reviewed
+    reviewed.where(photographer_handed_in_photos: false)
+    .or(self.reviewed.where(writer_handed_in_article: false))
   end
 
   scope :scheduled_today, -> do

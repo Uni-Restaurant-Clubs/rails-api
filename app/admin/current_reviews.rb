@@ -21,12 +21,12 @@ ActiveAdmin.register_page "Reviews in progress" do
             end
             column("photographer") do |rest|
               if rest.photographer
-                link_to(rest.photographer.name, admin_creator_path(rest.photographer))
+                link_to(rest.photographer.name, admin_content_creator_path(rest.photographer))
               end
             end
             column("writer") do |rest|
               if rest.writer
-                link_to(rest.writer.name, admin_creator_path(rest.writer))
+                link_to(rest.writer.name, admin_content_creator_path(rest.writer))
               end
             end
           end
@@ -43,12 +43,12 @@ ActiveAdmin.register_page "Reviews in progress" do
             end
             column("photographer") do |rest|
               if rest.photographer
-                link_to(rest.photographer.name, admin_creator_path(rest.photographer))
+                link_to(rest.photographer.name, admin_content_creator_path(rest.photographer))
               end
             end
             column("writer") do |rest|
               if rest.writer
-                link_to(rest.writer.name, admin_creator_path(rest.writer))
+                link_to(rest.writer.name, admin_content_creator_path(rest.writer))
               end
             end
           end
@@ -83,12 +83,12 @@ ActiveAdmin.register_page "Reviews in progress" do
             end
             column("photographer") do |rest|
               if rest.photographer
-                link_to(rest.photographer.name, admin_creator_path(rest.photographer))
+                link_to(rest.photographer.name, admin_content_creator_path(rest.photographer))
               end
             end
             column("writer") do |rest|
               if rest.writer
-                link_to(rest.writer.name, admin_creator_path(rest.writer))
+                link_to(rest.writer.name, admin_content_creator_path(rest.writer))
               end
             end
           end
@@ -105,12 +105,12 @@ ActiveAdmin.register_page "Reviews in progress" do
             end
             column("photographer") do |rest|
               if rest.photographer
-                link_to(rest.photographer.name, admin_creator_path(rest.photographer))
+                link_to(rest.photographer.name, admin_content_creator_path(rest.photographer))
               end
             end
             column("writer") do |rest|
               if rest.writer
-                link_to(rest.writer.name, admin_creator_path(rest.writer))
+                link_to(rest.writer.name, admin_content_creator_path(rest.writer))
               end
             end
             column("Photos handed in?") do |rest|

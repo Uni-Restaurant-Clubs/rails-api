@@ -13,7 +13,17 @@ ActiveAdmin.register Restaurant do
                 :primary_phone_number, :primary_email, :other_contact_info,
                 :operational_status, :website_url, :is_franchise,
                 :managers, :status, :notes, :scheduled_review_date_and_time,
-                :starred, :urc_rating, :follow_up_reason,
+                :starred, :urc_rating, :follow_up_reason, :accepted_at,
+                :option_1, :option_2, :option_3, :initial_offer_sent_to_creators,
+                :writer_confirmed, :photographer_confirmed,
+                :restaurant_confirmed_final_time,
+                :confirmed_with_restaurant_day_of_review,
+                :confirmed_with_writer_day_of_review,
+                :confirmed_with_photographer_day_of_review,
+                :photographer_handed_in_photos, :date_photos_received,
+                :writer_handed_in_article,
+                :date_article_received, :photographer_id, :writer_id,
+
                 address_attributes: [:id, :apt_suite_number, :street_number,
                                        :street_name, :street_type, :city,
                                        :state, :country, :zipcode,
@@ -100,12 +110,30 @@ ActiveAdmin.register Restaurant do
       row :address do |restaurant|
         restaurant.address.try(:full_address)
       end
-      row :scheduled_review_date_and_time
       row :manager_info
       row :primary_phone_number
       row :primary_email
       row :other_contact_info
       row :website_url
+      row :scheduled_review_date_and_time
+      row :accepted_at
+      row :option_1
+      row :option_2
+      row :option_3
+      row :initial_offer_sent_to_creators
+      row :writer_confirmed
+      row :photographer_confirmed
+      row :restaurant_confirmed_final_time
+      row :confirmed_with_restaurant_day_of_review
+      row :confirmed_with_writer_day_of_review
+      row :confirmed_with_photographer_day_of_review
+      row :photographer_handed_in_photos
+      row :date_photos_received
+      row :writer_handed_in_article
+      row :date_article_received
+      row :photographer
+      row :writer
+
     end
   end
 
@@ -121,12 +149,29 @@ ActiveAdmin.register Restaurant do
       f.input :starred
       f.input :urc_rating
       f.input :notes
-      f.input :scheduled_review_date_and_time, as: :date_time_picker
       f.input :manager_info
       f.input :primary_phone_number
       f.input :primary_email
       f.input :other_contact_info
       f.input :website_url
+      f.input :accepted_at, as: :date_time_picker
+      f.input :option_1, as: :date_time_picker
+      f.input :option_2, as: :date_time_picker
+      f.input :option_3, as: :date_time_picker
+      f.input :initial_offer_sent_to_creators
+      f.input :writer_confirmed
+      f.input :photographer_confirmed
+      f.input :restaurant_confirmed_final_time
+      f.input :scheduled_review_date_and_time, as: :date_time_picker
+      f.input :confirmed_with_restaurant_day_of_review
+      f.input :confirmed_with_writer_day_of_review
+      f.input :confirmed_with_photographer_day_of_review
+      f.input :photographer_handed_in_photos
+      f.input :date_photos_received, as: :date_time_picker
+      f.input :writer_handed_in_article
+      f.input :date_article_received, as: :date_time_picker
+      f.input :photographer
+      f.input :writer
     end
     f.inputs 'Address' do
       f.has_many :address, heading: false,
