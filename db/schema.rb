@@ -245,7 +245,7 @@ ActiveRecord::Schema.define(version: 2021_10_03_161942) do
     t.index ["yelp_rating"], name: "index_restaurants_on_yelp_rating"
   end
 
-  create_table "review_happened_canfirmations", force: :cascade do |t|
+  create_table "review_happened_confirmations", force: :cascade do |t|
     t.integer "content_creator_id"
     t.boolean "response"
     t.datetime "responded_at"
@@ -253,10 +253,10 @@ ActiveRecord::Schema.define(version: 2021_10_03_161942) do
     t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["content_creator_id"], name: "index_review_happened_canfirmations_on_content_creator_id"
-    t.index ["response"], name: "index_review_happened_canfirmations_on_response"
-    t.index ["restaurant_id"], name: "index_review_happened_canfirmations_on_restaurant_id"
-    t.index ["token"], name: "index_review_happened_canfirmations_on_token", unique: true
+    t.index ["content_creator_id"], name: "index_review_happened_confirmations_on_content_creator_id"
+    t.index ["response"], name: "index_review_happened_confirmations_on_response"
+    t.index ["restaurant_id"], name: "index_review_happened_confirmations_on_restaurant_id"
+    t.index ["token"], name: "index_review_happened_confirmations_on_token", unique: true
   end
 
   create_table "reviews", force: :cascade do |t|

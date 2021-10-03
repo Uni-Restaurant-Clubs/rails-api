@@ -1,9 +1,10 @@
-class ReviewHappenedCanfirmation < ApplicationRecord
+class ReviewHappenedConfirmation < ApplicationRecord
 
   belongs_to :restaurant
   belongs_to :content_creator
 
   validates_presence_of [:token, :creator_id, :restaurant_id]
+  validates_uniqueness_of :token, :allow_blank => true
 
   def self.create_new_token
     loop do
