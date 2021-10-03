@@ -12,9 +12,15 @@ class Restaurant < ApplicationRecord
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
 
-  enum status: { "not contacted" => 0, "contacted needs follow up" => 1,
-                 declined: 2, accepted: 3, "review scheduled" => 4, reviewed: 5,
-                 archived: 6 }
+  enum status: { "not contacted" => 0,
+                 "contacted needs follow up" => 1,
+                 declined: 2,
+                 accepted: 3,
+                 "review scheduled" => 4,
+                 reviewed: 5,
+                 archived: 6,
+                 "review did not happen as scheduled": 7,
+                 "confirming review happened": 8 }
   enum operational_status: { unknown: 0, "temporarily closed" => 1,
                              "permanently closed" => 2,
                              "currently active" => 3 }
@@ -36,6 +42,9 @@ class Restaurant < ApplicationRecord
   scope :has_article, -> { where(writer_handed_in_article: true) }
   scope :doesnt_have_photos, -> { where(photographer_handed_in_photos: false) }
   scope :doesnt_have_article, -> { where(writer_handed_in_article: false) }
+  scope :scheduled_in_past, -> do
+    where("scheduled_review_date_and_time < ?", DateTime.now)
+  end
 
   scope :reviewed_without_content, -> do
     reviewed.where(photographer_handed_in_photos: false)
@@ -65,6 +74,46 @@ class Restaurant < ApplicationRecord
 
   scope :scheduled_but_not_for_today_or_tomorrow, -> do
     self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
+  end
+
+  def self.update_and_send_confirm_if_reviewed_emails
+    rest.status = "confirming review happened"
+    begin
+      rest.save!
+    rescue Exception => e
+      Airbrake.notify("Restaurant status couldn't be updated", {
+        error: e,
+        errors: rest.errors.full_messages,
+        new_status: "confirming review happened",
+        restaurant_id: rest.id,
+        restaurant_name: rest.name
+      })
+      return
+    end
+    begin
+      # create review happened true token
+      # create review happened false token
+      # send confirm email to writer
+      # create review happened true token
+      # create review happened false token
+      # send confirm email to photographer
+    rescue Exception => e
+      Airbrake.notify("Restaurant status couldn't be updated", {
+        error: e,
+        errors: rest.errors.full_messages,
+        new_status: "confirming review happened",
+        restaurant_id: rest.id,
+        restaurant_name: rest.name
+      })
+      return
+    end
+  end
+  def self.start_confirming_if_reviews_happened_process
+    self.scheduled_in_past.each do |rest|
+      if Time.now > (rest.scheduled_review_date_and_time + 2.hours)
+        rest.update_and_send_confirm_if_reviewed_emails
+      end
+    end
   end
 
   def add_categories(categories)

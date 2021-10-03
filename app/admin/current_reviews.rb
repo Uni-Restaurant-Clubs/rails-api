@@ -5,7 +5,7 @@ ActiveAdmin.register_page "Reviews in progress" do
     columns do
       column do
         panel "TODAY'S REVIEWS!" do
-          table_for Restaurant.brooklyn.scheduled_today do
+          table_for Restaurant.brooklyn.review_scheduled.scheduled_today do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Time") do |rest|
               rest.scheduled_review_date_and_time
@@ -36,6 +36,28 @@ ActiveAdmin.register_page "Reviews in progress" do
     columns do
       column do
         panel "Tomorrow's Reviews" do
+          table_for Restaurant.brooklyn.review_scheduled.scheduled_tomorrow do
+            column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
+            column("Time") do |rest|
+              rest.scheduled_review_date_and_time
+            end
+            column("photographer") do |rest|
+              if rest.photographer
+                link_to(rest.photographer.name, admin_content_creator_path(rest.photographer))
+              end
+            end
+            column("writer") do |rest|
+              if rest.writer
+                link_to(rest.writer.name, admin_content_creator_path(rest.writer))
+              end
+            end
+          end
+        end
+      end
+    end
+    columns do
+      column do
+        panel "Confirming if restaurants were reviewed or not" do
           table_for Restaurant.brooklyn.scheduled_tomorrow do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Time") do |rest|
