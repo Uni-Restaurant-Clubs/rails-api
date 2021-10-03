@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_01_163207) do
+ActiveRecord::Schema.define(version: 2021_10_03_161942) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: :cascade do |t|
@@ -242,6 +243,20 @@ ActiveRecord::Schema.define(version: 2021_10_01_163207) do
     t.index ["writer_id"], name: "index_restaurants_on_writer_id"
     t.index ["yelp_id"], name: "index_restaurants_on_yelp_id", unique: true
     t.index ["yelp_rating"], name: "index_restaurants_on_yelp_rating"
+  end
+
+  create_table "review_happened_canfirmations", force: :cascade do |t|
+    t.integer "creator_id"
+    t.boolean "response"
+    t.datetime "responded_at"
+    t.integer "restaurant_id"
+    t.string "token"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["creator_id"], name: "index_review_happened_canfirmations_on_creator_id"
+    t.index ["response"], name: "index_review_happened_canfirmations_on_response"
+    t.index ["restaurant_id"], name: "index_review_happened_canfirmations_on_restaurant_id"
+    t.index ["token"], name: "index_review_happened_canfirmations_on_token", unique: true
   end
 
   create_table "reviews", force: :cascade do |t|

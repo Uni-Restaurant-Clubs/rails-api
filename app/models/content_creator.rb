@@ -2,7 +2,8 @@ class ContentCreator < ApplicationRecord
   has_many :reviews, ->(creator) {
     unscope(:where).where(photographer_id: creator.id).or(where(writer_id: creator.id))
   }
-  has_one :image
+  has_one :image, dependent: :destroy
+  has_many :review_happened_confirmation, dependent: :destroy
   belongs_to :location_code
 
   belongs_to :university, optional: true
