@@ -91,24 +91,9 @@ class Restaurant < ApplicationRecord
       })
       return
     end
-    begin
-      # create review happened true token
-      # create review happened false token
-      # send confirm email to writer
-      # create review happened true token
-      # create review happened false token
-      # send confirm email to photographer
-    rescue Exception => e
-      Airbrake.notify("Restaurant status couldn't be updated", {
-        error: e,
-        errors: rest.errors.full_messages,
-        new_status: "confirming review happened",
-        restaurant_id: rest.id,
-        restaurant_name: rest.name
-      })
-      return
-    end
+    ReviewHappenedConfirmation.send_confirmation_emails(rest)
   end
+
   def self.start_confirming_if_reviews_happened_process
     self.scheduled_in_past.each do |rest|
       if Time.now > (rest.scheduled_review_date_and_time + 2.hours)

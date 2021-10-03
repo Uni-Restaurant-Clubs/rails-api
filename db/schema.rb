@@ -246,14 +246,14 @@ ActiveRecord::Schema.define(version: 2021_10_03_161942) do
   end
 
   create_table "review_happened_canfirmations", force: :cascade do |t|
-    t.integer "creator_id"
+    t.integer "content_creator_id"
     t.boolean "response"
     t.datetime "responded_at"
     t.integer "restaurant_id"
     t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["creator_id"], name: "index_review_happened_canfirmations_on_creator_id"
+    t.index ["content_creator_id"], name: "index_review_happened_canfirmations_on_content_creator_id"
     t.index ["response"], name: "index_review_happened_canfirmations_on_response"
     t.index ["restaurant_id"], name: "index_review_happened_canfirmations_on_restaurant_id"
     t.index ["token"], name: "index_review_happened_canfirmations_on_token", unique: true

@@ -12,4 +12,38 @@ class ReviewHappenedCanfirmation < ApplicationRecord
     end
   end
 
+  def self.create_for_creator(restaurant, creator)
+    confirmation_data = {
+      content_creator_id: creator.id,
+      restaurant_id: restaurant.id,
+      token: self.create_new_token,
+    }
+    confirmation = self.new(confirmation_data)
+    begin
+      return confirmation.save!(confirmation_data)
+    rescue Exception => e
+      Airbrake.notify("Review Happened Confirmation couldn't be created", {
+        error: e,
+        errors: confirmation.errors.full_messages,
+        confirmation_data: confirmation_data
+      })
+      return nil
+    end
+  end
+
+  def self.send_confirmation_emails(restaurant)
+    photographer = restaurant.photographer
+    confirmation = self.create_for_creator(restaurant, photographer)
+    if confirmation
+      # send email here
+    end
+    writer = restaurant.writer
+    unless writer.id == photographer.id
+      confirmation = self.create_for_creator(restaurant, writer)
+      if confirmation
+        # send email here
+      end
+    end
+
+  end
 end
