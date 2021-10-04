@@ -36,13 +36,16 @@ class ReviewHappenedConfirmation < ApplicationRecord
     photographer = restaurant.photographer
     confirmation = self.create_for_creator(restaurant, photographer)
     if confirmation
-      # send email here
+      CreatorMailor.with(confirmation: confirmation).confirm_review_happened
+                                                    .deliver_now
     end
     writer = restaurant.writer
     unless writer.id == photographer.id
       confirmation = self.create_for_creator(restaurant, writer)
       if confirmation
-        # send email here
+        CreatorMailor.with(confirmation: confirmation).confirm_review_happened
+                                                    .deliver_now
+
       end
     end
 

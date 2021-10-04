@@ -1,0 +1,20 @@
+%p
+  Hello
+  = "#{@name},"
+%br
+%p
+  It seems that a scheduled time for a review just passed.
+%ul
+  %li
+    Restaurant name:
+    = @restaurant.name
+  %li
+    Date and time:
+    = @restaurant.scheduled_review_date_and_time
+%p
+  Please click here if the review happened
+  = link_to 'Review Happened', @confirm_true_url
+%p
+  Please click here if the review DID NOT happened
+  = link_to 'Review Did Not Happened and needs to be rescheduled', @confirm_false_url
+
