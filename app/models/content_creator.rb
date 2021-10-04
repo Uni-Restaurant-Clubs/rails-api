@@ -11,7 +11,7 @@ class ContentCreator < ApplicationRecord
   has_one_attached :signed_nda
   has_one_attached :signed_agreement
 
-  validates_presence_of :first_name, :last_name, :email, :phone, :signed_nda,
+  validates_presence_of :first_name, :last_name, :email, :phone,
     :signed_agreement, :public_unique_username, :creator_type, :location_code_id
   validates_uniqueness_of :public_unique_username
   validates :bio, length: { maximum: 1000 }
