@@ -16,6 +16,12 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create, :destroy]
       resources :reviews, only: [:show, :index]
+      resources :review_happened_confirmations, only: [] do
+        member do
+          post 'respond', to: "review_happened_confirmations#respond",
+                 as: :respond
+        end
+      end
       resources :content_creators, only: [:show] do
           collection do
             # SUBMIT APPLICATION

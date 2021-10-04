@@ -34,12 +34,20 @@ class ReviewHappenedConfirmation < ApplicationRecord
 
   def self.send_confirmation_emails(restaurant)
     photographer = restaurant.photographer
+    writer = restaurant.writer
+    if !photographer || !writer
+      Airbrake.notify("Restaurant is missing a creator", {
+        action: "sending review happened confirmations",
+        restaurant_id: restaurant.id,
+        restaurant_name: restaurant.name
+      })
+      return
+    end
     confirmation = self.create_for_creator(restaurant, photographer)
     if confirmation
       CreatorMailor.with(confirmation: confirmation).confirm_review_happened
                                                     .deliver_now
     end
-    writer = restaurant.writer
     unless writer.id == photographer.id
       confirmation = self.create_for_creator(restaurant, writer)
       if confirmation
