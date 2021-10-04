@@ -77,25 +77,35 @@ class Restaurant < ApplicationRecord
     self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
   end
 
-  def self.update_and_send_confirm_if_reviewed_emails
-    rest.status = "confirming review happened"
-    begin
-      rest.save!
-    rescue Exception => e
-      Airbrake.notify("Restaurant status couldn't be updated", {
-        error: e,
-        errors: rest.errors.full_messages,
-        new_status: "confirming review happened",
-        restaurant_id: rest.id,
-        restaurant_name: rest.name
+  def update_and_send_confirm_if_reviewed_emails
+    if !self.photographer || !self.writer
+      Airbrake.notify("Restaurant is missing a creator", {
+        action: "sending review happened confirmations",
+        restaurant_id: self.id,
+        restaurant_name: self.name
       })
+      puts "creator missing for #{self.name} with ID #{self.id}"
       return
     end
-    ReviewHappenedConfirmation.send_confirmation_emails(rest)
+    if ReviewHappenedConfirmation.send_confirmation_emails(self)
+      self.status = "confirming review happened"
+      begin
+        self.save!
+      rescue Exception => e
+        Airbrake.notify("Restaurant status couldn't be updated", {
+          error: e,
+          errors: self.errors.full_messages,
+          new_status: "confirming review happened",
+          restaurant_id: self.id,
+          restaurant_name: self.name
+        })
+        return
+      end
+    end
   end
 
   def self.start_confirming_if_reviews_happened_process
-    self.scheduled_in_past.each do |rest|
+    self.review_scheduled.scheduled_in_past.each do |rest|
       if Time.now > (rest.scheduled_review_date_and_time + 2.hours)
         rest.update_and_send_confirm_if_reviewed_emails
       end

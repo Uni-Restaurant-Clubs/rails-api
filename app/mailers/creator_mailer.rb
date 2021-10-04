@@ -10,7 +10,7 @@ class CreatorMailer < ApplicationMailer
     @email = @creator.email
     @name = @creator.name
 
-    mail to: @user.email, subject: "Confirm review happened"
+    mail to: @email, subject: "Confirm review happened"
   end
 
 end
