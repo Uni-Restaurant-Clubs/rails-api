@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       resources :reviews, only: [:show, :index]
       resources :review_happened_confirmations, only: [] do
         member do
-          post 'respond', to: "review_happened_confirmations#respond",
+          get 'respond', to: "review_happened_confirmations#respond",
                  as: :respond
         end
       end
