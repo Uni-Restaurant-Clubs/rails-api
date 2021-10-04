@@ -1,11 +1,11 @@
 class Api::V1::ReviewHappenedConfirmationsController < Api::V1::ApiApplicationController
 
   def respond
-    binding.pry
     token = params[:token]
     response = params[:response]
     confirmation = ReviewHappenedConfirmation.find_by(token: token)
     error = false
+
     if !token || !response
       error = "missing token or response"
     elsif !confirmation

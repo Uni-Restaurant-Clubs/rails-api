@@ -10,7 +10,16 @@ class CreatorMailer < ApplicationMailer
     @email = @creator.email
     @name = @creator.name
 
-    mail to: @email, subject: "Confirm review happened"
+    mail to: @email, bcc: "creators@unirestaurantclub.com",
+      subject: "Confirm review happened"
+  end
+
+  def just_reviewed_email
+    @restaurant = params[:restaurant]
+    @creator = params[:creator]
+
+    mail to: @creator.email, bcc: "creators@unirestaurantclub.com",
+      subject: "Review Follow Up Email for Uni Restaurant Club"
   end
 
 end

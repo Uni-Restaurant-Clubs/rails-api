@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_03_161942) do
+ActiveRecord::Schema.define(version: 2021_10_04_181358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -233,8 +233,10 @@ ActiveRecord::Schema.define(version: 2021_10_03_161942) do
     t.datetime "date_article_received"
     t.integer "photographer_id"
     t.integer "writer_id"
+    t.boolean "just_reviewed_emails_sent", default: false
     t.index ["follow_up_reason"], name: "index_restaurants_on_follow_up_reason"
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
+    t.index ["just_reviewed_emails_sent"], name: "index_restaurants_on_just_reviewed_emails_sent"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
     t.index ["photographer_id"], name: "index_restaurants_on_photographer_id"
     t.index ["starred"], name: "index_restaurants_on_starred"
@@ -284,6 +286,16 @@ ActiveRecord::Schema.define(version: 2021_10_03_161942) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "text_contents", force: :cascade do |t|
+    t.text "text"
+    t.integer "category"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category"], name: "index_text_contents_on_category"
+    t.index ["name"], name: "index_text_contents_on_name"
   end
 
   create_table "universities", force: :cascade do |t|
