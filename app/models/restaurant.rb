@@ -20,7 +20,7 @@ class Restaurant < ApplicationRecord
                  "review scheduled" => 4,
                  reviewed: 5,
                  archived: 6,
-                 "review did not happen as scheduled": 7,
+                 "review did not happen": 7,
                  "confirming review happened": 8 }
   enum operational_status: { unknown: 0, "temporarily closed" => 1,
                              "permanently closed" => 2,

@@ -6,6 +6,33 @@ class ReviewHappenedConfirmation < ApplicationRecord
   validates_presence_of [:token, :content_creator_id, :restaurant_id]
   validates_uniqueness_of :token, :allow_blank => true
 
+  def update_response_and_handle_next_steps
+    restaurant = self.restaurant
+
+    # update confirmation
+    self.response = response
+    self.responded_at = Time.now
+    if self.save
+      if response == "true"
+        # set status to reviewed
+        restaurant.status = "reviewed"
+        # send out restaurant and creators post reviewed emails
+      elsif response == "false"
+        # need to update status to not reviewed needs rescheduling
+        restaurant.status = "review did not happen"
+        # send email to admins
+      end
+    else
+      error = "confirmation update validation errors"
+      Airbrake.notify("Cannot update ReviewHappenedConfirmation", {
+        errors: self.errors.full_messages,
+        token: token,
+        response: response,
+        confirmation_id: confirmation.id
+      })
+    end
+  end
+
   def self.create_new_token
     loop do
       token = SecureRandom.hex(15)
