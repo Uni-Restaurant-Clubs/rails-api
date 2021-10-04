@@ -3,7 +3,7 @@ ActiveAdmin.register ContentCreator do
   permit_params do
     [:first_name, :last_name, :university_id, :email, :phone,
      :linkedin_url, :facebook_url, :instagram_url, :website_url,
-     :bio, :signed_nda, :signed_agreement, :location_code_id,
+     :bio, :signed_agreement, :location_code_id,
      :drive_folder_url, :public_unique_username, :creator_type,
      :youtube_url,
       image_attributes: [
@@ -59,11 +59,6 @@ ActiveAdmin.register ContentCreator do
           image_tag url_for(photographer.image.resize_to_fit(400))
         end
       end
-      row :signed_nda do |photographer|
-        if photographer.signed_nda&.url
-          link_to "Signed NDA", photographer.signed_nda.url, target: "_blank"
-        end
-      end
       row :signed_agreement do |photographer|
         if photographer.signed_agreement&.url
           link_to "Signed Agreement", photographer.signed_agreement.url, target: "_blank"
@@ -90,7 +85,6 @@ ActiveAdmin.register ContentCreator do
       f.input :website_url
       f.input :drive_folder_url
       f.input :bio, as: :quill_editor
-      f.input :signed_nda, as: :file
       f.input :signed_agreement, as: :file
     end
     f.inputs 'Image' do
