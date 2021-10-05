@@ -9,7 +9,6 @@ class CreatorMailer < ApplicationMailer
       @confirmation.token, response: false)
     @email = @creator.email
     @name = @creator.name
-    @html = TextContent.find_by(name: "creators just reviewed email")
 
     mail to: @email, bcc: "creators@unirestaurantclub.com",
       subject: "Confirm review happened"
@@ -19,6 +18,7 @@ class CreatorMailer < ApplicationMailer
     @restaurant = params[:restaurant]
     @creator = params[:creator]
     @name = @creator.name
+    @html = TextContent.find_by(name: "creators just reviewed email")&.text
 
     mail to: @creator.email, bcc: "creators@unirestaurantclub.com",
       subject: "Review Follow Up Email for Uni Restaurant Club"

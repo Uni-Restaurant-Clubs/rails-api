@@ -1,7 +1,7 @@
 class Api::V1::ReviewHappenedConfirmationsController < Api::V1::ApiApplicationController
 
   def respond
-    token = params[:token]
+    token = params[:id]
     response = params[:response]
     confirmation = ReviewHappenedConfirmation.find_by(token: token)
     error = false
@@ -21,12 +21,13 @@ class Api::V1::ReviewHappenedConfirmationsController < Api::V1::ApiApplicationCo
         error: error,
         token: token,
         response: response,
-        confirmation_id: confirmation.id
+        confirmation_id: confirmation&.id
       })
-      # return here
+      return render html: error
     end
 
-    confirmation.update_response_and_handle_next_steps
+    result = confirmation.update_response_and_handle_next_steps(response)
+    render html: result[:message]
   end
 
 end

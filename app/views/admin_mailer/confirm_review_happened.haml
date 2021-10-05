@@ -1,0 +1,15 @@
+%p
+  Hello Team,
+%br
+%p
+  It seems that a scheduled time for a review just passed.
+%p
+  Confirmation emails were just sent out to creators to confirm if the review happened or not.
+%ul
+  %li
+    Restaurant name:
+    = @restaurant.name
+  %li
+    Date and time:
+    = @restaurant.scheduled_review_date_and_time
+

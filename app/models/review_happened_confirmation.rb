@@ -17,7 +17,7 @@ class ReviewHappenedConfirmation < ApplicationRecord
       if response == "true"
 
         writer = restaurant.writer
-        photogrpher = restaurant.photographer
+        photographer = restaurant.photographer
 
         unless restaurant.just_reviewed_emails_sent
           CreatorMailer.with(restaurant: restaurant, creator: writer)
@@ -37,27 +37,34 @@ class ReviewHappenedConfirmation < ApplicationRecord
 
         AdminMailer.with(confirmation: self)
           .just_reviewed_email_true.deliver_now
+        return { error: false,
+                 message: "You have confirmed that the review DID happen. Thank you. You should receive a follow up email now." }
+
 
       elsif response == "false"
         AdminMailer.with(confirmation: self)
           .just_reviewed_email_false.deliver_now
         Airbrake.notify("Someone said a review did not happen!", {
-          restaurant_id: restaurant.id,
-          restaurant_name: restaurant.name,
-          confirmation_id: confirmation.id
+          restaurant_id: restaurant&.id,
+          restaurant_name: restaurant&.name,
+          confirmation_id: self.id
         })
+      return { error: false,
+               message: "You have confirmed that the review DID NOT happen. Thank you. We will reach out to you soon" }
       end
 
     rescue Exception => e
       error = "confirmation update validation errors"
       Airbrake.notify("Cannot update ReviewHappenedConfirmation", {
         e: e,
-        confirmation_errors: self.errors.full_messages,
-        restaurant_errors: restaurant.errors.full_messages,
+        confirmation_errors: self&.errors&.full_messages,
+        restaurant_errors: restaurant&.errors&.full_messages,
         response: response,
-        confirmation_id: self.id,
-        restaurant_id: restaurant.id
+        confirmation_id: self&.id,
+        restaurant_id: restaurant&.id
       })
+      return { error: true,
+              message: "oops there was an issue and we're looking into it" }
     end
   end
 
@@ -69,7 +76,6 @@ class ReviewHappenedConfirmation < ApplicationRecord
   end
 
   def self.create_for_creator(restaurant, creator)
-    puts "creator for creator"
     confirmation_data = {
       content_creator_id: creator.id,
       restaurant_id: restaurant.id,
@@ -90,7 +96,6 @@ class ReviewHappenedConfirmation < ApplicationRecord
   end
 
   def deliver_confirmation_email
-    puts "in deliver confirmation_emails"
     begin
       return CreatorMailer.with(confirmation: self).confirm_review_happened.deliver_now
     rescue Exception => e
@@ -104,7 +109,6 @@ class ReviewHappenedConfirmation < ApplicationRecord
     end
   end
   def self.send_confirmation_emails(restaurant)
-    puts "in send_confirmation_emails"
     photographer = restaurant.photographer
     writer = restaurant.writer
     confirmation = self.create_for_creator(restaurant, photographer)
@@ -113,6 +117,17 @@ class ReviewHappenedConfirmation < ApplicationRecord
     unless writer.id == photographer.id
       confirmation = self.create_for_creator(restaurant, writer)
       confirmation.deliver_confirmation_email if confirmation
+    end
+    begin
+      AdminMailer.with(confirmation: confirmation).confirm_review_happened.deliver_now
+    rescue Exception => e
+      Airbrake.notify("couldn't send Admin Review Happened Confirmation email", {
+        error: e,
+        confirmation_id: confirmation.id,
+        restaurant_id: restaurant.id,
+        restaurant_name: restaurant.name
+      })
+      return nil
     end
     return true
   end

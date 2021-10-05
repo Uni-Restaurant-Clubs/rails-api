@@ -54,11 +54,9 @@ ActiveAdmin.register_page "Reviews in progress" do
           end
         end
       end
-    end
-    columns do
       column do
         panel "Confirming if restaurants were reviewed or not" do
-          table_for Restaurant.brooklyn.scheduled_tomorrow do
+          table_for Restaurant.brooklyn.confirming_review_happened do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Time") do |rest|
               rest.scheduled_review_date_and_time
@@ -72,24 +70,6 @@ ActiveAdmin.register_page "Reviews in progress" do
               if rest.writer
                 link_to(rest.writer.name, admin_content_creator_path(rest.writer))
               end
-            end
-          end
-        end
-      end
-    end
-    columns do
-      column do
-        panel "Newly Accepted" do
-          table_for Restaurant.brooklyn.accepted do
-            column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
-            column("Accepted at") { |rest| rest.accepted_at }
-            column("Initial Offer Sent to Creators?") do |rest|
-              rest.initial_offer_sent_to_creators
-            end
-            column("Writer Confirmed?") { |rest| rest.writer_confirmed }
-            column("Photographer Confirmed?") { |rest| rest.writer_confirmed }
-            column("Final datetime confirmed with restaurant") do |rest|
-              rest.scheduled_review_date_and_time.present?
             end
           end
         end
@@ -140,6 +120,24 @@ ActiveAdmin.register_page "Reviews in progress" do
             end
             column("Article handed in?") do |rest|
               rest.writer_handed_in_article
+            end
+          end
+        end
+      end
+    end
+    columns do
+      column do
+        panel "Newly Accepted" do
+          table_for Restaurant.brooklyn.accepted do
+            column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
+            column("Accepted at") { |rest| rest.accepted_at }
+            column("Initial Offer Sent to Creators?") do |rest|
+              rest.initial_offer_sent_to_creators
+            end
+            column("Writer Confirmed?") { |rest| rest.writer_confirmed }
+            column("Photographer Confirmed?") { |rest| rest.writer_confirmed }
+            column("Final datetime confirmed with restaurant") do |rest|
+              rest.scheduled_review_date_and_time.present?
             end
           end
         end

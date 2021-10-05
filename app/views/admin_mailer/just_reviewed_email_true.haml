@@ -10,5 +10,19 @@
     Creator name:
     = @creator.name
 
-Below are the email contents sent out to creators and the restaurant
-= sanitize @html
+%p Below are the email contents sent out to creators and the restaurant
+%b Email sent to creators:
+%br
+%p
+  Hello
+  = "#{@creator.name},"
+%br
+= sanitize @creators_html
+%br
+%b Email sent to Restaurant:
+%br
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+= sanitize @restaurant_html
