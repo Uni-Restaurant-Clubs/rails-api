@@ -14,6 +14,11 @@ class AdminMailer < ApplicationMailer
   # a creator just confirmed that a review happened
   def just_reviewed_email_true
     @confirmation = params[:confirmation]
+    @creators_html = TextContent.find_by(name: "creators just reviewed email")
+    @restaurant_html = TextContent.find_by(name: "restaurant just reviewed email")
+    @restaurant = @confirmation.restaurant
+    @response = @confirmation.response
+    @creator = @confirmation.creator
 
     mail subject: "A review just happened!"
   end

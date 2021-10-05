@@ -1,0 +1,14 @@
+%p
+  Hello Team,
+%br
+%p A creator just confirmed that a review happened and next step emails were sent out to creators and the restaurant.
+%ul
+  %li
+    Restaurant name:
+    = @restaurant.name
+  %li
+    Creator name:
+    = @creator.name
+
+Below are the email contents sent out to creators and the restaurant
+= sanitize @html
