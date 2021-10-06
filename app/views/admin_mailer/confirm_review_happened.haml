@@ -11,5 +11,5 @@
     = @restaurant.name
   %li
     Date and time:
-    = @restaurant.scheduled_review_date_and_time
+    = TimeHelpers.to_human(@restaurant.scheduled_review_date_and_time)
 

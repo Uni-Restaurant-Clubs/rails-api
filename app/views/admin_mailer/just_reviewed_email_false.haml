@@ -8,6 +8,9 @@
     Restaurant name:
     = @restaurant.name
   %li
+    Scheduled date and time:
+    = TimeHelpers.to_human(@restaurant.scheduled_review_date_and_time)
+  %li
     Creator name:
     = @creator.name
   %li

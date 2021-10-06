@@ -9,6 +9,9 @@
   %li
     Creator name:
     = @creator.name
+  %li
+    Date and time:
+    = TimeHelpers.to_human(@restaurant.scheduled_review_date_and_time)
 
 %p Below are the email contents sent out to creators and the restaurant
 %b Email sent to creators:
