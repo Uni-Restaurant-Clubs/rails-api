@@ -5,7 +5,6 @@ ActiveAdmin.setup do |config|
   # for each of the active admin pages.
   #
   config.site_title = "Uni Restaurant Clubs"
-
   config.before_action :set_admin_timezone
 
   # Set the link url for the title. For example, to take
