@@ -10,7 +10,7 @@ class CreatorMailer < ApplicationMailer
     @email = @creator.email
     @name = @creator.name
 
-    mail to: @email, bcc: "creators@unirestaurantclub.com",
+    mail to: @email, bcc: "monty@unirestaurantclub.com",
       subject: "Confirm review happened"
   end
 
@@ -20,7 +20,7 @@ class CreatorMailer < ApplicationMailer
     @name = @creator.name
     @html = TextContent.find_by(name: "creators just reviewed email")&.text
 
-    mail to: @creator.email, bcc: "creators@unirestaurantclub.com",
+    mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
       subject: "Review Follow Up Email for Uni Restaurant Club"
   end
 

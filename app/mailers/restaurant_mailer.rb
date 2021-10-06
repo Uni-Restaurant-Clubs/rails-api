@@ -4,7 +4,7 @@ class RestaurantMailer < ApplicationMailer
     @name = @restaurant.name
     @html = TextContent.find_by(name: "restaurant just reviewed email")&.text
 
-    mail to: @restaurant&.primary_email, bcc: "hello@unirestaurantclub.com",
+    mail to: @restaurant&.primary_email, bcc: "monty@unirestaurantclub.com",
       subject: "Thank you for letting us review you!"
   end
 
