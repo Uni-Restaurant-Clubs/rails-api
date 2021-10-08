@@ -52,6 +52,11 @@ class Restaurant < ApplicationRecord
     .or(self.reviewed.where(writer_handed_in_article: false))
   end
 
+  scope :reviewed_with_content, -> do
+    reviewed.where(photographer_handed_in_photos: true,
+                   writer_handed_in_article: true)
+  end
+
   scope :scheduled_today, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
           DateTime.now.beginning_of_day, DateTime.now.end_of_day)
