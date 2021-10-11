@@ -1,4 +1,11 @@
 ActiveAdmin.register Review do
+
+  controller do
+    def find_collection(options = {})
+      super.unscoped.page(params[:page]).per(10)
+    end
+  end
+
   actions :all, :except => [:destroy]
 
   permit_params do
