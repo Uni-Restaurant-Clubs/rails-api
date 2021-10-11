@@ -9,6 +9,11 @@ class Review < ApplicationRecord
 
   accepts_nested_attributes_for :images, :allow_destroy => true
 
+  enum status: { "not public" => 0, "open to public" => 1 }
+
+  default_scope { where(status: 1) }
+  scope :newest_first, lambda { order("created_at ASC") }
+
   def limit_words
     #full_article.split("<p>").first.split
   end

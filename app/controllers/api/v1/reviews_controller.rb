@@ -11,7 +11,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
   end
 
   def index
-    reviews = Review.all
+    reviews = Review.newest_first.all
     if !reviews
       json = { error: true, message: "No reviews found" }.to_json
       render json: json, status: 404

@@ -5,7 +5,7 @@ ActiveAdmin.register Review do
     permitted = [
                   :restaurant_id, :university_id, :writer_id, :photographer_id,
                   :reviewed_at, :full_article, :medium_article, :small_article,
-                  :article_title,
+                  :article_title, :status,
                   images_attributes: [
                     :id, :title, :photo, :featured, :image_type
                   ]
@@ -17,6 +17,7 @@ ActiveAdmin.register Review do
     selectable_column
     id_column
     column :restaurant
+    column :status
     column :university
     column :writer
     column :photographer
@@ -32,6 +33,7 @@ ActiveAdmin.register Review do
   show do
     attributes_table do
       row :restaurant
+      row :status
       row :university
       row :writer
       row :photographer
@@ -59,6 +61,7 @@ ActiveAdmin.register Review do
     f.semantic_errors *f.object.errors.keys
     f.inputs 'Details' do
       f.input :restaurant
+      f.input :status
       f.input :writer
       f.input :photographer
       f.input :university
