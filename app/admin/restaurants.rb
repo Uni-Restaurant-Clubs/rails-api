@@ -6,6 +6,8 @@ ActiveAdmin.register Restaurant do
     end
   end
 
+
+
   actions :all, :except => [:destroy]
 
   permit_params do

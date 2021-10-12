@@ -4,6 +4,11 @@ ActiveAdmin.register Review do
     def find_collection(options = {})
       super.unscoped.page(params[:page]).per(10)
     end
+
+    def resource
+      Review.unscoped { super }
+    end
+
   end
 
   actions :all, :except => [:destroy]
