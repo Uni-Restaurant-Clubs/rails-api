@@ -135,7 +135,7 @@ ActiveAdmin.register_page "Reviews in progress" do
               rest.initial_offer_sent_to_creators
             end
             column("Writer Confirmed?") { |rest| rest.writer_confirmed }
-            column("Photographer Confirmed?") { |rest| rest.writer_confirmed }
+            column("Photographer Confirmed?") { |rest| rest.photographer_confirmed }
             column("Final datetime confirmed with restaurant") do |rest|
               rest.scheduled_review_date_and_time.present?
             end
