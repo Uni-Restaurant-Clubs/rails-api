@@ -4,7 +4,7 @@ class Giphy
     url = "https://api.giphy.com/v1/gifs/random?" +
     "api_key=#{ENV["GIPHY_API_KEY"]}&" +
     "tag=#{query}&" +
-    "rating=pg&"
+    "rating=pg-13&"
 
     options = {}
 
