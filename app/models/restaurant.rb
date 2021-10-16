@@ -10,6 +10,8 @@ class Restaurant < ApplicationRecord
   belongs_to :writer, class_name: 'ContentCreator', foreign_key: 'writer_id', optional: true
   belongs_to :photographer, class_name: 'ContentCreator', foreign_key: 'photographer_id', optional: true
 
+  before_save :check_if_review_scheduled
+
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
 
@@ -142,4 +144,13 @@ class Restaurant < ApplicationRecord
     end
   end
 
+  private
+
+  def check_if_review_scheduled
+    if scheduled_review_date_and_time &&
+        writer && photographer &&
+        status == "accepted"
+      self.status = "review scheduled"
+    end
+  end
 end
