@@ -1,8 +1,12 @@
 %p
-  Hello Team,
+  Hey Team Good luck today!
+- if @data[:gif]
+  - gif = @data[:gif]
+  %img{src: gif[:url], width: gif[:width], height: gif[:height] }
+%br
 %br
 %a(href="https://urc-production.herokuapp.com/admin/reviews_in_progress")
-  Admin Panel
+  Admin Panel Link
 %br
 %br
 %h3 Daily Summary

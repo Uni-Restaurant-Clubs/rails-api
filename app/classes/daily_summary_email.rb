@@ -48,6 +48,15 @@ class DailySummaryEmail
       reviews: reviews
     }
 
+    gif = Giphy.get_random("excited")
+    image = gif[:data][:images][:downsized_large] rescue nil
+    if image
+      data[:gif] = {
+        url: image[:url],
+        height: image[:height],
+        width: image[:width],
+      }
+    end
     return data
   end
 
