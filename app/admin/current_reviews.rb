@@ -99,7 +99,7 @@ ActiveAdmin.register_page "Reviews in progress" do
     end
     columns do
       column do
-        panel "Recently Reviewed" do
+        panel "Reviewed and Needing Content" do
           table_for Restaurant.brooklyn.reviewed_without_content do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Reviewed at") do |rest|
@@ -127,7 +127,7 @@ ActiveAdmin.register_page "Reviews in progress" do
     end
     columns do
       column do
-        panel "Newly Accepted" do
+        panel "Accepted and Needing a Confirmed Review Time" do
           table_for Restaurant.brooklyn.accepted do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Accepted at") { |rest| rest.accepted_at }

@@ -1,0 +1,55 @@
+%p
+  Hello Team,
+%br
+%a(href="https://urc-production.herokuapp.com/admin/reviews_in_progress")
+  Admin Panel
+%br
+%br
+%h3 Daily Summary
+%p(style="padding: 20px; width: 300px; border: 5px solid red;")
+  Today's Reviews:
+  %b= @data[:todays_reviews][:count]
+%p(style="margin-top: 10px; padding: 20px; width: 300px; border: 5px solid orange;")
+  Tomorrow's Reviews:
+  %b= @data[:tomorrows_reviews][:count]
+%p(style="margin-top: 10px;height: 30px;")
+  Confirming that Review Happened:
+  %b= @data[:confirming_review_happened][:count]
+%p(style="margin-top: 5px;height: 30px;")
+  Scheduled Reviews (not today or tomorrow):
+  %b= @data[:scheduled_but_not_today_or_tomorrow][:count]
+%p(style="margin-top: 5px;height: 30px;")
+  Reviewed and Needing Content:
+  %b= @data[:reviewed_but_needing_content][:count]
+%p(style="margin-top: 5px;height: 30px;")
+  Accepted and Needing a Confirmed Review Time:
+  %b= @data[:accepted][:count]
+%br
+%h3 Today's Reviews
+%table(style="padding: 10px; border: 5px solid red;")
+  %tr
+    %th(style="width: 150px; text-align: left;") Restaurant
+    %th(style="width: 150px; text-align: left;") Time
+    %th(style="width: 150px; text-align: left;") Writer
+    %th(style="width: 150px; text-align: left;") Photographer
+  - @data[:todays_reviews][:reviews].all.each do |rest|
+    %tr
+      %td= rest.name
+      %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
+      %td= rest.writer&.name
+      %td= rest.photographer&.name
+%br
+%h3 Tomorrow's Reviews
+%table(style="padding: 10px; border: 5px solid orange;")
+  %tr
+    %th(style="width: 150px; text-align: left;") Restaurant
+    %th(style="width: 150px; text-align: left;") Time
+    %th(style="width: 150px; text-align: left;") Writer
+    %th(style="width: 150px; text-align: left;") Photographer
+- @data[:tomorrows_reviews][:reviews].all.each do |rest|
+  %tr
+    %td= rest.name
+    %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
+
+    %td= rest.writer&.name
+    %td= rest.photographer&.name

@@ -2,6 +2,13 @@ class AdminMailer < ApplicationMailer
 
   default to: "hello@unirestaurantclub.com"
 
+  def send_daily_summary_email
+    @emails = params[:emails]
+    @data = params[:data]
+
+    mail to: @emails, subject: "URC Daily Summary"
+  end
+
   def new_contact_form_submission_email
     @name = params[:name]
     @email = params[:email]
@@ -22,7 +29,7 @@ class AdminMailer < ApplicationMailer
     mail subject: "A review just happened!"
   end
 
-  # a creator just confirmed that a review DID NOThappen
+  # a creator just confirmed that a review DID NOT happen
   # we need to follow up to see what happened
   def just_reviewed_email_false
     @confirmation = params[:confirmation]

@@ -84,6 +84,20 @@ class Restaurant < ApplicationRecord
     self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
   end
 
+  def self.send_daily_update_emails(time=nil)
+    emails = ["monty@unirestaurantclub.com"]
+    if time == "morning"
+      emails << "kirsys@unirestaurantclub.com"
+      emails << "manar@unirestaurantclub.com"
+    end
+    if time == "afternoon"
+      emails << "sandra@unirestaurantclub.com"
+    end
+    data = DailySummaryEmail.get_data
+    AdminMailer.with(emails: emails, data: data)
+               .send_daily_summary_email.deliver_now
+  end
+
   def update_and_send_confirm_if_reviewed_emails
     if !self.photographer || !self.writer
       Airbrake.notify("Restaurant is missing a creator", {
