@@ -5,8 +5,10 @@ class AdminMailer < ApplicationMailer
   def send_daily_summary_email
     @emails = params[:emails]
     @data = params[:data]
+    time = Time.now
+    date = "#{time.day}/#{time.month}/#{time.year}"
 
-    mail to: @emails, subject: "URC Daily Summary"
+    mail to: @emails, subject: "URC Daily Summary #{date}"
   end
 
   def new_contact_form_submission_email
