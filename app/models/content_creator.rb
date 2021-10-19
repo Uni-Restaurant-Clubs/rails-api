@@ -4,19 +4,22 @@ class ContentCreator < ApplicationRecord
   }
   has_one :image, dependent: :destroy
   has_many :review_happened_confirmation, dependent: :destroy
-  belongs_to :location_code
+  belongs_to :location_code, optional: true
 
   belongs_to :university, optional: true
 
   has_one_attached :signed_nda
   has_one_attached :signed_agreement
+  has_one_attached :intro_video
 
-  validates_presence_of :first_name, :last_name, :email, :phone,
-    :signed_agreement, :public_unique_username, :creator_type, :location_code_id
-  validates_uniqueness_of :public_unique_username
+  validates_presence_of :first_name, :last_name, :email
+    #:public_unique_username, :creator_type, :location_code_id
+  validates_uniqueness_of :public_unique_username, :allow_blank => true
   validates :bio, length: { maximum: 1000 }
 
   enum creator_type: { writer: 0, photographer: 1 }
+  enum status: { applied: 0, accepted: 1, denied: 2, active: 3,
+                 archived: 4, suspended: 5 }
 
   accepts_nested_attributes_for :image, :allow_destroy => true
 
