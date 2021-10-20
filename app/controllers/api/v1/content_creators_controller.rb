@@ -55,6 +55,9 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
       #create content creator with status of applied
       data[:status] = "applied"
       data[:email] = current_user&.email if current_user
+      data[:public_unique_username] = ContentCreator.create_public_unique_username(data)
+      lc = LocationCode.find_by(code: "BR")
+      data[:location_code_id] = lc&.id
       creator = ContentCreator.new(data)
       if creator.save!
         #AdminMailer.with(data: data).new_contact_form_submission_email.deliver_later

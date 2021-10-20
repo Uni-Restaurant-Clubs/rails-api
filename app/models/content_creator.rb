@@ -26,6 +26,17 @@ class ContentCreator < ApplicationRecord
   scope :writers, lambda { where(creator_type: "writer") }
   scope :photographers, lambda { where(creator_type: "photographer") }
 
+  def self.create_public_unique_username(data)
+    name = data[:first_name]&.downcase + "_" + data[:last_name]&.downcase
+    number = ""
+    loop do
+      new_name = name + number.to_s
+      break new_name unless self.exists?(public_unique_username: new_name)
+      number = 0 if number == ""
+      number += 1
+    end
+  end
+
   def name
     first_name + " " + last_name
   end
