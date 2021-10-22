@@ -5,7 +5,10 @@ ActiveAdmin.register ContentCreator do
      :linkedin_url, :facebook_url, :instagram_url, :website_url,
      :bio, :signed_agreement, :location_code_id,
      :drive_folder_url, :public_unique_username, :creator_type,
-     :youtube_url,
+     :youtube_url, :is_writer, :is_photographer, :is_videographer,
+     :intro_application_text, :experiences_application_text,
+     :why_join_application_text, :application_social_media_links, :resume,
+     :writing_example, :status,
       image_attributes: [
         :id, :photo, :image_type
       ]]
@@ -22,9 +25,11 @@ ActiveAdmin.register ContentCreator do
   index do
     selectable_column
     id_column
-      column :creator_type
+      column :status
+      column :is_writer
+      column :is_photographer
+      column :is_videographer
       column :location_code
-      column :public_unique_username
       column :first_name
       column :last_name
       column :profile_image do |photographer|
@@ -32,13 +37,19 @@ ActiveAdmin.register ContentCreator do
           image_tag url_for(photographer.image.resize_to_fit(75))
         end
       end
-      column :email
-      column :phone
     actions
   end
 
   show do
     attributes_table do
+      row :status
+      row :is_writer
+      row :is_photographer
+      row :is_videographer
+      row :intro_application_text
+      row :experiences_application_text
+      row :why_join_application_text
+      row :application_social_media_links
       row :creator_type
       row :location_code
       row :public_unique_username
@@ -64,13 +75,32 @@ ActiveAdmin.register ContentCreator do
           link_to "Signed Agreement", photographer.signed_agreement.url, target: "_blank"
         end
       end
+      row :resume do |creator|
+        if creator.resume&.url
+          link_to "resume", creator.resume.url, target: "_blank"
+        end
+      end
+      row :writing_example do |creator|
+        if creator.writing_example&.url
+          link_to "writing example", creator.writing_example.url, target: "_blank"
+        end
+      end
     end
   end
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
     f.inputs 'Details' do
-      f.input :creator_type
+      f.input :status
+      f.input :is_writer
+      f.input :is_photographer
+      f.input :is_videographer
+      f.input :intro_application_text
+      f.input :experiences_application_text
+      f.input :why_join_application_text
+      f.input :application_social_media_links
+      f.input :resume
+      f.input :writing_example
       f.input :location_code
       f.input :public_unique_username
       f.input :first_name

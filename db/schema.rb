@@ -115,13 +115,21 @@ ActiveRecord::Schema.define(version: 2021_10_19_220301) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "location_code_id"
     t.string "youtube_url"
-    t.string "roles", default: [], array: true
+    t.boolean "is_writer", default: false
+    t.boolean "is_photographer", default: false
+    t.boolean "is_videographer", default: false
+    t.text "intro_application_text"
+    t.text "experiences_application_text"
+    t.text "why_join_application_text"
+    t.text "application_social_media_links"
     t.integer "status"
     t.index ["creator_type"], name: "index_content_creators_on_creator_type"
     t.index ["email"], name: "index_content_creators_on_email", unique: true
+    t.index ["is_photographer"], name: "index_content_creators_on_is_photographer"
+    t.index ["is_videographer"], name: "index_content_creators_on_is_videographer"
+    t.index ["is_writer"], name: "index_content_creators_on_is_writer"
     t.index ["location_code_id"], name: "index_content_creators_on_location_code_id"
     t.index ["public_unique_username"], name: "index_content_creators_on_public_unique_username", unique: true
-    t.index ["roles"], name: "index_content_creators_on_roles", using: :gin
     t.index ["status"], name: "index_content_creators_on_status"
     t.index ["university_id"], name: "index_content_creators_on_university_id"
   end

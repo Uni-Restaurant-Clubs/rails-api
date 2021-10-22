@@ -78,7 +78,12 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
   private
 
     def application_params
-      params.require(:creator).permit(:firstName, :lastName, :email, :recaptchaToken)
+      params.require(:creator)
+        .permit(:isWriter, :isPhotographer, :isVideographer, :firstName,
+                :lastName, :email, :isWriter, :isPhotographer,
+                :isVideographer, :introApplicationText, :experiencesApplicationText,
+                :whyJoinApplicationText, :applicationSocialMediaLinks, :resume,
+                :writingExample)
             .to_h.deep_transform_keys!(&:underscore)
     end
 
