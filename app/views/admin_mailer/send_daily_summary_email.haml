@@ -28,6 +28,13 @@
 %p(style="margin-top: 5px;height: 30px;")
   Accepted and Needing a Confirmed Review Time:
   %b= @data[:accepted][:count]
+%p(style="margin-top: 5px;height: 30px;")
+  Number of Creators that Applied within last day:
+  %b= @data[:newly_applied_creators][:last_24_hour_count]
+%p(style="margin-top: 5px;height: 30px;")
+  Number of Creators that Applied within last 7 days:
+  %b= @data[:newly_applied_creators][:last_7_day_count]
+
 %br
 %h3 Today's Reviews
 %table(style="padding: 10px; border: 5px solid red;")
@@ -42,7 +49,7 @@
       %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
       %td= rest.writer&.name
       %td= rest.photographer&.name
-%br
+  %br
 %h3 Tomorrow's Reviews
 %table(style="padding: 10px; border: 5px solid orange;")
   %tr

@@ -26,6 +26,12 @@ class ContentCreator < ApplicationRecord
 
   scope :writers, lambda { where(creator_type: "writer") }
   scope :photographers, lambda { where(creator_type: "photographer") }
+  scope :within_last_day, -> do
+    where("created_at > ?", DateTime.now - 24.hours)
+  end
+  scope :within_last_7_days, -> do
+    where("created_at > ?", DateTime.now - 7.days)
+  end
 
   def self.create_public_unique_username(data)
     name = data[:first_name]&.downcase + "_" + data[:last_name]&.downcase
