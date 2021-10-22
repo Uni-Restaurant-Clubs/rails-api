@@ -57,7 +57,6 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
       json = { error: true, message: error }.to_json
       render json: json, status: status
     else
-      #create content creator with status of applied
       data[:status] = "applied"
       data[:email] = current_user&.email if current_user
       data[:public_unique_username] = ContentCreator.create_public_unique_username(data)
@@ -65,7 +64,6 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
       data[:location_code_id] = lc&.id
       creator = ContentCreator.new(data)
       if creator.save!
-        #AdminMailer.with(data: data).new_contact_form_submission_email.deliver_later
         render json: {}, status: 200
       else
         Airbrake.notify("could not create creator", {
