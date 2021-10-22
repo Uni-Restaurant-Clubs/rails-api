@@ -12,8 +12,13 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
   end
 
   def submit_application
-    code = Recaptcha.get_code(params["recaptchaToken"])
     data = application_params
+    code = Recaptcha.get_code(data["recaptcha_token"])
+    data.delete("recaptcha_token")
+    data.delete("format")
+    data["is_writer"] = false unless data["is_writer"] == "true"
+    data["is_photographer"] = false unless data["is_photographer"] == "true"
+    data["is_videographer"] = false unless data["is_photographer"] == "true"
 
     error = false
     airbrake_error = nil
@@ -78,12 +83,12 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
   private
 
     def application_params
-      params.require(:creator)
+      params
         .permit(:isWriter, :isPhotographer, :isVideographer, :firstName,
-                :lastName, :email, :isWriter, :isPhotographer,
+                :lastName, :email, :isWriter, :isPhotographer, :recaptchaToken,
                 :isVideographer, :introApplicationText, :experiencesApplicationText,
                 :whyJoinApplicationText, :applicationSocialMediaLinks, :resume,
-                :writingExample)
+                :writingExample, :format)
             .to_h.deep_transform_keys!(&:underscore)
     end
 
