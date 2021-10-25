@@ -65,9 +65,7 @@ class DailySummaryEmail
     data[:newly_applied_creators] = {
       last_24_hour_count: last_24_hours_applied_creators.count,
       last_24_hour_creators: last_24_hours_applied_creators,
-      last_7_day_count: last_7_days_applied_creators.count,
-      last_7_day_creators: last_7_days_applied_creators
-    }
+      last_7_day_count: last_7_days_applied_creators.count, last_7_day_creators: last_7_days_applied_creators }
 
     return data
   end

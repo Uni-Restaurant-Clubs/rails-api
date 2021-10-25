@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_19_220301) do
+ActiveRecord::Schema.define(version: 2021_10_25_193114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -132,6 +132,31 @@ ActiveRecord::Schema.define(version: 2021_10_19_220301) do
     t.index ["public_unique_username"], name: "index_content_creators_on_public_unique_username", unique: true
     t.index ["status"], name: "index_content_creators_on_status"
     t.index ["university_id"], name: "index_content_creators_on_university_id"
+  end
+
+  create_table "creator_review_offers", force: :cascade do |t|
+    t.datetime "responded_at"
+    t.boolean "option_one_response"
+    t.datetime "option_one"
+    t.datetime "option_two"
+    t.boolean "option_two_response"
+    t.datetime "option_three"
+    t.boolean "option_three_response"
+    t.integer "restaurant_id"
+    t.integer "content_creator_id"
+    t.boolean "as_writer", default: false
+    t.boolean "as_photographer", default: false
+    t.boolean "as_videographer", default: false
+    t.string "token"
+    t.text "notes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["as_photographer"], name: "index_creator_review_offers_on_as_photographer"
+    t.index ["as_videographer"], name: "index_creator_review_offers_on_as_videographer"
+    t.index ["as_writer"], name: "index_creator_review_offers_on_as_writer"
+    t.index ["content_creator_id"], name: "index_creator_review_offers_on_content_creator_id"
+    t.index ["restaurant_id"], name: "index_creator_review_offers_on_restaurant_id"
+    t.index ["token"], name: "index_creator_review_offers_on_token", unique: true
   end
 
   create_table "identities", force: :cascade do |t|

@@ -4,6 +4,7 @@ class ContentCreator < ApplicationRecord
   }
   has_one :image, dependent: :destroy
   has_many :review_happened_confirmation, dependent: :destroy
+  has_many :creator_review_offers, dependent: :destroy
   belongs_to :location_code, optional: true
 
   belongs_to :university, optional: true

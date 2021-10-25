@@ -4,6 +4,7 @@ class Restaurant < ApplicationRecord
 
   has_many :reviews, dependent: :destroy
   has_many :images, dependent: :destroy
+  has_many :creator_review_offers, dependent: :destroy
   has_many :restaurant_category_restaurants, dependent: :destroy
   has_many :review_happened_confirmation, dependent: :destroy
   has_many :restaurant_categories, through: :restaurant_category_restaurants
@@ -82,6 +83,12 @@ class Restaurant < ApplicationRecord
 
   scope :scheduled_but_not_for_today_or_tomorrow, -> do
     self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
+  end
+
+  def send_review_offer_emails_to_creators
+    # create review_offer_response for each creator
+    # create token
+    # send emails to creators with link to form with token in it
   end
 
   def self.send_daily_update_emails(time=nil)
