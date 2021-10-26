@@ -1,1 +1,32 @@
 %h1 offer form
+= form_with model: @offer do |f|
+  %p Select all options that you are available for
+  %br
+  = f.check_box :option_one_response
+  = f.label :option_one_response, TimeHelpers.to_human(@offer[:option_one])
+  %br
+  = f.check_box :option_two_response
+  = f.label :option_two_response, TimeHelpers.to_human(@offer[:option_two])
+  %br
+  = f.check_box :option_three_response
+  = f.label :option_three_response, TimeHelpers.to_human(@offer[:option_three])
+  %br
+  %br
+  %p If you did not select any options, please select a reason below
+  %br
+  = f.check_box :not_available_for_any_options
+  = f.label :not_available_for_any_options, "I am not available for any of these options"
+  %br
+  = f.check_box :does_not_want_to_review_this_restaurant
+  = f.label :does_not_want_to_review_this_restaurant, "I do not want to review this restaurant"
+  %br
+  %br
+  = f.label :does_not_want_to_review_reason, "If you do not want to review this restaurant, please tell us why"
+  = f.text_area :does_not_want_to_review_reason
+  %br
+  %br
+  = f.label :notes, "Anything else you would like to communicate to us?"
+  %br
+  = f.text_area :notes
+  %br
+  = f.submit

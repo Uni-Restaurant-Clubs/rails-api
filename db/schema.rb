@@ -142,6 +142,9 @@ ActiveRecord::Schema.define(version: 2021_10_25_193114) do
     t.boolean "option_two_response"
     t.datetime "option_three"
     t.boolean "option_three_response"
+    t.boolean "not_available_for_any_options"
+    t.boolean "does_not_want_to_review_this_restaurant"
+    t.text "does_not_want_to_review_reason"
     t.integer "restaurant_id"
     t.integer "content_creator_id"
     t.boolean "as_writer", default: false
