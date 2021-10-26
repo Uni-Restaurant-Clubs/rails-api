@@ -99,8 +99,8 @@ ActiveAdmin.register ContentCreator do
       f.input :experiences_application_text
       f.input :why_join_application_text
       f.input :application_social_media_links
-      f.input :resume
-      f.input :writing_example
+      f.input :resume, as: :file
+      f.input :writing_example, as: :file
       f.input :location_code
       f.input :public_unique_username
       f.input :first_name
