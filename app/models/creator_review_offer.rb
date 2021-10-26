@@ -7,6 +7,14 @@ class CreatorReviewOffer < ApplicationRecord
                          :option_three]
   validates_uniqueness_of :token, allow_nil: true
 
+  def roles
+    roles = []
+    roles << "writer" if as_writer
+    roles << "photographer" if as_photographer
+    roles << "videographer" if as_videographer
+    roles.join(", ")
+  end
+
   def self.create_new_token
     loop do
       token = SecureRandom.hex(15)
@@ -23,7 +31,9 @@ class CreatorReviewOffer < ApplicationRecord
       option_one: rest.option_1,
       option_two: rest.option_2,
       option_three: rest.option_3,
-      token: self.create_new_token
+      token: self.create_new_token,
+      as_writer: (role == "writer"),
+      as_photographer: (role == "photographer")
     }
       offer = self.create!(data)
       CreatorMailer.with(offer: offer).review_offer_email.deliver_now
