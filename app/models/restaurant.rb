@@ -85,12 +85,6 @@ class Restaurant < ApplicationRecord
     self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
   end
 
-  def send_review_offer_emails_to_creators
-    # create review_offer_response for each creator
-    # create token
-    # send emails to creators with link to form with token in it
-  end
-
   def self.send_daily_update_emails(time=nil)
     emails = ["monty@unirestaurantclub.com"]
     if time == "morning"

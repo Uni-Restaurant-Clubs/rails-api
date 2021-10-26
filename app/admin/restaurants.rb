@@ -56,8 +56,13 @@ ActiveAdmin.register Restaurant do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
     else
-      response = resource.send_review_offer_emails_to_creators
-      redirect_to resource_path(resource), notice: response
+      response, error = CreatorReviewOffer.create_offers_and_send_emails_to_creators(
+                                                                       resource)
+      if alert_type = error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to resource_path(resource), notice: response
+      end
     end
   end
 

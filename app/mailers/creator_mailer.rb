@@ -11,7 +11,7 @@ class CreatorMailer < ApplicationMailer
     @name = @creator.name
 
     mail to: @email, bcc: "monty@unirestaurantclub.com",
-      subject: "Confirm review happened"
+      subject: "Confirm review happened: #{@restaurant.name}"
   end
 
   def just_reviewed_email
@@ -22,6 +22,15 @@ class CreatorMailer < ApplicationMailer
 
     mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
       subject: "Review Follow Up Email for Uni Restaurant Club"
+  end
+
+  def review_offer_email
+    @offer = params[:offer]
+    @restaurant = @offer.restaurant
+    @creator = @offer.content_creator
+
+    mail to: @creator.email,
+      subject: "We have a new restaurant for you! #{@restaurant.name}"
   end
 
 end
