@@ -12,6 +12,7 @@ class ContentCreator < ApplicationRecord
   has_one_attached :signed_agreement
   has_one_attached :resume
   has_one_attached :writing_example
+  has_one_attached :intro_video
 
   validates_presence_of :first_name, :last_name, :email, :public_unique_username,
                         :location_code_id
@@ -24,8 +25,10 @@ class ContentCreator < ApplicationRecord
 
   accepts_nested_attributes_for :image, :allow_destroy => true
 
-  scope :writers, lambda { where(creator_type: "writer") }
-  scope :photographers, lambda { where(creator_type: "photographer") }
+  scope :writers, lambda { where(is_writer: true) }
+  scope :photographers, lambda { where(is_photographer: true) }
+  scope :videographers, lambda { where(is_videographer: true) }
+
   scope :within_last_day, -> do
     where("created_at > ?", DateTime.now - 24.hours)
   end

@@ -4,22 +4,46 @@ ActiveAdmin.register ContentCreator do
     [:first_name, :last_name, :university_id, :email, :phone,
      :linkedin_url, :facebook_url, :instagram_url, :website_url,
      :bio, :signed_agreement, :location_code_id,
-     :drive_folder_url, :public_unique_username, :creator_type,
+     :drive_folder_url, :public_unique_username,
      :youtube_url, :is_writer, :is_photographer, :is_videographer,
      :intro_application_text, :experiences_application_text,
      :why_join_application_text, :application_social_media_links, :resume,
-     :writing_example, :status,
+     :writing_example, :status, :intro_video,
       image_attributes: [
         :id, :photo, :image_type
       ]]
   end
 
   scope :all, default: true
-  scope :writers do |content_creators|
-    content_creators.writers
+  scope :active_writers do |content_creators|
+    content_creators.active.writers
   end
-  scope :photographers do |content_creators|
-    content_creators.photographers
+  scope :active_photographers do |content_creators|
+    content_creators.active.photographers
+  end
+  scope :active_videographers do |content_creators|
+    content_creators.active.videographers
+  end
+  scope :all_active do |content_creators|
+    content_creators.active
+  end
+  scope :newly_applied do |content_creators|
+    content_creators.applied
+  end
+  scope :accepted do |content_creators|
+    content_creators.accepted
+  end
+  scope :denied do |content_creators|
+    content_creators.denied
+  end
+  scope :archived do |content_creators|
+    content_creators.archived
+  end
+  scope :suspended do |content_creators|
+    content_creators.suspended
+  end
+  scope :inactive do |content_creators|
+    content_creators.inactive
   end
 
   index do
@@ -50,7 +74,6 @@ ActiveAdmin.register ContentCreator do
       row :experiences_application_text
       row :why_join_application_text
       row :application_social_media_links
-      row :creator_type
       row :location_code
       row :public_unique_username
       row :first_name
@@ -65,6 +88,11 @@ ActiveAdmin.register ContentCreator do
       row :website_url
       row :drive_folder_url
       row (:bio) { |photographer| raw(photographer.bio) }
+      row :intro_video do |photographer|
+        if photographer.intro_video&.url
+          link_to "intro Video", photographer.intro_video.url, target: "_blank"
+        end
+      end
       row :profile_image do |photographer|
         if photographer.image
           image_tag url_for(photographer.image.resize_to_fit(400))
@@ -101,6 +129,7 @@ ActiveAdmin.register ContentCreator do
       f.input :application_social_media_links
       f.input :resume, as: :file
       f.input :writing_example, as: :file
+      f.input :intro_video, as: :file
       f.input :location_code
       f.input :public_unique_username
       f.input :first_name
