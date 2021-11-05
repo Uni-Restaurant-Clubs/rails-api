@@ -1,60 +1,61 @@
-.container
-  .row.justify-content-center
-    .col-md-8.col-lg-6.col-sm-12(style="padding: 20px;")
-      %br
-      %h1
-        = image_tag "https://urc-public-images.s3.us-east-2.amazonaws.com/output-onlinepngtools+(1).png", height: "50", style: "margin-right: 10px;"
-        Restaurant Review offer
-      %br
-      %br
-      %b Restaurant Details:
-      %ul
-        %li
-          Name:
-          = @offer.restaurant&.name
-        %li
-          = link_to "Yelp Link", @offer.restaurant&.yelp_url, target: "_blank"
-        %li
-          Your Role(s):
-          = @offer.roles
+- if !@error
+  .container
+    .row.justify-content-center
+      .col-md-8.col-lg-6.col-sm-12(style="padding: 20px;")
+        %br
+        %h1
+          = image_tag "https://urc-public-images.s3.us-east-2.amazonaws.com/output-onlinepngtools+(1).png", height: "50", style: "margin-right: 10px;"
+          Restaurant Review offer
+        %br
+        %br
+        %b Restaurant Details:
+        %ul
+          %li
+            Name:
+            = @offer.restaurant&.name
+          %li
+            = link_to "Yelp Link", @offer.restaurant&.yelp_url, target: "_blank"
+          %li
+            Your Role(s):
+            = @offer.roles
 
-      %br
-      = form_with model: @offer do |f|
-        %b Select all options that you are available for
         %br
-        %br
-        = f.check_box :option_one_response, class: "form-check-input"
-        = f.label :option_one_response, TimeHelpers.to_human(@offer[:option_one]), class: "form-check-label"
-        %br
-        = f.check_box :option_two_response, class: "form-check-input"
-        = f.label :option_two_response, TimeHelpers.to_human(@offer[:option_two]), class: "form-check-label"
-        %br
-        = f.check_box :option_three_response, class: "form-check-input"
-        = f.label :option_three_response, TimeHelpers.to_human(@offer[:option_three]), class: "form-check-label"
-        %br
-        %br
-        %br
-        %b If you did not select any options, please select a reason below
-        %br
-        %br
-        = f.check_box :not_available_for_any_options, class: "form-check-input"
-        = f.label :not_available_for_any_options, "I am not available for any of these options", class: "form-check-label"
-        %br
-        = f.check_box :does_not_want_to_review_this_restaurant, class: "form-check-input"
-        = f.label :does_not_want_to_review_this_restaurant, "I do not want to review this restaurant", class: "form-check-label"
-        %br
-        %br
-        %br
-        %b= f.label :does_not_want_to_review_reason, "If you do not want to review this restaurant, please tell us why", class: "form-label"
-        = f.text_area :does_not_want_to_review_reason, class: "form-control"
-        %br
-        %br
-        %b= f.label :notes, "Anything else you would like to communicate to us?", class: "form-label"
-        %br
-        = f.text_area :notes, class: "form-control"
-        %br
-        %br
-        .d-grid.gap-2
-          = f.submit "Submit Offer Response", class: "btn btn-danger"
-        %br
-        %br
+        = form_with model: @offer do |f|
+          %b Select all options that you are available for
+          %br
+          %br
+          = f.check_box :option_one_response, class: "form-check-input"
+          = f.label :option_one_response, TimeHelpers.to_human(@offer[:option_one]), class: "form-check-label"
+          %br
+          = f.check_box :option_two_response, class: "form-check-input"
+          = f.label :option_two_response, TimeHelpers.to_human(@offer[:option_two]), class: "form-check-label"
+          %br
+          = f.check_box :option_three_response, class: "form-check-input"
+          = f.label :option_three_response, TimeHelpers.to_human(@offer[:option_three]), class: "form-check-label"
+          %br
+          %br
+          %br
+          %b If you did not select any options, please select a reason below
+          %br
+          %br
+          = f.check_box :not_available_for_any_options, class: "form-check-input"
+          = f.label :not_available_for_any_options, "I am not available for any of these options", class: "form-check-label"
+          %br
+          = f.check_box :does_not_want_to_review_this_restaurant, class: "form-check-input"
+          = f.label :does_not_want_to_review_this_restaurant, "I do not want to review this restaurant", class: "form-check-label"
+          %br
+          %br
+          %br
+          %b= f.label :does_not_want_to_review_reason, "If you do not want to review this restaurant, please tell us why", class: "form-label"
+          = f.text_area :does_not_want_to_review_reason, class: "form-control"
+          %br
+          %br
+          %b= f.label :notes, "Anything else you would like to communicate to us?", class: "form-label"
+          %br
+          = f.text_area :notes, class: "form-control"
+          %br
+          %br
+          .d-grid.gap-2
+            = f.submit "Submit Offer Response", class: "btn btn-danger"
+          %br
+          %br
