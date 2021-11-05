@@ -12,11 +12,15 @@ class CreatorReviewOffersController < ApplicationController
       # validate date (can't be more than 2 days old)
       @error = "This offer has expired since it was sent more than 2 days ago."
     end
+    flash[:alert] = @error
   end
 
   def update
     binding.pry
     # verify it has not been responded to already
+    # validate data
+    # an option must be selected
+    # a reason must be given if they select do not want to review
     # update offer
     # update responded at
     # check for match
