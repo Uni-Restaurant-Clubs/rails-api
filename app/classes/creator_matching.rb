@@ -1,5 +1,7 @@
 class CreatorMatching
 
+  # Logic for creator review offer post response matching goes here
+
   def self.categorize_by_options(writer_responses, photographer_responses)
     {
       option_one: {
@@ -64,24 +66,19 @@ class CreatorMatching
     responses
   end
 
-  def self.get_writer_and_photographer(offer)
+  def self.get_writer_and_photographer_matching_info(offer)
     filter_data = {
       restaurant_id: offer.restaurant_id
     }
 
+    # get responded offers
+    responses = CreatorReviewOffer.where(filter_data).responded_to
     # get all writer responses
-    writer_responses = CreatorReviewOffer.where(filter_data)
-                                         .for_writers
-                                         .responded
-                                         .oldest_first
+    writer_responses = responses.for_writers.oldest_first
+    writer_responses = self.order_by_criteria(writer_responses, offer)
 
-    writer_responses = self.order_by_criteria(writer_ responses, offer)
     # get all photographer responses
-    photographer_responses = CreatorReviewOffer.where(filter_data)
-                                         .for_photographers
-                                         .responded
-                                         .oldest_first
-
+    photographer_responses = responses.for_photographers.oldest_first
     photographer_responses = self.order_by_criteria(photographer_responses, offer)
 
     return if writer_responses.empty? || photographer_responses.empty?
