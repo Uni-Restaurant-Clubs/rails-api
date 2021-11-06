@@ -37,18 +37,21 @@ class CreatorMatching
 
     if option_one_writers.any? && option_one_photographers.any?
       return {
-        writer: option_one_writers.first,
-        photographer: option_one_photographers.first
+        writer_offer: option_one_writers.first,
+        photographer_offer: option_one_photographers.first,
+        option: :option_one
       }
     elsif option_two_writers.any? && option_two_photographers.any?
       return {
-        writer: option_two_writers.first,
-        photographer: option_two_photographers.first
+        writer_offer: option_two_writers.first,
+        photographer_offer: option_two_photographers.first,
+        option: :option_two
       }
     elsif option_three_writers.any? && option_three_photographers.any?
       return {
-        writer: option_three_writers.first,
-        photographer: option_three_photographers.first
+        writer_offer: option_three_writers.first,
+        photographer_offer: option_three_photographers.first,
+        option: :option_three
       }
     else
       nil
@@ -61,8 +64,7 @@ class CreatorMatching
     responses
   end
 
-  def self.handle_post_response_matching(offer)
-
+  def self.get_writer_and_photographer(offer)
     filter_data = {
       restaurant_id: offer.restaurant_id
     }
@@ -84,9 +86,15 @@ class CreatorMatching
 
     return if writer_responses.empty? || photographer_responses.empty?
 
-    match = self.match(writer_responses, photographer_responses)
-    writer = match[:writer]
-    photographer = match[:photographer]
+    matching_info = self.match(writer_responses, photographer_responses)
+    matching_info
+  end
+
+  def self.handle_post_response_matching(offer)
+    matching_info = self.get_writer_and_photographer_matching_info(offer)
+    if matching_info
+      offer.restaurant.update_after_offer_response_matching(matching_info)
+    end
 
     #
     # if match, update final scheduled time
