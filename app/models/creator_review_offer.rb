@@ -39,6 +39,66 @@ class CreatorReviewOffer < ApplicationRecord
       CreatorMailer.with(offer: offer).review_offer_email.deliver_now
   end
 
+  def selected_option_and_no_option_reason?(data)
+    return (data[:option_one_response] == "1" ||
+      data[:option_two_response] == "1" ||
+      data[:option_three_response] == "1") &&
+      (data[:not_available_for_any_options] == "1" ||
+      data[:does_not_want_to_review_this_restaurant] == "1")
+  end
+
+  def no_reason_given?(data)
+    return data[:does_not_want_to_review_this_restaurant] == "1" &&
+      data[:does_not_want_to_review_reason].blank?
+  end
+
+  def no_option_selected?(data)
+    return data[:option_one_response] != "1" &&
+      data[:option_two_response] != "1" &&
+      data[:option_three_response] != "1" &&
+      data[:not_available_for_any_options] != "1" &&
+      data[:does_not_want_to_review_this_restaurant] != "1"
+  end
+
+
+  def validate_response_data(data)
+    error = false
+    # verify it has not been responded to already
+    if self.responded_at
+      error = "This offer has already been responded too"
+    elsif self.no_option_selected?(data)
+      # an option must be selected
+      error = "Please select an option: one or more date/time option(s), if you're not available or if you do not want to review this restaurant"
+    elsif self.selected_option_and_no_option_reason?(data)
+      error = "Hmm...looks like you selected a datetime option and selected a can't make it option. Please select one or the other"
+    elsif self.no_reason_given?(data)
+      # a reason must be given if they select do not want to review
+      error = "Please give a reason as to why you do not want to review this restaurant. This will help us find better restaurants for you in the future!"
+    end
+    error
+  end
+
+  def add_response(data)
+    self.assign_attributes(data)
+    error = self.validate_response_data(data)
+    unless error
+      begin
+        self.responded_at = Time.now
+        self.save!
+      rescue Exception => e
+        Airbrake.notify("Creator review offer could not be responded to", {
+          error: e,
+          errors: self.errors.full_messages,
+          params: params,
+          offer_id: self.id,
+          restaurant_name: self.restaurant.name
+        })
+        error = "Oops! something went wrong. We have been notified and will fix the issue soon!"
+      end
+    end
+    error
+  end
+
   def self.create_offers_and_send_emails_to_creators(restaurant)
     response = "Offer emails sent successfully!"
     r = restaurant
