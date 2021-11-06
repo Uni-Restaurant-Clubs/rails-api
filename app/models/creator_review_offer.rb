@@ -7,6 +7,14 @@ class CreatorReviewOffer < ApplicationRecord
                          :option_three]
   validates_uniqueness_of :token, allow_nil: true
 
+  scope :for_writers, -> { where(is_writer: true) }
+  scope :for_photographers, -> { where(is_photographer: true) }
+  scope :responded_to, -> { where.not(responded_to: nil) }
+  scope :oldest_first, -> { order('created_at ASC') }
+  scope :option_one_selected, -> { where(:option_one_response: true)  }
+  scope :option_two_selected, -> { where(:option_two_response: true)  }
+  scope :option_three_selected, -> { where(:option_three_response: true)  }
+
   def roles
     roles = []
     roles << "writer" if as_writer
@@ -60,8 +68,8 @@ class CreatorReviewOffer < ApplicationRecord
       data[:does_not_want_to_review_this_restaurant] != "1"
   end
 
-
   def validate_response_data(data)
+    # TODO add one response per creator per category
     error = false
     # verify it has not been responded to already
     if self.responded_at

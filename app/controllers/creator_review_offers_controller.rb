@@ -19,16 +19,8 @@ class CreatorReviewOffersController < ApplicationController
     @offer = CreatorReviewOffer.find_by(id: params[:id])
     data = review_offer_params
     error = @offer.add_response(data)
+    @offer.handle_post_response
 
-    # check for match
-    #
-    # if match, update final scheduled time
-    # send confirmation emails to restaurant and creators
-    # create and send google events
-    #
-    # if no match
-    # send out to everyone
-    # first response gets it
     flash.now[:alert] = error if error
     flash.now[:notice] = "Response received. Thank you!" unless error
     render :edit
