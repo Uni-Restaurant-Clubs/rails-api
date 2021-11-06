@@ -85,26 +85,39 @@ class Restaurant < ApplicationRecord
     self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
   end
 
-  def update_after_offer_response_matching(matching_info)
+  def handle_after_offer_response_matching(matching_info)
     writer_offer = matching_info[:writer_offer]
     photographer_offer = matching_info[:photographer_offer]
     option = matching_info[:option]
-    self.writer_id = writer_offer.creator_id
-    self.photographer_id = photographer_offer.creator_id
+    self.writer_id = writer_offer.content_creator_id
+    self.photographer_id = photographer_offer.content_creator_id
     self.scheduled_review_time = writer_offer[:option]
     begin
       self.save!
       # send out emails
+      # send email to writer
+      # send email to photographer
+      CreatorMailer.with(info: matching_info)
+               .send_review_time_scheduled_email.deliver_now
+      # send email to restaurant
+      RestaurantMailer.with(info: matching_info)
+               .send_review_time_scheduled_email.deliver_now
+      RestaurantMailer.with(info: matching_info)
+               .no_charge_confirmation_email.deliver_now
+      # send email to admin
+      AdminMailer.with(info: matching_info)
+               .send_review_time_scheduled_email.deliver_now
       # create calendar invites
     rescue Exception => e
       Airbrake.notify("Could not update restaurant scheduled time after creator matching", {
         error: e,
         errors: self.errors.full_messages,
-        restaurant_id: self.id
+        restaurant_id: self.id,
         restaurant_name: self.name
       })
     end
   end
+
   def self.send_daily_update_emails(time=nil)
     emails = ["monty@unirestaurantclub.com"]
     if time == "morning"

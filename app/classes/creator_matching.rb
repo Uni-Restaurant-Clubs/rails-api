@@ -3,6 +3,7 @@ class CreatorMatching
   # Logic for creator review offer post response matching goes here
 
   def self.categorize_by_options(writer_responses, photographer_responses)
+    ######  CATEGORIZING LOGIC HERE ##################
     {
       option_one: {
         writers: writer_responses.option_one_selected,
@@ -37,6 +38,7 @@ class CreatorMatching
     option_three_writers = option_three_writers
     option_three_photographers = option_three_photographers
 
+    ######  MATCHING LOGIC HERE ##################
     if option_one_writers.any? && option_one_photographers.any?
       return {
         writer_offer: option_one_writers.first,
@@ -61,6 +63,7 @@ class CreatorMatching
   end
 
   def self.order_by_criteria(responses, offer)
+    ######  ORDERING BY CRITERIA LOGIC HERE ##################
     # add ordering by criteria logic here
     # TODO add point system
     responses
@@ -90,7 +93,7 @@ class CreatorMatching
   def self.handle_post_response_matching(offer)
     matching_info = self.get_writer_and_photographer_matching_info(offer)
     if matching_info
-      offer.restaurant.update_after_offer_response_matching(matching_info)
+      offer.restaurant.handle_after_offer_response_matching(matching_info)
     end
 
     #

@@ -1,0 +1,9 @@
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+%p
+  Regarding your scheduled review for:
+  = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+%br
+= sanitize @html

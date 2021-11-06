@@ -50,4 +50,17 @@ class AdminMailer < ApplicationMailer
       subject: "Confirm review happened emails sent"
   end
 
+  def send_review_time_scheduled_email
+    @info = params[:info]
+    @writer_offer = @info[:writer_offer]
+    @writer = @writer_offer.content_creator
+    @photographer_offer = @info[:photographer_offer]
+    @photographer = @photographer_offer.content_creator
+    @restaurant = @writer_offer.restaurant
+    @option = @info[:option]
+    @restaurant_html = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text
+    @creators_html = TextContent.find_by(name: "notify creators that a review has been scheduled")&.text
+    mail subject: "A new review for #{restaurant.name} has been scheduled!"
+  end
+
 end

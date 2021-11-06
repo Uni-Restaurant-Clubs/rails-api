@@ -1,0 +1,12 @@
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+%p
+  This is an email to confirm that a writer and photographer from Uni Restaurant Club will review your restaurant on the following date and time:
+%ul
+  %li
+    Your scheduled review time is:
+    = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+%br
+= sanitize @html

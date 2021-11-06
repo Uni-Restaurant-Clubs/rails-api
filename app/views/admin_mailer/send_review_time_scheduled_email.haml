@@ -1,0 +1,65 @@
+%p
+  Hey team,
+%br
+%p
+  A review date and time has been confirmed for
+  = @restaurant.name
+  and emails have been sent to both creators and the restaurant
+
+%br
+%p
+  Email content for no charge confirmation email sent to restaurant:
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+%p
+  Regarding your scheduled review for:
+  = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+%br
+= sanitize @html
+%br
+%br
+%p
+  Email content for scheduled time sent to restaurant:
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+%p
+  This is an email to confirm that a writer and photographer from Uni Restaurant Club will review your restaurant on the following date and time:
+%ul
+  %li
+    Your scheduled review time is:
+    = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+%br
+= sanitize @html
+%br
+%br
+%p
+  Email content sent to creators:
+%br
+%p
+  Hello
+  = "#{@writer.name} and #{@photographer.name},"
+%br
+%p
+  = "You have a new confirmed review time for #{@restaurant.name}!"
+%p
+%ul
+  %li
+    Restaurant:
+    = @restaurant.name
+  %li
+    = link_to "Yelp Link", @restaurant.yelp_link
+  %li
+    Scheduled date and time:
+    = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+  %li
+    Writer:
+    = @writer.name
+  %li
+    Photographer:
+    = @photographer.name
+%br
+= sanitize @html

@@ -1,0 +1,27 @@
+%p
+  Hello
+  = "#{@writer.name} and #{@photographer.name},"
+%br
+%p
+  = "You have a new confirmed review time for #{@restaurant.name}!"
+%p
+%ul
+  %li
+    Restaurant:
+    = @restaurant.name
+  %li
+    = link_to "Yelp Link", @restaurant.yelp_link
+  %li
+    Scheduled date and time:
+    = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+  %li
+    Writer:
+    = @writer.name
+  %li
+    Photographer:
+    = @photographer.name
+%br
+= sanitize @html
+
+
+
