@@ -3,7 +3,28 @@ require 'base_cli'
 
 class GoogleCalendar
 
+  def self.create_scheduled_time_confirmed_for_restaurant()
+    restaurant = Restaurant.find_by(id: 3715)
+    summary = "Uni Restaurant Club is sending a writer and photographer to your restaurant for a review!",
+    description = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text,
+    event_data = {
+      summary: summary,
+      description: description,
+      address: restaurant.address&.full_address,
+      writer: restaurant.writer,
+      photographer: restaurant.photographer,
+      start_time: restaurant.scheduled_review_time,
+      end_time: (start_time + 2.hours),
+      timezone: "America/New_York",
+      methods_and_minutes: self.day_before_and_2_hours_before_reminders,
+      emails: restaurant.primary_email&.strip,
+    }
+    return self.create_event(event_data)
+  end
+
   def self.create_attendees(emails)
+    # protect from notifying real people during development
+    emails = ["montylennie@gmail.com"] if Rails.env != "production"
     attendees = []
     emails.each do |email|
       attendees << Google::Apis::CalendarV3::EventAttendee.new(email: email)
@@ -11,6 +32,15 @@ class GoogleCalendar
     attendees
   end
 
+  def day_before_and_2_hours_before_reminders
+    return [
+      ["email", (24 * 60)],
+      ["popup", (24 * 60)],
+      ["email", (2 * 60)],
+      ["popup", (2 * 60)]
+    ]
+
+  end
   # methods and minutes example:
   # [["email", (24 * 60)], ["popup", 10]]
   def self.create_notifications(methods_and_minutes)
