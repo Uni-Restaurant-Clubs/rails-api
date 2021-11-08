@@ -1,19 +1,24 @@
 require 'google/apis/calendar_v3'
-require 'base_cli'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
 
 class GoogleCalendar
+
+  Calendar = Google::Apis::CalendarV3
+  OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 
   def self.create_scheduled_time_confirmed_for_restaurant()
     restaurant = Restaurant.find_by(id: 3715)
     summary = "Uni Restaurant Club is sending a writer and photographer to your restaurant for a review!",
     description = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text,
+    start_time = restaurant.scheduled_review_date_and_time
     event_data = {
       summary: summary,
       description: description,
       address: restaurant.address&.full_address,
       writer: restaurant.writer,
       photographer: restaurant.photographer,
-      start_time: restaurant.scheduled_review_time,
+      start_time: start_time,
       end_time: (start_time + 2.hours),
       timezone: "America/New_York",
       methods_and_minutes: self.day_before_and_2_hours_before_reminders,
@@ -32,7 +37,7 @@ class GoogleCalendar
     attendees
   end
 
-  def day_before_and_2_hours_before_reminders
+  def self.day_before_and_2_hours_before_reminders
     return [
       ["email", (24 * 60)],
       ["popup", (24 * 60)],
@@ -55,6 +60,15 @@ class GoogleCalendar
   end
 
   def self.create_event(event_data)
+    calendar = Google::Apis::CalendarV3::CalendarService.new
+		scopes =  ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/calendar.events',"https://www.googleapis.com/auth/admin.directory.resource.calendar"]
+		#calendar.authorization = Google::Auth.get_application_default(scopes)
+    calendar.authorization = Google::Auth::ServiceAccountCredentials.from_env(scope: scopes)
+		calendar.authorization.sub = "monty@unirestaurantclub.com"
+		calendar.authorization.fetch_access_token!
+
+    #calendar.authorization = user_credentials_for(Calendar::AUTH_CALENDAR)
+=begin
     event = Google::Apis::CalendarV3::Event.new(
       summary: event_data[:summary],
       location: event_data[:address],
@@ -73,8 +87,15 @@ class GoogleCalendar
         overrides: self.create_notifications(event_data[:methods_and_minutes])
       )
     )
-
-    result = client.insert_event('primary', event)
+=end
+emails = ["montylennie@gmail.com", "monty@unirestaurantclub.com"]
+# Create an event, adding any emails listed in the command line as attendees
+event = Calendar::Event.new(summary: 'A sample event',
+                            location: '1600 Amphitheatre Parkway, Mountain View, CA 94045',
+                            attendees:  [Calendar::EventAttendee.new(email: "montylennie@gmail.com")],
+                            start: Calendar::EventDateTime.new(date_time: DateTime.parse('2021-11-09T17:00:00')),
+                            end: Calendar::EventDateTime.new(date_time: DateTime.parse('2021-11-09T18:00:00')))
+    result = calendar.insert_event('primary', event, send_notifications: true)
     return result
   end
 =begin
