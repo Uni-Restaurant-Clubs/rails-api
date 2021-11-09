@@ -10,10 +10,10 @@
     Restaurant:
     = @restaurant.name
   %li
-    = link_to "Yelp Link", @restaurant.yelp_link
+    = link_to "Yelp Link", @restaurant.yelp_url
   %li
     Scheduled date and time:
-    = TimeHelpers.to_human(@restaurant.scheduled_review_time)
+    = TimeHelpers.to_human(@restaurant.scheduled_review_date_and_time)
   %li
     Writer:
     = @writer.name

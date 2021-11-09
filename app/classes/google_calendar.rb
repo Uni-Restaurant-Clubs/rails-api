@@ -7,14 +7,11 @@ class GoogleCalendar
   Calendar = Google::Apis::CalendarV3
   OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 
-  def self.create_scheduled_time_confirmed_for_restaurant()
-    restaurant = Restaurant.find_by(id: 3715)
-    summary = "Uni Restaurant Club is sending a writer and photographer to your restaurant for a review!"
-    description = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text,
+  def self.prepare_event_data(restaurant)
     start_time = restaurant.scheduled_review_date_and_time
-    event_data = {
-      summary: summary,
-      description: description,
+    return {
+      restaurant_name: restaurant.name,
+      restaurant_id: restaurant.id,
       address: restaurant.address&.full_address,
       writer: restaurant.writer,
       photographer: restaurant.photographer,
@@ -22,9 +19,45 @@ class GoogleCalendar
       end_time: (start_time + 2.hours),
       timezone: "America/New_York",
       methods_and_minutes: self.day_before_and_2_hours_before_reminders,
+    }
+  end
+
+  def self.create_scheduled_time_confirmed_for_creators(restaurant)
+    summary = "URC Restaurant Review for #{restaurant.name}"
+    description =
+      "<b>Restaurant Info:</b>" +
+      "<ul>" +
+        "<li>Name: #{restaurant.name}</li>" +
+        "<li><a href=\'#{restaurant.yelp_url}\'>Yelp Link</a></li>" +
+        "<li>Scheduled date and time: #{TimeHelpers.to_human(restaurant.scheduled_review_date_and_time)}</li>" +
+        "<li>Writer: #{restaurant.writer.name}</li>" +
+        "<li>Photographer: #{restaurant.photographer.name}</li>" +
+      "</ul>"
+    description += TextContent.find_by(name: "notify creators that a review has been scheduled")&.text
+    start_time = restaurant.scheduled_review_date_and_time
+    event_data = self.prepare_event_data(restaurant)
+    extra_data = {
+      summary: summary,
+      description: description,
+      emails: [restaurant.writer.email&.strip, restaurant.photographer.email&.strip]
+    }
+    event_data.merge!(extra_data)
+    result = self.create_event(event_data)
+  end
+
+  def self.create_scheduled_time_confirmed_for_restaurant(restaurant)
+    restaurant = Restaurant.find_by(id: 3715)
+    summary = "Uni Restaurant Club is sending a writer and photographer to review your restaurant!"
+    description = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text
+    start_time = restaurant.scheduled_review_date_and_time
+    event_data = self.prepare_event_data(restaurant)
+    extra_data = {
+      summary: summary,
+      description: description,
       emails: restaurant.primary_email&.strip,
     }
-    return self.create_event(event_data)
+    event_data.merge!(extra_data)
+    result = self.create_event(event_data)
   end
 
   def self.create_attendees(emails)
@@ -44,8 +77,8 @@ class GoogleCalendar
       ["email", (2 * 60)],
       ["popup", (2 * 60)]
     ]
-
   end
+
   # methods and minutes example:
   # [["email", (24 * 60)], ["popup", 10]]
   def self.create_notifications(methods_and_minutes)
@@ -59,7 +92,7 @@ class GoogleCalendar
     notifications
   end
 
-  def self.create_event(event_data)
+  def self.create_calendar_and_authorize
     calendar = Calendar::CalendarService.new
 		scopes =  ['https://www.googleapis.com/auth/calendar',
                'https://www.googleapis.com/auth/gmail.send',
@@ -68,78 +101,45 @@ class GoogleCalendar
     calendar.authorization = Google::Auth::ServiceAccountCredentials.from_env(scope: scopes)
 		calendar.authorization.sub = "monty@unirestaurantclub.com"
 		calendar.authorization.fetch_access_token!
+    calendar
+  end
 
+  def self.create_datetime(time, info)
+    Calendar::EventDateTime.new(
+        date_time: time.utc.to_datetime.rfc3339,
+        time_zone: info[:timezone]
+      )
+  end
+
+  def self.create_reminders(event_data)
+      Calendar::Event::Reminders.new(
+        use_default: false,
+        overrides: self.create_notifications(event_data[:methods_and_minutes])
+      )
+  end
+
+  def self.create_event(event_data)
+    calendar = self.create_calendar_and_authorize
+    cal = Rails.env == "production" ? ENV["GOOGLE_MAIN_CALENDAR"] : "primary"
     event = Calendar::Event.new(
       summary: event_data[:summary],
       location: event_data[:address],
       description: event_data[:description],
-      start: Calendar::EventDateTime.new(
-        date_time: event_data[:start_time],
-        time_zone: event_data[:timezone]
-      ),
-      end: Calendar::EventDateTime.new(
-        date_time: event_data[:end_time],
-        time_zone: event_data[:timezone]
-      ),
+      start: self.create_datetime(event_data[:start_time], event_data),
+      end: self.create_datetime(event_data[:end_time], event_data),
       attendees: self.create_attendees(event_data[:emails]),
-      reminders: Calendar::Event::Reminders.new(
-        use_default: false,
-        overrides: self.create_notifications(event_data[:methods_and_minutes])
-      )
+      reminders: self.create_reminders(event_data)
     )
-    result = calendar.insert_event('primary', event, send_notifications: true)
-    return result
-  end
-=begin
-emails = ["montylennie@gmail.com", "monty@unirestaurantclub.com"]
-# Create an event, adding any emails listed in the command line as attendees
-event = Calendar::Event.new(summary: 'A sample event',
-                            location: '1600 Amphitheatre Parkway, Mountain View, CA 94045',
-                            attendees:  [Calendar::EventAttendee.new(email: "montylennie@gmail.com")],
-                            start: Calendar::EventDateTime.new(date_time: DateTime.parse('2021-11-09T17:00:00')),
-                            end: Calendar::EventDateTime.new(date_time: DateTime.parse('2021-11-09T18:00:00')))
-    result = calendar.insert_event('primary', event, send_notifications: true)
-    return result
-  end
-    event = Google::Apis::CalendarV3::Event.new(
-      summary: 'Google I/O 2015',
-      location: '800 Howard St., San Francisco, CA 94103',
-      description: 'A chance to hear more about Google\'s developer products.',
-      start: Google::Apis::CalendarV3::EventDateTime.new(
-        date_time: '2015-05-28T09:00:00-07:00',
-        time_zone: 'America/Los_Angeles'
-      ),
-      end: Google::Apis::CalendarV3::EventDateTime.new(
-        date_time: '2015-05-28T17:00:00-07:00',
-        time_zone: 'America/Los_Angeles'
-      ),
-      recurrence: [
-        'RRULE:FREQ=DAILY;COUNT=2'
-      ],
-      attendees: [
-        Google::Apis::CalendarV3::EventAttendee.new(
-          email: 'lpage@example.com'
-        ),
-        Google::Apis::CalendarV3::EventAttendee.new(
-          email: 'sbrin@example.com'
-        )
-      ],
-      reminders: Google::Apis::CalendarV3::Event::Reminders.new(
-        use_default: false,
-        overrides: [
-          Google::Apis::CalendarV3::EventReminder.new(
-            reminder_method: 'email',
-            minutes: 24 * 60
-          ),
-          Google::Apis::CalendarV3::EventReminder.new(
-            reminder_method: 'popup',
-            minutes: 10
-          )
-        ]
-      )
-    )
+    begin
+      result = calendar.insert_event(cal, event, send_notifications: true)
+    rescue Exception => e
+      Airbrake.notify("Could not create google event", {
+        error: e,
+        event_data: event_data
+      })
+      result = nil
+    end
 
-    result = client.insert_event('primary', event)
-    puts "Event created: #{result.html_link}"
-=end
+    return result
+  end
 end
