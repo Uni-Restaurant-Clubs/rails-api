@@ -108,8 +108,17 @@ class Restaurant < ApplicationRecord
       AdminMailer.with(info: matching_info)
                .send_review_time_scheduled_email.deliver_now
       # create calendar invites
-      GoogleCalendar.create_scheduled_time_confirmed_for_restaurant(self)
-      GoogleCalendar.create_scheduled_time_confirmed_for_creators(self)
+      result = GoogleCalendar.create_scheduled_time_confirmed_for_restaurant(self)
+      if result && result.id && result.html_link
+        self.restaurant_event_id = result.id
+        self.restaurant_event_url = result.html_link
+      end
+      result = GoogleCalendar.create_scheduled_time_confirmed_for_creators(self)
+      if result && result.id && result.html_link
+        self.creators_event_id = result.id
+        self.creators_event_url = result.html_link
+      end
+      self.save!
     rescue Exception => e
       Airbrake.notify("Could not update restaurant scheduled time after creator matching", {
         error: e,

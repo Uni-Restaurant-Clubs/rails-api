@@ -42,7 +42,7 @@ class GoogleCalendar
       emails: [restaurant.writer.email&.strip, restaurant.photographer.email&.strip]
     }
     event_data.merge!(extra_data)
-    result = self.create_event(event_data)
+    self.create_event(event_data)
   end
 
   def self.create_scheduled_time_confirmed_for_restaurant(restaurant)

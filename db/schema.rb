@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_25_193114) do
+ActiveRecord::Schema.define(version: 2021_11_09_225400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -274,6 +274,10 @@ ActiveRecord::Schema.define(version: 2021_10_25_193114) do
     t.integer "photographer_id"
     t.integer "writer_id"
     t.boolean "just_reviewed_emails_sent", default: false
+    t.string "restaurant_event_id"
+    t.string "restaurant_event_url"
+    t.string "creators_event_id"
+    t.string "creators_event_url"
     t.index ["follow_up_reason"], name: "index_restaurants_on_follow_up_reason"
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["just_reviewed_emails_sent"], name: "index_restaurants_on_just_reviewed_emails_sent"
