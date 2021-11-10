@@ -30,7 +30,7 @@ class CreatorMailer < ApplicationMailer
     @creator = @offer.content_creator
 
     mail to: @creator.email,
-      subject: "We have a new restaurant for you! #{@restaurant.name}"
+      subject: "We have a new restaurant offer for you! #{@restaurant.name}"
   end
 
   def send_review_time_scheduled_email

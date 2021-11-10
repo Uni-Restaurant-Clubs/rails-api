@@ -131,6 +131,8 @@ ActiveAdmin.register Restaurant do
       row :other_contact_info
       row :website_url
       row :scheduled_review_date_and_time
+      row :restaurant_event_url
+      row :creators_event_url
       row :accepted_at
       row :option_1
       row :option_2
