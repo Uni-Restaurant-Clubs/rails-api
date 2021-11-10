@@ -31,12 +31,12 @@ class CreatorMatching
     option_one = responses_by_options[:option_one]
     option_two = responses_by_options[:option_two]
     option_three = responses_by_options[:option_three]
-    option_one_writers = option_one_writers
-    option_one_photographers = option_one_photographers
-    option_two_writers = option_two_writers
-    option_two_photographers = option_two_photographers
-    option_three_writers = option_three_writers
-    option_three_photographers = option_three_photographers
+    option_one_writers = option_one[:writers]
+    option_one_photographers = option_one[:photographers]
+    option_two_writers = option_two[:writers]
+    option_two_photographers = option_two[:photographers]
+    option_three_writers = option_three[:writers]
+    option_three_photographers = option_three[:photographers]
 
     ######  MATCHING LOGIC HERE ##################
     if option_one_writers.any? && option_one_photographers.any?

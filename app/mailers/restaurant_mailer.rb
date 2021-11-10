@@ -17,7 +17,8 @@ class RestaurantMailer < ApplicationMailer
     @restaurant = @writer_offer.restaurant
     @option = @info[:option]
     @html = TextContent.find_by(name: "No Charge Confirmation email")&.text
-    mail subject: "No Charge Confirmation"
+    mail to: @restaurant.primary_email, bcc: "monty@unirestaurantclub.com",
+         subject: "No Charge Confirmation"
   end
 
   def send_review_time_scheduled_email
@@ -29,7 +30,7 @@ class RestaurantMailer < ApplicationMailer
     @restaurant = @writer_offer.restaurant
     @option = @info[:option]
     @html = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text
-    mail to: @restaurant.email, bcc: "monty@unirestaurantclub.com",
+    mail to: @restaurant.primary_email, bcc: "monty@unirestaurantclub.com",
       subject: "Your review date and time has been confirmed!"
   end
 

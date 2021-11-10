@@ -91,7 +91,8 @@ class Restaurant < ApplicationRecord
     option = matching_info[:option]
     self.writer_id = writer_offer.content_creator_id
     self.photographer_id = photographer_offer.content_creator_id
-    self.scheduled_review_date_and_time = writer_offer[:option]
+    self.scheduled_review_date_and_time = writer_offer[option]
+    self.status = "review scheduled"
     begin
       self.save!
       # send out emails

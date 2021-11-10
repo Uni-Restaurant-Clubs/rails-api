@@ -59,8 +59,9 @@ class AdminMailer < ApplicationMailer
     @restaurant = @writer_offer.restaurant
     @option = @info[:option]
     @restaurant_html = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text
+    @no_charge_html = TextContent.find_by(name: "No Charge Confirmation email")&.text
     @creators_html = TextContent.find_by(name: "notify creators that a review has been scheduled")&.text
-    mail subject: "A new review for #{restaurant.name} has been scheduled!"
+    mail subject: "A new review for #{@restaurant.name} has been scheduled!"
   end
 
 end

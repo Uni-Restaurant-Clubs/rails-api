@@ -7,13 +7,13 @@ class CreatorReviewOffer < ApplicationRecord
                          :option_three]
   validates_uniqueness_of :token, allow_nil: true
 
-  scope :for_writers, -> { where(is_writer: true) }
-  scope :for_photographers, -> { where(is_photographer: true) }
-  scope :responded_to, -> { where.not(responded_to: nil) }
+  scope :for_writers, -> { where(as_writer: true) }
+  scope :for_photographers, -> { where(as_photographer: true) }
+  scope :responded_to, -> { where.not(responded_at: nil) }
   scope :oldest_first, -> { order('created_at ASC') }
-  scope :option_one_selected, -> { where(:option_one_response: true)  }
-  scope :option_two_selected, -> { where(:option_two_response: true)  }
-  scope :option_three_selected, -> { where(:option_three_response: true)  }
+  scope :option_one_selected, -> { where(option_one_response: true)  }
+  scope :option_two_selected, -> { where(option_two_response: true)  }
+  scope :option_three_selected, -> { where(option_three_response: true)  }
 
   def roles
     roles = []

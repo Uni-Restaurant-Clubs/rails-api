@@ -19,7 +19,7 @@ class CreatorReviewOffersController < ApplicationController
     @offer = CreatorReviewOffer.find_by(id: params[:id])
     data = review_offer_params
     error = @offer.add_response(data)
-    CreatorMatching.handle_post_response(@offer)
+    CreatorMatching.handle_post_response_matching(@offer) unless error
 
     flash.now[:alert] = error if error
     flash.now[:notice] = "Response received. Thank you!" unless error
