@@ -5,6 +5,7 @@ ActiveAdmin.register ContentCreator do
      :linkedin_url, :facebook_url, :instagram_url, :website_url,
      :bio, :signed_agreement, :location_code_id,
      :drive_folder_url, :public_unique_username,
+     :applied_for_writer, :applied_for_photographer, :applied_for_videographer,
      :youtube_url, :is_writer, :is_photographer, :is_videographer,
      :intro_application_text, :experiences_application_text,
      :why_join_application_text, :application_social_media_links, :resume,
@@ -67,6 +68,9 @@ ActiveAdmin.register ContentCreator do
   show do
     attributes_table do
       row :status
+      row :applied_for_writer
+      row :applied_for_photographer
+      row :applied_for_videographer
       row :is_writer
       row :is_photographer
       row :is_videographer
@@ -120,6 +124,9 @@ ActiveAdmin.register ContentCreator do
     f.semantic_errors *f.object.errors.keys
     f.inputs 'Details' do
       f.input :status
+      f.input :applied_for_writer
+      f.input :applied_for_photographer
+      f.input :applied_for_videographer
       f.input :is_writer
       f.input :is_photographer
       f.input :is_videographer

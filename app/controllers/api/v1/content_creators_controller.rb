@@ -16,9 +16,9 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
     code = Recaptcha.get_code(data["recaptcha_token"])
     data.delete("recaptcha_token")
     data.delete("format")
-    data["is_writer"] = false unless data["is_writer"] == "true"
-    data["is_photographer"] = false unless data["is_photographer"] == "true"
-    data["is_videographer"] = false unless data["is_photographer"] == "true"
+    data["applied_for_writer"] = false unless data["applied_for_writer"] == "true"
+    data["applied_for_photographer"] = false unless data["applied_for_photographer"] == "true"
+    data["applied_for_videographer"] = false unless data["applied_for_photographer"] == "true"
 
     error = false
     airbrake_error = nil
@@ -82,7 +82,8 @@ class Api::V1::ContentCreatorsController < Api::V1::ApiApplicationController
 
     def application_params
       params
-        .permit(:isWriter, :isPhotographer, :isVideographer, :firstName,
+        .permit(:appliedForWriter, :appliedForPhotographer, :appliedForVideographer,
+                :firstName,
                 :lastName, :email, :isWriter, :isPhotographer, :recaptchaToken,
                 :isVideographer, :introApplicationText, :experiencesApplicationText,
                 :whyJoinApplicationText, :applicationSocialMediaLinks, :resume,
