@@ -90,24 +90,49 @@ class CreatorMatching
     matching_info
   end
 
+  def self.send_offers_to_everyone_if_havent_yet(rest)
+    if !rest.offer_sent_to_everyone
+      CreatorReviewOffer.create_offers_and_send_emails_to_rest_of_creators(rest)
+    end
+  end
+
   def self.handle_post_response_matching(offer)
+    rest = offer.restaurant
+
     if offer[:does_not_want_to_review_this_restaurant] ||
         offer[:not_available_for_any_options]
       # declined so no match
       # send out to everyone if haven't sent out to everyone yet
-      rest = offer.restaurant
-      CreatorReviewOffer.create_offers_and_send_emails_to_rest_of_creators(rest)
+      self.send_offers_to_everyone_if_havent_yet(rest)
+
     else
       matching_info = self.get_writer_and_photographer_matching_info(offer)
       if matching_info
+        # there is a matching time so send out confirmations
         offer.restaurant.handle_after_offer_response_matching(matching_info)
+
+        # there is no matching time
+      elsif rest.creator_review_offers.responded_to.count > 1
+        # both initial offers have been responded to
+        # send offer to everyone if haven't yet
+        self.send_offers_to_everyone_if_havent_yet(rest)
       end
     end
-
-    # if no match
-    # send out to everyone
-    # first response gets it
-
   end
 
+  def self.check_for_no_answers
+    # get all restaurants that have had initial offers sent with no matches
+    # and offer hasn't been sent out to everyone yet
+    restaurants = Restaurant.where(initial_offers_sent_to_creators: true)
+                            .where(offer_sent_to_everyone: false)
+                            .where(scheduled_review_date_and_time: nil)
+    restaurants.each do |restaurant|
+      first_offer_time = restaurant.creator_review_offers.first&.created_at
+      if (Time.now - 24.hours) > first_offer_time
+        # send offer to everyone if it's been more than 24 hours since the offer
+        # was sent and there's still no reply
+        self.send_offers_to_everyone_if_havent_yet(rest)
+      end
+    end
+  end
 end

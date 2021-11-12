@@ -136,6 +136,7 @@ class CreatorReviewOffer < ApplicationRecord
   end
 
   def self.create_offers_and_send_emails_to_rest_of_creators(restaurant)
+    restaurant.update!(offer_sent_to_everyone: true)
     creator_ids = self.where(restaurant_id: restaurant.id)
                       .pluck(:content_creator_id)
     lc = LocationCode.find_by(code: "BR")
@@ -151,6 +152,8 @@ class CreatorReviewOffer < ApplicationRecord
     response = "Offer emails sent successfully!"
     r = restaurant
     error = true
+    if r.scheduled_review_date_and_time
+      response = "Alert!! Looks like there is already a scheduled review date and time. If you really want to send out new offer emails, the review scheduled time must be removed first. Double check first if you really want to do that!"
     if !r.option_1 || !r.option_2 || !r.option_3
       response = "All datetime options must be filled first"
     elsif r.option_1 < Time.now || r.option_2 < Time.now || r.option_3 < Time.now
@@ -159,10 +162,14 @@ class CreatorReviewOffer < ApplicationRecord
       response = "A writer and a photographer must first be selected"
     elsif self.where(restaurant_id: restaurant.id).any?
       response = "Offer emails have already been sent for this restaurant"
+    elsif restaurant.initial_offers_sent_to_creators
+      response = "It seems that the initial offers have already been sent to the creators. " +
+                "Contact an admin if this seems to be an error"
     else
       writer = self.create_and_send_email(restaurant, "writer")
       photographer = self.create_and_send_email(restaurant, "photographer")
       if writer && photographer
+        restaurant.update!(initial_offers_sent_to_creators: true)
         error = false
       else
         response = "Oops there was an issue creating the review offers and the team has been notified."

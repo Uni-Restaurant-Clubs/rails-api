@@ -9,4 +9,9 @@ namespace :restaurants do
     Restaurant.start_confirming_if_reviews_happened_process
   end
 
+  desc "Check for no responses on offers sent out and send to everyone if it's been more than 24 hours."
+  task check_offers_for_no_responses: :environment do
+    CreatorMatching.check_for_no_answers
+  end
+
 end
