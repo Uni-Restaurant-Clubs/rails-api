@@ -18,6 +18,13 @@ class DailySummaryEmail
       reviews: reviews
     }
 
+    ########## REVIEWS in 2 days ###################
+    reviews = restaurants.review_scheduled.scheduled_in_two_days
+    data[:in_two_days_reviews] = {
+      count: reviews.count,
+      reviews: reviews
+    }
+
     ########## CONFIRMING REVIEWS HAPPENED ###################
     # Needing "review happened" confirmations from creator(s)
     reviews = restaurants.confirming_review_happened
@@ -27,9 +34,9 @@ class DailySummaryEmail
     }
 
     ########## OTHER SCHEDULED ###################
-    # Scheduled restaurants (not today or tomorrow)
-    reviews = restaurants.brooklyn.scheduled_but_not_for_today_or_tomorrow
-    data[:scheduled_but_not_today_or_tomorrow] = {
+    # Scheduled restaurants (not today or later)
+    reviews = restaurants.brooklyn.scheduled_but_not_today_or_later
+    data[:scheduled_but_not_today_or_later] = {
       count: reviews.count,
       reviews: reviews
     }

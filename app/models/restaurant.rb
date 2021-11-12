@@ -70,6 +70,11 @@ class Restaurant < ApplicationRecord
           (DateTime.now + 1.day).beginning_of_day,
           (DateTime.now + 1.day).end_of_day)
   end
+  scope :scheduled_in_two_days, -> do
+    where('scheduled_review_date_and_time BETWEEN ? AND ?',
+          (DateTime.now + 2.day).beginning_of_day,
+          (DateTime.now + 2.day).end_of_day)
+  end
   scope :not_scheduled_today, -> do
     where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
           DateTime.now.beginning_of_day, DateTime.now.end_of_day)
@@ -81,8 +86,15 @@ class Restaurant < ApplicationRecord
           (DateTime.now + 1.day).end_of_day)
   end
 
-  scope :scheduled_but_not_for_today_or_tomorrow, -> do
-    self.not_scheduled_today.not_scheduled_tomorrow.review_scheduled
+  scope :not_scheduled_in_two_days, -> do
+    where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
+          (DateTime.now + 2.day).beginning_of_day,
+          (DateTime.now + 2.day).end_of_day)
+  end
+
+  scope :scheduled_but_not_for_today_or_later, -> do
+    self.not_scheduled_today.not_scheduled_tomorrow.not_scheduled_in_two_days
+        .review_scheduled
   end
 
   def handle_after_offer_response_matching(matching_info)
