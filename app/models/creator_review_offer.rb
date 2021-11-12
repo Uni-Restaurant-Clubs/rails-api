@@ -30,21 +30,49 @@ class CreatorReviewOffer < ApplicationRecord
     end
   end
 
-  def self.create_and_send_email(restaurant, role)
-    rest = restaurant
-    creator_id = role == "writer" ? rest.writer_id : rest.photographer_id
+  def self.create_and_send_for_role(rest, role, creator_id)
     data = {
       restaurant_id: rest.id,
-      content_creator_id: creator_id,
       option_one: rest.option_1,
       option_two: rest.option_2,
       option_three: rest.option_3,
       token: self.create_new_token,
       as_writer: (role == "writer"),
-      as_photographer: (role == "photographer")
+      as_photographer: (role == "photographer"),
+      content_creator_id: creator_id
     }
+    begin
       offer = self.create!(data)
       CreatorMailer.with(offer: offer).review_offer_email.deliver_now
+      return offer
+    rescue Exception => e
+      creator_email = ContentCreator.find_by(id: creator_id)&.email
+      Airbrake.notify("Issue while creating Creator review offer", {
+        error: e,
+        offer_errors: offer&.errors&.full_messages,
+        creator_id: creator_id,
+        creator_email: creator_email,
+        restaurant_id: rest.id,
+        restaurant_name: rest.name
+      })
+      return nil
+    end
+  end
+
+  def self.create_and_send_email_for_creator(restaurant, creator)
+    roles = []
+    roles << "writer" if creator.is_writer
+    roles << "photographer" if creator.is_photographer
+    rest = restaurant
+    roles.each do |role|
+      self.create_and_send_for_role(rest, role, creator.id)
+    end
+  end
+
+  def self.create_and_send_email(restaurant, role)
+    rest = restaurant
+    creator_id = role == "writer" ? rest.writer_id : rest.photographer_id
+    self.create_and_send_for_role(rest, role, creator_id)
   end
 
   def selected_option_and_no_option_reason?(data)
@@ -107,6 +135,18 @@ class CreatorReviewOffer < ApplicationRecord
     error
   end
 
+  def self.create_offers_and_send_emails_to_rest_of_creators(restaurant)
+    creator_ids = self.where(restaurant_id: restaurant.id)
+                      .pluck(:content_creator_id)
+    lc = LocationCode.find_by(code: "BR")
+    creators = ContentCreator.where(location_code_id: lc&.id)
+    creators.each do |creator|
+      unless creator_ids.include?(creator.id)
+        self.create_and_send_email_for_creator(restaurant, creator)
+      end
+    end
+  end
+
   def self.create_offers_and_send_emails_to_creators(restaurant)
     response = "Offer emails sent successfully!"
     r = restaurant
@@ -120,16 +160,11 @@ class CreatorReviewOffer < ApplicationRecord
     elsif self.where(restaurant_id: restaurant.id).any?
       response = "Offer emails have already been sent for this restaurant"
     else
-      begin
-        self.create_and_send_email(restaurant, "writer")
-        self.create_and_send_email(restaurant, "photographer")
+      writer = self.create_and_send_email(restaurant, "writer")
+      photographer = self.create_and_send_email(restaurant, "photographer")
+      if writer && photographer
         error = false
-      rescue Exception => e
-        Airbrake.notify("Issue while creating Creator review offer", {
-          error: e,
-          restaurant_id: restaurant.id,
-          restaurant_name: restaurant.name
-        })
+      else
         response = "Oops there was an issue creating the review offers and the team has been notified."
       end
     end
