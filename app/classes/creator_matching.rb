@@ -91,16 +91,19 @@ class CreatorMatching
   end
 
   def self.handle_post_response_matching(offer)
-    matching_info = self.get_writer_and_photographer_matching_info(offer)
-    if matching_info
-      offer.restaurant.handle_after_offer_response_matching(matching_info)
+    if offer[:does_not_want_to_review_this_restaurant] ||
+        offer[:not_available_for_any_options]
+      # declined so no match
+      # send out to everyone if haven't sent out to everyone yet
+      rest = offer.restaurant
+      CreatorReviewOffer.create_offers_and_send_emails_to_rest_of_creators(rest)
+    else
+      matching_info = self.get_writer_and_photographer_matching_info(offer)
+      if matching_info
+        offer.restaurant.handle_after_offer_response_matching(matching_info)
+      end
     end
 
-    #
-    # if match, update final scheduled time
-    # send confirmation emails to restaurant and creators
-    # create and send google events
-    #
     # if no match
     # send out to everyone
     # first response gets it

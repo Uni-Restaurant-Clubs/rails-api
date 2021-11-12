@@ -4,7 +4,7 @@ class CreatorReviewOffersController < ApplicationController
     @token = params[:id]
     @offer = CreatorReviewOffer.find_by(token: @token)
     if !@offer
-      @error = "Offer could not be found"
+      @error = "Offer no longer valid"
     elsif @offer.responded_at
       # verify it has not been responded to already
       @error = "This offer has already been responded to"
@@ -17,9 +17,14 @@ class CreatorReviewOffersController < ApplicationController
 
   def update
     @offer = CreatorReviewOffer.find_by(id: params[:id])
-    data = review_offer_params
-    error = @offer.add_response(data)
-    CreatorMatching.handle_post_response_matching(@offer) unless error
+    if @offer
+      data = review_offer_params
+      error = @offer.add_response(data)
+      CreatorMatching.handle_post_response_matching(@offer) unless error
+    else
+      error = "This offer is no longer valid. Looks like a match has already been found."
+      @error = true
+    end
 
     flash.now[:alert] = error if error
     flash.now[:notice] = "Response received. Thank you!" unless error

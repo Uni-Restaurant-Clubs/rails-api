@@ -94,6 +94,8 @@ class Restaurant < ApplicationRecord
     self.scheduled_review_date_and_time = writer_offer[option]
     self.status = "review scheduled"
     begin
+      # delete non responded to offers so they can not be responded to
+      self.creator_review_offers.where(responded_at: nil).destroy_all
       self.save!
       # send out emails
       # send email to writer
