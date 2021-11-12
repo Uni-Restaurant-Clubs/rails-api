@@ -6,7 +6,6 @@ namespace :admin do
 
   desc "send afternoon updates"
   task send_afternoon_updates: :environment do
-    Restaurant.send_daily_update_emails("afternoon")
   end
 
 end

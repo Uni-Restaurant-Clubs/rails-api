@@ -149,8 +149,6 @@ class Restaurant < ApplicationRecord
     if time == "morning"
       emails << "kirsys@unirestaurantclub.com"
       emails << "manar@unirestaurantclub.com"
-    end
-    if time == "afternoon"
       emails << "sandra@unirestaurantclub.com"
     end
     data = DailySummaryEmail.get_data
