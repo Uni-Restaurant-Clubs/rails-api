@@ -18,3 +18,12 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+.today-reviews {
+  border: 5px solid red;
+}
+.tomorrow-reviews {
+  border: 5px solid orange;
+}
+.reviews-in-three-days {
+  border: 5px solid green;
+}

@@ -5,6 +5,8 @@ class AddOfferSentToEveryoneToRestaurant < ActiveRecord::Migration[6.1]
     add_column :restaurants, :applied_for_writer, :boolean, default: false
     add_column :restaurants, :applied_for_photographer, :boolean, default: false
     add_column :restaurants, :applied_for_videographer, :boolean, default: false
+    add_column :restaurants, :confirmed_with_restaurant_three_days_before, :boolean, default: false
+    add_column :restaurants, :confirmed_with_creators_day_before, :boolean, default: false
     add_index :restaurants, :applied_for_videographer
     add_index :restaurants, :applied_for_writer
     add_index :restaurants, :applied_for_photographer

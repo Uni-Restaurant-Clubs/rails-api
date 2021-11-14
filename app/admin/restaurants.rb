@@ -22,8 +22,9 @@ ActiveAdmin.register Restaurant do
                 :confirmed_with_photographer_day_of_review,
                 :photographer_handed_in_photos, :date_photos_received,
                 :writer_handed_in_article,
+                :confirmed_with_restaurant_three_days_before,
+                :confirmed_with_creators_day_before,
                 :date_article_received, :photographer_id, :writer_id,
-
                 address_attributes: [:id, :apt_suite_number, :street_number,
                                        :street_name, :street_type, :city,
                                        :state, :country, :zipcode,
@@ -147,6 +148,8 @@ ActiveAdmin.register Restaurant do
       row :writer_confirmed
       row :photographer_confirmed
       row :restaurant_confirmed_final_time
+      row :confirmed_with_restaurant_three_days_before
+      row :confirmed_with_creators_day_before
       row :confirmed_with_restaurant_day_of_review
       row :confirmed_with_writer_day_of_review
       row :confirmed_with_photographer_day_of_review
@@ -186,6 +189,8 @@ ActiveAdmin.register Restaurant do
       f.input :photographer_confirmed
       f.input :restaurant_confirmed_final_time
       f.input :scheduled_review_date_and_time, as: :date_time_picker
+      f.input :confirmed_with_restaurant_three_days_before
+      f.input :confirmed_with_creators_day_before
       f.input :confirmed_with_restaurant_day_of_review
       f.input :confirmed_with_writer_day_of_review
       f.input :confirmed_with_photographer_day_of_review
