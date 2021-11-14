@@ -10,15 +10,19 @@
 %br
 %br
 %h3 Daily Summary
-%p(style="padding: 20px; width: 300px; border: 5px solid red;")
-  Today's Reviews (Needs Creators and Restaurant Confirmation 2 hours before Review!!):
+%p(style="padding: 20px; width: 600px; border: 5px solid red;")
+  %b Today's Reviews
+  (Needs Creators and Restaurant Confirmation 2 hours before Review!!):
   %b= @data[:todays_reviews][:count]
-%p(style="margin-top: 10px; padding: 20px; width: 300px; border: 5px solid orange;")
-  Tomorrow's Reviews (Needs Creators confirmation!!):
+%p(style="margin-top: 10px; padding: 20px; width: 600px; border: 5px solid orange;")
+  %b Tomorrow's Reviews
+  (Needs Creators confirmation!!):
   %b= @data[:tomorrows_reviews][:count]
-%p(style="margin-top: 10px; padding: 20px; width: 300px; border: 5px solid green;")
-  Reviews in 2 days (Needs Restaurant confirmation!!):
+%p(style="margin-top: 10px; padding: 20px; width: 600px; border: 5px solid green;")
+  %b Reviews in 2 days
+  (Needs Restaurant confirmation!!):
   %b= @data[:in_two_days_reviews][:count]
+%br
 %p(style="margin-top: 10px;height: 30px;")
   Confirming that Review Happened:
   %b= @data[:confirming_review_happened][:count]
@@ -37,7 +41,8 @@
 %p(style="margin-top: 5px;height: 30px;")
   Number of Creators that Applied within last 7 days:
   %b= @data[:newly_applied_creators][:last_7_day_count]
-
+%br
+%br
 %br
 %h3 Today's Reviews
 %table(style="padding: 10px; border: 5px solid red;")
@@ -60,13 +65,13 @@
     %th(style="width: 150px; text-align: left;") Time
     %th(style="width: 150px; text-align: left;") Writer
     %th(style="width: 150px; text-align: left;") Photographer
-- @data[:tomorrows_reviews][:reviews].all.each do |rest|
-  %tr
-    %td= rest.name
-    %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
+  - @data[:tomorrows_reviews][:reviews].all.each do |rest|
+    %tr
+      %td= rest.name
+      %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
 
-    %td= rest.writer&.name
-    %td= rest.photographer&.name
+      %td= rest.writer&.name
+      %td= rest.photographer&.name
 %h3 Reviews in 2 days
 %table(style="padding: 10px; border: 5px solid green;")
   %tr
@@ -74,10 +79,10 @@
     %th(style="width: 150px; text-align: left;") Time
     %th(style="width: 150px; text-align: left;") Writer
     %th(style="width: 150px; text-align: left;") Photographer
-- @data[:in_two_days_reviews][:reviews].all.each do |rest|
-  %tr
-    %td= rest.name
-    %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
+  - @data[:in_two_days_reviews][:reviews].all.each do |rest|
+    %tr
+      %td= rest.name
+      %td= TimeHelpers.to_human(rest.scheduled_review_date_and_time)
 
-    %td= rest.writer&.name
-    %td= rest.photographer&.name
+      %td= rest.writer&.name
+      %td= rest.photographer&.name
