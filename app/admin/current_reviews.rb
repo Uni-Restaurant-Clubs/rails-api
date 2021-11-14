@@ -1,4 +1,5 @@
 ActiveAdmin.register_page "Reviews in progress" do
+
   menu priority: 2, label: "Reviews in progress"
 
   content title: "Reviews In Progress" do
