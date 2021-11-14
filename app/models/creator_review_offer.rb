@@ -154,7 +154,7 @@ class CreatorReviewOffer < ApplicationRecord
     error = true
     if r.scheduled_review_date_and_time
       response = "Alert!! Looks like there is already a scheduled review date and time. If you really want to send out new offer emails, the review scheduled time must be removed first. Double check first if you really want to do that!"
-    if !r.option_1 || !r.option_2 || !r.option_3
+    elsif !r.option_1 || !r.option_2 || !r.option_3
       response = "All datetime options must be filled first"
     elsif r.option_1 < Time.now || r.option_2 < Time.now || r.option_3 < Time.now
       response = "The datetime options must be in the future"
