@@ -35,8 +35,8 @@ class DailySummaryEmail
 
     ########## OTHER SCHEDULED ###################
     # Scheduled restaurants (not today or later)
-    reviews = restaurants.brooklyn.scheduled_but_not_today_or_later
-    data[:scheduled_but_not_today_or_later] = {
+    reviews = restaurants.brooklyn.scheduled_but_not_for_next_three_days
+    data[:scheduled_but_not_for_next_three_days] = {
       count: reviews.count,
       reviews: reviews
     }

@@ -55,6 +55,26 @@ ActiveAdmin.register_page "Reviews in progress" do
         end
       end
       column do
+        panel "Reviews in 3 days" do
+          table_for Restaurant.brooklyn.review_scheduled.scheduled_in_two_days do
+            column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
+            column("Time") do |rest|
+              rest.scheduled_review_date_and_time
+            end
+            column("photographer") do |rest|
+              if rest.photographer
+                link_to(rest.photographer.name, admin_content_creator_path(rest.photographer))
+              end
+            end
+            column("writer") do |rest|
+              if rest.writer
+                link_to(rest.writer.name, admin_content_creator_path(rest.writer))
+              end
+            end
+          end
+        end
+      end
+      column do
         panel "Confirming if restaurants were reviewed or not" do
           table_for Restaurant.brooklyn.confirming_review_happened do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
@@ -78,7 +98,7 @@ ActiveAdmin.register_page "Reviews in progress" do
     columns do
       column do
         panel "Scheduled" do
-          table_for Restaurant.brooklyn.scheduled_but_not_for_today_or_tomorrow do
+          table_for Restaurant.brooklyn.scheduled_but_not_for_next_three_days do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Scheduled datetime") do |rest|
               rest.scheduled_review_date_and_time

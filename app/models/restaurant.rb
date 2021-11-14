@@ -47,7 +47,7 @@ class Restaurant < ApplicationRecord
   scope :doesnt_have_photos, -> { where(photographer_handed_in_photos: false) }
   scope :doesnt_have_article, -> { where(writer_handed_in_article: false) }
   scope :scheduled_in_past, -> do
-    where("scheduled_review_date_and_time < ?", DateTime.now)
+    where("scheduled_review_date_and_time < ?",  TimeHelpers.now)
   end
 
   scope :reviewed_without_content, -> do
@@ -62,38 +62,38 @@ class Restaurant < ApplicationRecord
 
   scope :scheduled_today, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
-          DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+          TimeHelpers.now.beginning_of_day, TimeHelpers.now.end_of_day)
   end
 
   scope :scheduled_tomorrow, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
-          (DateTime.now + 1.day).beginning_of_day,
-          (DateTime.now + 1.day).end_of_day)
+          (TimeHelpers.now + 1.day).beginning_of_day,
+          (TimeHelpers.now + 1.day).end_of_day)
   end
   scope :scheduled_in_two_days, -> do
     where('scheduled_review_date_and_time BETWEEN ? AND ?',
-          (DateTime.now + 2.day).beginning_of_day,
-          (DateTime.now + 2.day).end_of_day)
+          (TimeHelpers.now + 2.day).beginning_of_day,
+          (TimeHelpers.now + 2.day).end_of_day)
   end
   scope :not_scheduled_today, -> do
     where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
-          DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+          TimeHelpers.now.beginning_of_day, TimeHelpers.now.end_of_day)
   end
 
   scope :not_scheduled_tomorrow, -> do
     where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
-          (DateTime.now + 1.day).beginning_of_day,
-          (DateTime.now + 1.day).end_of_day)
+          (TimeHelpers.now + 1.day).beginning_of_day,
+          (TimeHelpers.now + 1.day).end_of_day)
   end
 
-  scope :not_scheduled_in_two_days, -> do
+  scope :not_scheduled_in_next_three_days, -> do
     where.not('scheduled_review_date_and_time BETWEEN ? AND ?',
-          (DateTime.now + 2.day).beginning_of_day,
-          (DateTime.now + 2.day).end_of_day)
+          (TimeHelpers.now + 2.day).beginning_of_day,
+          (TimeHelpers.now + 2.day).end_of_day)
   end
 
-  scope :scheduled_but_not_for_today_or_later, -> do
-    self.not_scheduled_today.not_scheduled_tomorrow.not_scheduled_in_two_days
+  scope :scheduled_but_not_for_next_three_days, -> do
+    self.not_scheduled_today.not_scheduled_tomorrow.not_scheduled_in_next_three_days
         .review_scheduled
   end
 
@@ -146,11 +146,9 @@ class Restaurant < ApplicationRecord
 
   def self.send_daily_update_emails(time=nil)
     emails = ["monty@unirestaurantclub.com"]
-    if time == "morning"
-      emails << "kirsys@unirestaurantclub.com"
-      emails << "manar@unirestaurantclub.com"
-      emails << "sandra@unirestaurantclub.com"
-    end
+    emails << "kirsys@unirestaurantclub.com"
+    emails << "manar@unirestaurantclub.com"
+    emails << "sandra@unirestaurantclub.com"
     data = DailySummaryEmail.get_data
     AdminMailer.with(emails: emails, data: data)
                .send_daily_summary_email.deliver_now
