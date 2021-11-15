@@ -123,6 +123,12 @@ ActiveRecord::Schema.define(version: 2021_11_12_005740) do
     t.text "why_join_application_text"
     t.text "application_social_media_links"
     t.integer "status"
+    t.boolean "applied_for_writer", default: false
+    t.boolean "applied_for_photographer", default: false
+    t.boolean "applied_for_videographer", default: false
+    t.index ["applied_for_photographer"], name: "index_content_creators_on_applied_for_photographer"
+    t.index ["applied_for_videographer"], name: "index_content_creators_on_applied_for_videographer"
+    t.index ["applied_for_writer"], name: "index_content_creators_on_applied_for_writer"
     t.index ["creator_type"], name: "index_content_creators_on_creator_type"
     t.index ["email"], name: "index_content_creators_on_email", unique: true
     t.index ["is_photographer"], name: "index_content_creators_on_is_photographer"
@@ -280,14 +286,8 @@ ActiveRecord::Schema.define(version: 2021_11_12_005740) do
     t.string "creators_event_url"
     t.boolean "offer_sent_to_everyone", default: false
     t.boolean "initial_offers_sent_to_creators", default: false
-    t.boolean "applied_for_writer", default: false
-    t.boolean "applied_for_photographer", default: false
-    t.boolean "applied_for_videographer", default: false
     t.boolean "confirmed_with_restaurant_three_days_before", default: false
     t.boolean "confirmed_with_creators_day_before", default: false
-    t.index ["applied_for_photographer"], name: "index_restaurants_on_applied_for_photographer"
-    t.index ["applied_for_videographer"], name: "index_restaurants_on_applied_for_videographer"
-    t.index ["applied_for_writer"], name: "index_restaurants_on_applied_for_writer"
     t.index ["follow_up_reason"], name: "index_restaurants_on_follow_up_reason"
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["just_reviewed_emails_sent"], name: "index_restaurants_on_just_reviewed_emails_sent"
