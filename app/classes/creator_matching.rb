@@ -130,7 +130,7 @@ class CreatorMatching
                             .where(status: "accepted")
     restaurants.each do |restaurant|
       first_offer_time = restaurant.creator_review_offers.first&.created_at
-      if (TimeHelpers.now - 24.hours) > first_offer_time
+      if (Time.now - 24.hours) > first_offer_time
         # send offer to everyone if it's been more than 24 hours since the offer
         # was sent and there's still no reply
         self.send_offers_to_everyone_if_havent_yet(rest)

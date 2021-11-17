@@ -46,7 +46,6 @@ class GoogleCalendar
   end
 
   def self.create_scheduled_time_confirmed_for_restaurant(restaurant)
-    restaurant = Restaurant.find_by(id: 3715)
     summary = "Uni Restaurant Club is sending a writer and photographer to review your restaurant!"
     description = TextContent.find_by(name: "notify restaurant that a review has been scheduled")&.text
     start_time = restaurant.scheduled_review_date_and_time

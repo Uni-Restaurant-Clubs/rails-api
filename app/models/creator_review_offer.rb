@@ -30,10 +30,8 @@ class CreatorReviewOffer < ApplicationRecord
     end
   end
 
-  def self.selected_a_time_offer?
-    offer[:option_one_response] ||
-    offer[:option_two_response] ||
-    offer[:option_three_response]
+  def selected_a_time_offer?
+    option_one_response || option_two_response || option_three_response
   end
 
   def self.create_and_send_for_role(rest, role, creator_id)
@@ -170,7 +168,7 @@ class CreatorReviewOffer < ApplicationRecord
       response = "A writer and a photographer must first be selected"
     elsif self.where(restaurant_id: restaurant.id).any?
       response = "Offer emails have already been sent for this restaurant"
-    elsif restaurant.initial_offers_sent_to_creators
+    elsif restaurant.initial_offer_sent_to_creators
       response = "It seems that the initial offers have already been sent to the creators. " +
                 "Contact an admin if this seems to be an error"
     else

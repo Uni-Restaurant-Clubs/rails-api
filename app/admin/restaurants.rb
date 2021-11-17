@@ -145,6 +145,7 @@ ActiveAdmin.register Restaurant do
           :data => {:confirm => 'Are you sure you want to send review offer emails out to creators?'}
       end
       row :initial_offer_sent_to_creators
+      row :offer_sent_to_everyone
       row :writer_confirmed
       row :photographer_confirmed
       row :restaurant_confirmed_final_time
