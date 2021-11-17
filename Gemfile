@@ -32,6 +32,7 @@ gem 'active_model_serializers', '~> 0.10.12'
 gem 'airbrake', '~> 11.0', '>= 11.0.3'
 gem 'email_validator', '~> 2.2', '>= 2.2.3'
 gem 'google-api-client', '~> 0.53.0'
+gem 'sidekiq', '~> 6.3', '>= 6.3.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false

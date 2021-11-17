@@ -97,6 +97,15 @@ class Restaurant < ApplicationRecord
         .review_scheduled
   end
 
+  def reset_confirmation_information_so_can_resend_initial_offers
+    self.initial_offer_sent_to_creators = false
+    self.scheduled_review_date_and_time = nil
+    self.offer_sent_to_everyone = false
+    self.status = "accepted"
+    self.save!
+    self.creator_review_offers.destroy_all
+  end
+
   def handle_after_offer_response_matching(matching_info)
     writer_offer = matching_info[:writer_offer]
     photographer_offer = matching_info[:photographer_offer]
@@ -113,15 +122,15 @@ class Restaurant < ApplicationRecord
       # send email to writer
       # send email to photographer
       CreatorMailer.with(info: matching_info)
-               .send_review_time_scheduled_email.deliver_now
+               .send_review_time_scheduled_email.deliver_later
       # send email to restaurant
       RestaurantMailer.with(info: matching_info)
-               .send_review_time_scheduled_email.deliver_now
+               .send_review_time_scheduled_email.deliver_later
       RestaurantMailer.with(info: matching_info)
-               .no_charge_confirmation_email.deliver_now
+               .no_charge_confirmation_email.deliver_later
       # send email to admin
       AdminMailer.with(info: matching_info)
-               .send_review_time_scheduled_email.deliver_now
+               .send_review_time_scheduled_email.deliver_later
       # create calendar invites
       result = GoogleCalendar.create_scheduled_time_confirmed_for_restaurant(self)
       if result && result.id && result.html_link

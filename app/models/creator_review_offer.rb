@@ -47,7 +47,7 @@ class CreatorReviewOffer < ApplicationRecord
     }
     begin
       offer = self.create!(data)
-      CreatorMailer.with(offer: offer).review_offer_email.deliver_now
+      CreatorMailer.with(offer: offer).review_offer_email.deliver_later
       return offer
     rescue Exception => e
       creator_email = ContentCreator.find_by(id: creator_id)&.email
@@ -144,7 +144,8 @@ class CreatorReviewOffer < ApplicationRecord
     creator_ids = self.where(restaurant_id: restaurant.id)
                       .pluck(:content_creator_id)
     lc = LocationCode.find_by(code: "BR")
-    creators = ContentCreator.where(location_code_id: lc&.id)
+    creators = ContentCreator.where(location_code_id: lc&.id,
+                                    status: "active")
     creators.each do |creator|
       unless creator_ids.include?(creator.id)
         self.create_and_send_email_for_creator(restaurant, creator)
@@ -175,7 +176,7 @@ class CreatorReviewOffer < ApplicationRecord
       writer = self.create_and_send_email(restaurant, "writer")
       photographer = self.create_and_send_email(restaurant, "photographer")
       if writer && photographer
-        restaurant.update!(initial_offers_sent_to_creators: true)
+        restaurant.update!(initial_offer_sent_to_creators: true)
         error = false
       else
         response = "Oops there was an issue creating the review offers and the team has been notified."
