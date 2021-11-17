@@ -47,7 +47,7 @@ class CreatorReviewOffer < ApplicationRecord
     }
     begin
       offer = self.create!(data)
-      CreatorMailer.with(offer: offer).review_offer_email.deliver_later
+      CreatorMailer.with(offer: offer).review_offer_email.deliver_now
       return offer
     rescue Exception => e
       creator_email = ContentCreator.find_by(id: creator_id)&.email

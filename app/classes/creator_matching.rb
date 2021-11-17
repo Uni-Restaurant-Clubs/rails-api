@@ -90,7 +90,9 @@ class CreatorMatching
     matching_info
   end
 
-  def self.send_offers_to_everyone_if_havent_yet(rest)
+  def self.send_offers_to_everyone_if_havent_yet(rest_id)
+    rest = Restaurant.find_by(id: rest_id)
+    return unless rest
     if !rest.offer_sent_to_everyone
       CreatorReviewOffer.create_offers_and_send_emails_to_rest_of_creators(rest)
     end
@@ -104,7 +106,7 @@ class CreatorMatching
         offer[:not_available_for_any_options]
       # declined so no match
       # send out to everyone if haven't sent out to everyone yet
-      self.send_offers_to_everyone_if_havent_yet(rest)
+      CreatorReviewOffer::CreateAndSendOffersToAllWorker.perform_async(rest.id)
 
     else
       matching_info = self.get_writer_and_photographer_matching_info(offer)
@@ -116,7 +118,7 @@ class CreatorMatching
       elsif rest.creator_review_offers.responded_to.count > 1
         # both initial offers have been responded to
         # send offer to everyone if haven't yet
-        self.send_offers_to_everyone_if_havent_yet(rest)
+        CreatorReviewOffer::CreateAndSendOffersToAllWorker.perform_async(rest.id)
       end
     end
   end
@@ -128,13 +130,13 @@ class CreatorMatching
                             .where(offer_sent_to_everyone: false)
                             .where(scheduled_review_date_and_time: nil)
                             .where(status: "accepted")
-    restaurants.each do |restaurant|
-      first_offer_time = restaurant.creator_review_offers.first&.created_at
+    restaurants.each do |rest|
+      first_offer_time = rest.creator_review_offers.first&.created_at
       if first_offer_time
         if (Time.now - 24.hours) > first_offer_time
           # send offer to everyone if it's been more than 24 hours since the offer
           # was sent and there's still no reply
-          self.send_offers_to_everyone_if_havent_yet(restaurant)
+          CreatorReviewOffer::CreateAndSendOffersToAllWorker.perform_async(rest.id)
         end
       end
     end
