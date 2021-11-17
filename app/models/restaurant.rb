@@ -97,7 +97,7 @@ class Restaurant < ApplicationRecord
         .review_scheduled
   end
 
-  def self.send_non_selected_emails_to_all_non_selected_responded_to_offers
+  def send_non_selected_emails_to_all_non_selected_responded_to_offers
     self.creator_review_offers.responded_to.each do |offer|
       creator = offer.content_creator
       # if they are not the selected creators and if they selected
@@ -107,7 +107,7 @@ class Restaurant < ApplicationRecord
            offer[:option_two_response] ||
            offer[:option_three_response])
         begin
-          ContentCreator.with(offer: offer).non_selected_email.deliver_later
+          CreatorMailer.with(offer: offer).non_selected_email.deliver_later
         rescue Exception => e
           Airbrake.notify("A non selected email could not have been sent", {
             error: e,

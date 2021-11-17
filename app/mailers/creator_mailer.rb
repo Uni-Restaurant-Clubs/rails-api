@@ -20,6 +20,7 @@ class CreatorMailer < ApplicationMailer
     @offer = params[:offer]
     @restaurant = @offer.restaurant
     @creator = @offer.content_creator
+    @name = @creator.name
 
     mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
       subject: "You could not be matched for #{@restaurant.name}"
