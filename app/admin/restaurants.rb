@@ -59,7 +59,7 @@ ActiveAdmin.register Restaurant do
     else
       response, error = CreatorReviewOffer.create_offers_and_send_emails_to_creators(
                                                                        resource)
-      if alert_type = error
+      if error
         redirect_to resource_path(resource), alert: response
       else
         redirect_to resource_path(resource), notice: response
@@ -139,12 +139,10 @@ ActiveAdmin.register Restaurant do
       row :option_2
       row :option_3
       row :send_review_offer_emails_to_creators do |restaurant|
-=begin
         button_to "Send review offer emails to creators",
           send_review_offer_emails_admin_restaurant_path(restaurant.id),
           action: :post,
           :data => {:confirm => 'Are you sure you want to send review offer emails out to creators?'}
-=end
       end
       row :initial_offer_sent_to_creators
       row :writer_confirmed

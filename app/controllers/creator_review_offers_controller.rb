@@ -3,14 +3,14 @@ class CreatorReviewOffersController < ApplicationController
   def edit
     @token = params[:id]
     @offer = CreatorReviewOffer.find_by(token: @token)
-    if @offer.restaurant&.scheduled_review_date_and_time
+    if !@offer
       @error = "Offer no longer valid"
-    elsif !@offer
+    elsif @offer.restaurant&.scheduled_review_date_and_time
       @error = "Offer no longer valid"
     elsif @offer.responded_at
       # verify it has not been responded to already
       @error = "This offer has already been responded to"
-    elsif Time.now > @offer.created_at + 2.days
+    elsif TimeHelpers.now > @offer.created_at + 2.days
       # validate date (can't be more than 2 days old)
       @error = "This offer has expired since it was sent more than 2 days ago."
     end

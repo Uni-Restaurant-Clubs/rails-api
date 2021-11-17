@@ -99,7 +99,8 @@ class CreatorMatching
   def self.handle_post_response_matching(offer)
     rest = offer.restaurant
 
-    if offer[:does_not_want_to_review_this_restaurant] ||
+    if !offer.selected_a_time_offer? ||
+        offer[:does_not_want_to_review_this_restaurant] ||
         offer[:not_available_for_any_options]
       # declined so no match
       # send out to everyone if haven't sent out to everyone yet
@@ -126,9 +127,10 @@ class CreatorMatching
     restaurants = Restaurant.where(initial_offers_sent_to_creators: true)
                             .where(offer_sent_to_everyone: false)
                             .where(scheduled_review_date_and_time: nil)
+                            .where(status: "accepted")
     restaurants.each do |restaurant|
       first_offer_time = restaurant.creator_review_offers.first&.created_at
-      if (Time.now - 24.hours) > first_offer_time
+      if (TimeHelpers.now - 24.hours) > first_offer_time
         # send offer to everyone if it's been more than 24 hours since the offer
         # was sent and there's still no reply
         self.send_offers_to_everyone_if_havent_yet(rest)

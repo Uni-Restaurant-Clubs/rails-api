@@ -30,6 +30,12 @@ class CreatorReviewOffer < ApplicationRecord
     end
   end
 
+  def self.selected_a_time_offer?
+    offer[:option_one_response] ||
+    offer[:option_two_response] ||
+    offer[:option_three_response]
+  end
+
   def self.create_and_send_for_role(rest, role, creator_id)
     data = {
       restaurant_id: rest.id,
@@ -117,7 +123,7 @@ class CreatorReviewOffer < ApplicationRecord
   def add_response(data)
     self.assign_attributes(data)
     error = self.validate_response_data(data)
-    unless error
+    if !error
       begin
         self.responded_at = Time.now
         self.save!
@@ -125,9 +131,9 @@ class CreatorReviewOffer < ApplicationRecord
         Airbrake.notify("Creator review offer could not be responded to", {
           error: e,
           errors: self.errors.full_messages,
-          params: params,
+          params: data,
           offer_id: self.id,
-          restaurant_name: self.restaurant.name
+          restaurant_name: self.restaurant&.name
         })
         error = "Oops! something went wrong. We have been notified and will fix the issue soon!"
       end
@@ -156,7 +162,9 @@ class CreatorReviewOffer < ApplicationRecord
       response = "Alert!! Looks like there is already a scheduled review date and time. If you really want to send out new offer emails, the review scheduled time must be removed first. Double check first if you really want to do that!"
     elsif !r.option_1 || !r.option_2 || !r.option_3
       response = "All datetime options must be filled first"
-    elsif r.option_1 < Time.now || r.option_2 < Time.now || r.option_3 < Time.now
+    elsif r.option_1 < TimeHelpers.now ||
+          r.option_2 < TimeHelpers.now ||
+          r.option_3 < TimeHelpers.now
       response = "The datetime options must be in the future"
     elsif !r.writer_id || !r.photographer_id
       response = "A writer and a photographer must first be selected"
