@@ -139,7 +139,8 @@ class CreatorReviewOffer < ApplicationRecord
     error
   end
 
-  def self.create_offers_and_send_emails_to_rest_of_creators(restaurant)
+  def self.create_offers_and_send_emails_to_rest_of_creators(offer, reason)
+    restaurant = offer.restaurant
     restaurant.update!(offer_sent_to_everyone: true)
     creator_ids = self.where(restaurant_id: restaurant.id)
                       .pluck(:content_creator_id)
@@ -151,6 +152,8 @@ class CreatorReviewOffer < ApplicationRecord
         self.create_and_send_email_for_creator(restaurant, creator)
       end
     end
+    AdminMailer.with(offer: offer, reason: reason)
+               .sent_offers_to_all_creators_email.deliver_now
   end
 
   def self.create_offers_and_send_emails_to_creators(restaurant)

@@ -1,0 +1,28 @@
+%p Hey Team,
+%br
+%b Offer emails were just sent out to all creators!
+%br
+%ul
+  %li
+    Reason:
+    %b= @reason
+  - if @reason == "One or both creators did not respond within 24 hours."
+    %li
+      Creator(s) with no response name:
+      = @no_response_creators.map { |c| c.name }
+    %li
+      Creator(s) with no response email:
+      = @no_response_creators.map { |c| c.email }
+  - if @reason == "A creator Declined."
+    %li
+      Creator that declined name:
+      %b= @creator.name
+    %li
+      Creator that declined email:
+      = @creator.email
+  %li
+    Restaurant name:
+    %b= @restaurant.name
+  %li
+    Restaurant id:
+    = @restaurant.id

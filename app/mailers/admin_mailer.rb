@@ -2,6 +2,21 @@ class AdminMailer < ApplicationMailer
 
   default to: "hello@unirestaurantclub.com"
 
+  def sent_offers_to_all_creators_email
+    @offer = params[:offer]
+    @creator = @offer.content_creator
+    @reason = params[:reason]
+    @restaurant = @offer.restaurant
+    @initial_creator_offers = @restaurant.creator_review_offers.first(2)
+    @no_response_creators = []
+    @initial_creator_offers.each do |offer|
+      creator = offer.content_creator
+      @no_response_creators << creator if offer.responded_at == nil
+    end
+
+    mail subject: "Offer emails sent out to all creators for #{@restaurant.name}"
+  end
+
   def send_daily_summary_email
     @emails = params[:emails]
     @data = params[:data]
