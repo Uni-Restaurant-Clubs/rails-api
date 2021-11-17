@@ -17,6 +17,7 @@ class CreatorMailer < ApplicationMailer
   # if they responded to an offer but they were not selected
   # this is to notify them that they could not be selected
   def non_selected_email
+
     @offer = params[:offer]
     @restaurant = @offer.restaurant
     @creator = @offer.content_creator
