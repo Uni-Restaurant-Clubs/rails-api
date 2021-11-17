@@ -14,6 +14,17 @@ class CreatorMailer < ApplicationMailer
       subject: "Confirm review happened: #{@restaurant.name}"
   end
 
+  # if they responded to an offer but they were not selected
+  # this is to notify them that they could not be selected
+  def non_selected_email
+    @offer = params[:offer]
+    @restaurant = @offer.restaurant
+    @creator = @offer.content_creator
+
+    mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
+      subject: "You could not be matched for #{@restaurant.name}"
+  end
+
   def just_reviewed_email
     @restaurant = params[:restaurant]
     @creator = params[:creator]
@@ -29,7 +40,7 @@ class CreatorMailer < ApplicationMailer
     @restaurant = @offer.restaurant
     @creator = @offer.content_creator
 
-    mail to: @creator.email,
+    mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
       subject: "We have a new restaurant offer for you! #{@restaurant.name}"
   end
 

@@ -97,6 +97,29 @@ class Restaurant < ApplicationRecord
         .review_scheduled
   end
 
+  def self.send_non_selected_emails_to_all_non_selected_responded_to_offers
+    self.creator_review_offers.responded_to.each do |offer|
+      creator = offer.content_creator
+      # if they are not the selected creators and if they selected
+      # a time option then notify them that they were not selected
+      if creator.id != writer_id && creator.id != photographer_id &&
+          (offer[:option_one_response] ||
+           offer[:option_two_response] ||
+           offer[:option_three_response])
+        begin
+          ContentCreator.with(offer: offer).non_selected_email.deliver_later
+        rescue Exception => e
+          Airbrake.notify("A non selected email could not have been sent", {
+            error: e,
+            offer_id: offer.id,
+            restaurant_id: self.id,
+            restaurant_name: self.name
+          })
+        end
+      end
+    end
+  end
+
   def reset_confirmation_information_so_can_resend_initial_offers
     self.initial_offer_sent_to_creators = false
     self.scheduled_review_date_and_time = nil
@@ -114,10 +137,12 @@ class Restaurant < ApplicationRecord
     self.photographer_id = photographer_offer.content_creator_id
     self.scheduled_review_date_and_time = writer_offer[option]
     self.status = "review scheduled"
+    rest_id = self.id
     begin
-      # delete non responded to offers so they can not be responded to
-      self.creator_review_offers.where(responded_at: nil).destroy_all
       self.save!
+      CreatorReviewOffer::HandlePostMatchNonSelectedResponsesWorker.perform_async(
+        rest_id)
+
       # send out emails
       # send email to writer
       # send email to photographer
