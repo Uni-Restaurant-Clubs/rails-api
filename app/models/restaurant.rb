@@ -138,6 +138,7 @@ class Restaurant < ApplicationRecord
     self.scheduled_review_date_and_time = writer_offer[option]
     self.status = "review scheduled"
     rest_id = self.id
+    begin
       self.save!
       CreatorReviewOffer::HandlePostMatchNonSelectedResponsesWorker.perform_async(
         rest_id)
@@ -167,6 +168,14 @@ class Restaurant < ApplicationRecord
         self.creators_event_url = result.html_link
       end
       self.save!
+    rescue Exception => e
+      Airbrake.notify("Could not update restaurant scheduled time after creator matching", {
+        error: e,
+        errors: self.errors.full_messages,
+        restaurant_id: self.id,
+        restaurant_name: self.name
+      })
+    end
   end
 
   def self.send_daily_update_emails(time=nil)
