@@ -3,10 +3,7 @@ class CreatorMailer < ApplicationMailer
     @confirmation = params[:confirmation]
     @creator = @confirmation.content_creator
     @restaurant = @confirmation.restaurant
-    @confirm_true_url = respond_api_v1_review_happened_confirmation_url(
-      @confirmation.token, response: true)
-    @confirm_false_url = respond_api_v1_review_happened_confirmation_url(
-      @confirmation.token, response: false)
+    @confirm_url = edit_review_happened_confirmation_url(@confirmation.token)
     @email = @creator.email
     @name = @creator.name
 
@@ -34,7 +31,7 @@ class CreatorMailer < ApplicationMailer
     @html = TextContent.find_by(name: "creators just reviewed email")&.text
 
     mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
-      subject: "Review Follow Up Email for Uni Restaurant Club"
+      subject: "URC Review Follow Up Email for #{@restaurant.name}"
   end
 
   def review_offer_email

@@ -1,0 +1,32 @@
+.container
+  .row.justify-content-center
+    .col-md-8.col-lg-6.col-sm-12(style="padding: 20px;")
+      %br
+      %h1(style="text-align: center;")
+        = image_tag "https://urc-public-images.s3.us-east-2.amazonaws.com/output-onlinepngtools+(1).png", height: "50", style: "margin-right: 10px;"
+        Confirm if review happened
+      %br
+
+      %p
+        Hello
+        = "#{@creator.name},"
+      %br
+      %p
+        It seems that a scheduled time for a review just passed.
+      %ul
+        %li
+          Restaurant name:
+          %b= @restaurant.name
+      %br
+      %br
+      %p
+        Click here if the review happened
+      .d-grid.gap-2
+        = link_to 'Review Happened', @confirm_true_url, class: "btn btn-lg btn-success", :data => {:confirm => 'I confirm that review DID happen'}
+      %br
+      %br
+      %p
+        Click here if the review DID NOT happened
+      .d-grid.gap-2
+        = link_to 'Review DID NOT Happen', @confirm_false_url, class: "btn-lg btn btn-danger", :data => {:confirm => 'I confirm that review DID NOT happen.'}
+

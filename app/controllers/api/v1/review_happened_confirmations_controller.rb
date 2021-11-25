@@ -23,11 +23,17 @@ class Api::V1::ReviewHappenedConfirmationsController < Api::V1::ApiApplicationCo
         response: response,
         confirmation_id: confirmation&.id
       })
-      return render html: error
+      flash[:alert] = error
+      redirect_to edit_review_happened_confirmation_url(confirmation.token)
+      return
     end
 
     result = confirmation.update_response_and_handle_next_steps(response)
-    render html: result[:message]
+    flash[:notice] = result[:message] if !result[:error]
+    flash[:alert] = result[:message] if result[:error]
+    redirect_to edit_review_happened_confirmation_url(confirmation.token)
+    return
+
   end
 
 end

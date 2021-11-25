@@ -11,10 +11,9 @@
   %li
     Date and time:
     = TimeHelpers.to_human(@restaurant.scheduled_review_date_and_time)
-%p
-  Please click here if the review happened
-  = link_to 'Review Happened', @confirm_true_url
-%p
-  Please click here if the review DID NOT happened
-  = link_to 'Review DID NOT Happen and needs to be rescheduled', @confirm_false_url
+%br
+%img(src="https://urc-public-images.s3.us-east-2.amazonaws.com/output-onlinepngtools+(2).png" width="30")
+= link_to 'CLICK HERE to confirm if review happened or not', @confirm_url
+%br
+%br
 

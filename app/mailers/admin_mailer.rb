@@ -32,7 +32,7 @@ class AdminMailer < ApplicationMailer
     @text = params[:text]
     @current_user_email = params[:current_user_email]
 
-    mail subject: "New Contact Form Submission"
+    mail subject: "New Contact Form Submission from #{@email}"
   end
 
   # a creator just confirmed that a review happened
@@ -43,7 +43,7 @@ class AdminMailer < ApplicationMailer
     @restaurant = @confirmation.restaurant
     @creator = @confirmation.content_creator
 
-    mail subject: "A review just happened!"
+    mail subject: "Creator confirmed review happened for #{@restaurant.name}"
   end
 
   # a creator just confirmed that a review DID NOT happen
@@ -54,7 +54,7 @@ class AdminMailer < ApplicationMailer
     @creator = @confirmation.content_creator
 
 
-    mail subject: "UH OH a review did NOT happen!"
+    mail subject: "UH OH a review did NOT happen for #{@restaurant.name}!"
   end
 
   def confirm_review_happened
@@ -62,7 +62,7 @@ class AdminMailer < ApplicationMailer
     @restaurant = @confirmation.restaurant
 
     mail bcc: "creators@unirestaurantclub.com",
-      subject: "Confirm review happened emails sent"
+      subject: "Confirm review happened emails sent for #{@restaurant.name}"
   end
 
   def send_review_time_scheduled_email

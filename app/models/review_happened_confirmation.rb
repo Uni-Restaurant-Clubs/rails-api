@@ -19,16 +19,16 @@ class ReviewHappenedConfirmation < ApplicationRecord
         writer = restaurant.writer
         photographer = restaurant.photographer
 
-        unless restaurant.just_reviewed_emails_sent
+        if !restaurant.just_reviewed_emails_sent
           CreatorMailer.with(restaurant: restaurant, creator: writer)
-            .just_reviewed_email.deliver_now
+            .just_reviewed_email.deliver_later
           unless writer.id == photographer.id
             CreatorMailer.with(restaurant: restaurant, creator: photographer)
-              .just_reviewed_email.deliver_now
+              .just_reviewed_email.deliver_later
           end
 
           RestaurantMailer.with(restaurant: restaurant)
-            .just_reviewed_email.deliver_now
+            .just_reviewed_email.deliver_later
 
           restaurant.just_reviewed_emails_sent = true
           restaurant.status = "reviewed"
@@ -36,14 +36,13 @@ class ReviewHappenedConfirmation < ApplicationRecord
         end
 
         AdminMailer.with(confirmation: self)
-          .just_reviewed_email_true.deliver_now
+          .just_reviewed_email_true.deliver_later
         return { error: false,
-                 message: "You have confirmed that the review DID happen. Thank you. You should receive a follow up email now." }
-
+                   message: "You have confirmed that the review DID happen. Thank you. You should receive a follow up email now." }
 
       elsif response == "false"
         AdminMailer.with(confirmation: self)
-          .just_reviewed_email_false.deliver_now
+          .just_reviewed_email_false.deliver_later
         Airbrake.notify("Someone said a review did not happen!", {
           restaurant_id: restaurant&.id,
           restaurant_name: restaurant&.name,
