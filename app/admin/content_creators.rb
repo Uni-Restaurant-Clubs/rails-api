@@ -9,7 +9,8 @@ ActiveAdmin.register ContentCreator do
      :youtube_url, :is_writer, :is_photographer, :is_videographer,
      :intro_application_text, :experiences_application_text,
      :why_join_application_text, :application_social_media_links, :resume,
-     :writing_example, :status, :intro_video,
+     :writing_example, :status, :intro_video, :food_preferences,
+     :camera_equipment_description, :editing_software, :notes, :allergies,
       image_attributes: [
         :id, :photo, :image_type
       ]]
@@ -74,6 +75,10 @@ ActiveAdmin.register ContentCreator do
       row :is_writer
       row :is_photographer
       row :is_videographer
+      row :food_preferences
+      row :camera_equipment_description
+      row :notes
+      row :allergies
       row :intro_application_text
       row :experiences_application_text
       row :why_join_application_text
@@ -130,6 +135,10 @@ ActiveAdmin.register ContentCreator do
       f.input :is_writer
       f.input :is_photographer
       f.input :is_videographer
+      f.input :food_preferences
+      f.input :camera_equipment_description
+      f.input :notes
+      f.input :allergies
       f.input :intro_application_text
       f.input :experiences_application_text
       f.input :why_join_application_text

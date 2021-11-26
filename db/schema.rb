@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_12_005740) do
+ActiveRecord::Schema.define(version: 2021_11_26_194211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -126,6 +126,11 @@ ActiveRecord::Schema.define(version: 2021_11_12_005740) do
     t.boolean "applied_for_writer", default: false
     t.boolean "applied_for_photographer", default: false
     t.boolean "applied_for_videographer", default: false
+    t.text "food_preferences"
+    t.text "camera_equipment_description"
+    t.string "editing_software"
+    t.text "notes"
+    t.string "allergies"
     t.index ["applied_for_photographer"], name: "index_content_creators_on_applied_for_photographer"
     t.index ["applied_for_videographer"], name: "index_content_creators_on_applied_for_videographer"
     t.index ["applied_for_writer"], name: "index_content_creators_on_applied_for_writer"
