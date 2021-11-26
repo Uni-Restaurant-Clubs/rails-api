@@ -121,12 +121,32 @@ class Restaurant < ApplicationRecord
   end
 
   def reset_confirmation_information_so_can_resend_initial_offers
-    self.initial_offer_sent_to_creators = false
-    self.scheduled_review_date_and_time = nil
-    self.offer_sent_to_everyone = false
-    self.status = "accepted"
-    self.save!
-    self.creator_review_offers.destroy_all
+    response = "Restaurant UNSCHEDULED correctly"
+    error = false
+    if self.status != "review scheduled"
+      error = true
+      response = "status is not currently 'review scheduled' so cannot unschedule. You must change the status to 'review scheduled' if you want to unschedule the review but first DOUBLE CHECK that you really want to do that"
+    end
+    if !error
+      begin
+        self.initial_offer_sent_to_creators = false
+        self.scheduled_review_date_and_time = nil
+        self.offer_sent_to_everyone = false
+        self.status = "accepted"
+        self.save!
+        self.creator_review_offers.destroy_all
+      rescue Exception => e
+        error = true
+        response = "Oops there was an issue unscheduling the restaurant and the tech team has been notified"
+        Airbrake.notify("A restaurant could not be UNSCHEDULED", {
+          error: e,
+          restaurant_errors: self.errors.full_messages,
+          restaurant_id: self.id,
+          restaurant_name: self.name
+        })
+      end
+    end
+    return response, error
   end
 
   def handle_after_offer_response_matching(matching_info)

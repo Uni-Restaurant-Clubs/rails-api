@@ -67,6 +67,19 @@ ActiveAdmin.register Restaurant do
     end
   end
 
+  member_action :unschedule_restaurant_review, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      response, error = resource.reset_confirmation_information_so_can_resend_initial_offers
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to resource_path(resource), notice: response
+      end
+    end
+  end
+
   index :download_links => false do
     selectable_column
     id_column
@@ -131,6 +144,12 @@ ActiveAdmin.register Restaurant do
       row :primary_email
       row :other_contact_info
       row :website_url
+      row :unschedule_restaurant_review do |restaurant|
+        button_to "Unschedule Restaurant Review so that it can be Rescheduled",
+          unschedule_restaurant_review_admin_restaurant_path(restaurant.id),
+          action: :post,
+          :data => {:confirm => 'Are you sure you want to UNSCHEDULE the restaurant review? This will set status to accepted and remove scheduled_review_date_and_time so that the restaurant can be RESCHEDULED again'}
+      end
       row :scheduled_review_date_and_time
       row :restaurant_event_url
       row :creators_event_url
