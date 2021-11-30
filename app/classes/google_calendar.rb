@@ -53,7 +53,7 @@ class GoogleCalendar
     extra_data = {
       summary: summary,
       description: description,
-      emails: restaurant.primary_email&.strip,
+      emails: [restaurant.primary_email&.strip],
     }
     event_data.merge!(extra_data)
     result = self.create_event(event_data)
