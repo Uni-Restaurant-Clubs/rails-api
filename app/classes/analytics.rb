@@ -15,8 +15,8 @@ class Analytics
 
     if !event.save
       Airbrake.notify("could not save log event", {
-        errors: event.errors.full_messages)
-      }
+        errors: event.errors.full_messages
+      })
       return false
     end
     return true

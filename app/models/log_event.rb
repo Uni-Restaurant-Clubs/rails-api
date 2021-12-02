@@ -1,6 +1,6 @@
 class LogEvent < ApplicationRecord
-  belongs_to :user
-  belongs_to :restaurant
+  belongs_to :user, optional: true
+  belongs_to :restaurant, optional: true
 
   validates  :event_name, presence: true
 

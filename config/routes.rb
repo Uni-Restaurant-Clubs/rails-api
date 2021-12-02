@@ -22,7 +22,6 @@ Rails.application.routes.draw do
       resources :log_events, only: [] do
         collection do
           post 'track', to: "log_events#track"
-          post 'page_view', to: "log_events#page_view"
         end
       end
       resources :review_happened_confirmations, only: [] do

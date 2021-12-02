@@ -4,11 +4,7 @@ class Api::V1::LogEventsController < ApplicationController
   def track
     data = event_params
     Analytics.track(data[:event_name], data)
-  end
-
-  def page_view
-    data = event_params
-    Analytics.page_view(data[:label], data)
+    render json: {}, status: 204
   end
 
   private
