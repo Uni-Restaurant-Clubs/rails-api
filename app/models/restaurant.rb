@@ -8,6 +8,7 @@ class Restaurant < ApplicationRecord
   has_many :restaurant_category_restaurants, dependent: :destroy
   has_many :review_happened_confirmation, dependent: :destroy
   has_many :restaurant_categories, through: :restaurant_category_restaurants
+  has_many :log_events, dependent: :destroy
   belongs_to :writer, class_name: 'ContentCreator', foreign_key: 'writer_id', optional: true
   belongs_to :photographer, class_name: 'ContentCreator', foreign_key: 'photographer_id', optional: true
 

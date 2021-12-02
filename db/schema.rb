@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_194211) do
+ActiveRecord::Schema.define(version: 2021_12_02_195800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -224,6 +224,22 @@ ActiveRecord::Schema.define(version: 2021_11_26_194211) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["code"], name: "index_location_codes_on_code", unique: true
     t.index ["state"], name: "index_location_codes_on_state"
+  end
+
+  create_table "log_events", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "restaurant_id"
+    t.string "event_name"
+    t.string "label"
+    t.integer "category"
+    t.text "properties"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category"], name: "index_log_events_on_category"
+    t.index ["event_name"], name: "index_log_events_on_event_name"
+    t.index ["label"], name: "index_log_events_on_label"
+    t.index ["restaurant_id"], name: "index_log_events_on_restaurant_id"
+    t.index ["user_id"], name: "index_log_events_on_user_id"
   end
 
   create_table "restaurant_categories", force: :cascade do |t|
