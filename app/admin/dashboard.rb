@@ -5,10 +5,19 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel 'Daily Page Views' do
+          #line_chart ChartData.daily_page_views
           line_chart LogEvent.page_views.group_by_day(:created_at).count
         end
       end
     end
+    columns do
+      column do
+        panel 'Daily Page Views per Page' do
+          line_chart ChartData.daily_page_views_by_page
+        end
+      end
+    end
+
     # Here is an example of a simple dashboard with columns and panels.
     #
     # columns do

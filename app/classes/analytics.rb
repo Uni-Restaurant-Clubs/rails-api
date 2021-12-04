@@ -3,8 +3,9 @@ class Analytics
   def self.track(event_name, options={})
 
     event_data = {
-      user_id: options[:user]&.id,
-      restaurant: options[:restaurant]&.id,
+      user_id: options[:user_id],
+      creator_id: options[:creator_id],
+      restaurant: options[:restaurant_id],
       event_name: event_name,
       label: options[:label],
       category: options[:category],
