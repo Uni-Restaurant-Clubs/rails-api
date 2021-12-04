@@ -10,6 +10,7 @@ class LogEvent < ApplicationRecord
     where(created_at: [start_time..end_time])
   end
 
+  scope :page_views, -> { where(event_name: "Page View") }
   scope :grouped_by_day, lambda {
     group_by do |x|
         x.created_at.strftime("%Y-%m-%d")

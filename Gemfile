@@ -33,6 +33,8 @@ gem 'airbrake', '~> 11.0', '>= 11.0.3'
 gem 'email_validator', '~> 2.2', '>= 2.2.3'
 gem 'google-api-client', '~> 0.53.0'
 gem 'sidekiq', '~> 6.3', '>= 6.3.1'
+gem 'chartkick', '~> 4.1', '>= 4.1.2'
+gem 'groupdate', '~> 5.2', '>= 5.2.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
