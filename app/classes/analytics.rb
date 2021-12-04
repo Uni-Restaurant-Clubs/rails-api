@@ -5,7 +5,7 @@ class Analytics
     event_data = {
       user_id: options[:user_id],
       creator_id: options[:creator_id],
-      restaurant: options[:restaurant_id],
+      restaurant_id: options[:restaurant_id],
       event_name: event_name,
       label: options[:label],
       category: options[:category],
