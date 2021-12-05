@@ -1,5 +1,9 @@
 class ChartData
 
+  def self.unique_user_page_views_by_day
+    LogEvent.page_views.unique_grouped_by_day
+  end
+
   # daily page views
   def self.daily_page_views
 

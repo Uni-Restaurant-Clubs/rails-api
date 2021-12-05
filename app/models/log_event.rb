@@ -22,4 +22,13 @@ class LogEvent < ApplicationRecord
     end
   }
 
+  def self.unique_grouped_by_day
+    grouped = self.grouped_by_day
+    data = {}
+    grouped.each do |day, events|
+      data[day] = events.uniq(&:user_ip_address).count
+    end
+    data
+  end
+
 end

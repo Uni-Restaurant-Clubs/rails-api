@@ -232,6 +232,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_195800) do
     t.integer "creator_id"
     t.string "event_name"
     t.string "label"
+    t.string "user_ip_address"
     t.integer "category"
     t.text "properties"
     t.datetime "created_at", precision: 6, null: false
@@ -242,6 +243,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_195800) do
     t.index ["label"], name: "index_log_events_on_label"
     t.index ["restaurant_id"], name: "index_log_events_on_restaurant_id"
     t.index ["user_id"], name: "index_log_events_on_user_id"
+    t.index ["user_ip_address"], name: "index_log_events_on_user_ip_address"
   end
 
   create_table "restaurant_categories", force: :cascade do |t|

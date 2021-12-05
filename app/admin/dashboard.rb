@@ -4,7 +4,14 @@ ActiveAdmin.register_page "Dashboard" do
   content title: proc { I18n.t('active_admin.dashboard') } do
     columns do
       column do
-        panel 'Daily Page Views' do
+        panel 'Unique Daily User Visits' do
+          line_chart ChartData.unique_user_page_views_by_day
+        end
+      end
+    end
+    columns do
+      column do
+        panel 'Total Daily Page Views' do
           #line_chart ChartData.daily_page_views
           line_chart LogEvent.page_views.group_by_day(:created_at).count
         end

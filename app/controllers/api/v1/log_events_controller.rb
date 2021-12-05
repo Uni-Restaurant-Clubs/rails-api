@@ -3,6 +3,7 @@ class Api::V1::LogEventsController < ApplicationController
 
   def track
     data = event_params
+    data[:user_ip_address] = request.remote_ip
     if username = data[:public_unique_username]
       creator = ContentCreator.find_by(public_unique_username: username)
       data[:creator_id] = creator.id
