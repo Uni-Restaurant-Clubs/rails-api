@@ -54,7 +54,7 @@ class ReviewSerializer < ActiveModel::Serializer
   end
 
   class RestaurantSerializer < ActiveModel::Serializer
-    attributes :name
+    attributes :name, :id
   end
 
 end
