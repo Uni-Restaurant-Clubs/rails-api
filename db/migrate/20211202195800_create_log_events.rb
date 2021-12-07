@@ -3,7 +3,7 @@ class CreateLogEvents < ActiveRecord::Migration[6.1]
     create_table :log_events do |t|
       t.integer :user_id
       t.integer :restaurant_id
-      t.integer :creator_id
+      t.integer :content_creator_id
       t.string :event_name
       t.string :label
       t.string :user_ip_address
@@ -14,7 +14,7 @@ class CreateLogEvents < ActiveRecord::Migration[6.1]
     end
     add_index :log_events, :user_id
     add_index :log_events, :user_ip_address
-    add_index :log_events, :creator_id
+    add_index :log_events, :content_creator_id
     add_index :log_events, :restaurant_id
     add_index :log_events, :event_name
     add_index :log_events, :label

@@ -229,7 +229,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_195800) do
   create_table "log_events", force: :cascade do |t|
     t.integer "user_id"
     t.integer "restaurant_id"
-    t.integer "creator_id"
+    t.integer "content_creator_id"
     t.string "event_name"
     t.string "label"
     t.string "user_ip_address"
@@ -238,7 +238,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_195800) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category"], name: "index_log_events_on_category"
-    t.index ["creator_id"], name: "index_log_events_on_creator_id"
+    t.index ["content_creator_id"], name: "index_log_events_on_content_creator_id"
     t.index ["event_name"], name: "index_log_events_on_event_name"
     t.index ["label"], name: "index_log_events_on_label"
     t.index ["restaurant_id"], name: "index_log_events_on_restaurant_id"
