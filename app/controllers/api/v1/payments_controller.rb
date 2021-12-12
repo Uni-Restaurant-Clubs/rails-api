@@ -42,7 +42,7 @@ class Api::V1::PaymentsController < Api::V1::ApiApplicationController
     session = StripePayments.create_checkout_session(price_id, @current_user)
     if session.try(:url)
       json = { checkout_url: session.url }.to_json
-      render json: json, status: 303
+      render json: json, status: 200
     else
       json = { error: true,
                message: "session url not found" }.to_json
