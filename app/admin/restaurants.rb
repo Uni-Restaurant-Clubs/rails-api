@@ -57,12 +57,11 @@ ActiveAdmin.register Restaurant do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
     else
-      response, error = Review.create_from_restaurant(resource)
+      response, error, review = Review.create_from_restaurant(resource)
       if error
         redirect_to resource_path(resource), alert: response
       else
-        review = Review.where(restaurant_id: resource.id).last
-        redirect_to admin_review_path(review), notice: response
+        redirect_to admin_review_path(review.id), notice: response
       end
     end
   end

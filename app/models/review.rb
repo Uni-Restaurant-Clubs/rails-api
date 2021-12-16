@@ -23,7 +23,7 @@ class Review < ApplicationRecord
   end
 
   def self.create_from_restaurant(restaurant)
-    if restaurant.reviews.any?
+    if Review.unscoped.where(restaurant_id: restaurant.id).any?
       response = "A review has already been created for this restaurant"
       error = true
     else
@@ -49,6 +49,6 @@ class Review < ApplicationRecord
         error = true
       end
     end
-    return response, error
+    return response, error, review
   end
 end
