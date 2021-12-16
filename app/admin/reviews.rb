@@ -11,7 +11,7 @@ ActiveAdmin.register Review do
 
   end
 
-  actions :all, :except => [:destroy]
+  actions :all, :except => [:destroy, :new, :create]
 
   permit_params do
     permitted = [
