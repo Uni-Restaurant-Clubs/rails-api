@@ -21,4 +21,34 @@ class Review < ApplicationRecord
   def featured_photo
     self.images.featured.first
   end
+
+  def self.create_from_restaurant(restaurant)
+    if restaurant.reviews.any?
+      response = "A review has already been created for this restaurant"
+      error = true
+    else
+      review_data = {
+        restaurant_id: restaurant.id,
+        photographer_id: restaurant.photographer_id,
+        writer_id: restaurant.writer_id,
+        status: "not public",
+        reviewed_at: restaurant.scheduled_review_date_and_time
+      }
+      review = self.new(review_data)
+
+      if review.save
+        response = "Review created!"
+        error = false
+      else
+        Airbrake.notify("Could not create a review from the restaurant page", {
+          errors: review.errors.full_messages,
+          restaurant_id: restaurant.id,
+          restaurant_name: restaurant.name
+        })
+        response = review.errors.full_messages
+        error = true
+      end
+    end
+    return response, error
+  end
 end

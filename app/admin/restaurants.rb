@@ -53,6 +53,20 @@ ActiveAdmin.register Restaurant do
     restaurants.brooklyn.where(:is_franchise => true)
   end
 
+  member_action :create_review, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      response, error = Review.create_from_restaurant(resource)
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        review = Review.where(restaurant_id: resource.id).last
+        redirect_to admin_review_path(review), notice: response
+      end
+    end
+  end
+
   member_action :send_review_offer_emails, method: :post do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
@@ -157,6 +171,12 @@ ActiveAdmin.register Restaurant do
       row :option_1
       row :option_2
       row :option_3
+      row :create_review do |restaurant|
+        button_to "Create a review for this restaurant",
+          create_review_admin_restaurant_path(restaurant.id),
+          action: :post,
+          :data => {:confirm => 'Are you sure you want to create a review for this restaurant?'}
+      end
       row :send_review_offer_emails_to_creators do |restaurant|
         button_to "Send review offer emails to creators",
           send_review_offer_emails_admin_restaurant_path(restaurant.id),
