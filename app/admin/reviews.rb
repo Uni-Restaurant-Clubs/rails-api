@@ -89,7 +89,8 @@ ActiveAdmin.register Review do
         a.input :title
         a.input :featured
         a.input :image_type, :input_html => { :value => "review" }, as: :hidden
-        a.input :photo, as: :file
+        a.input :photo, as: :file, hint: a.template.image_tag(url_for(a.object.resize_to_fit(300)))
+
       end
     end
     f.actions
