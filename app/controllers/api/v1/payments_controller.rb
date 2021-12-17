@@ -2,7 +2,7 @@ require 'stripe'
 
 class Api::V1::PaymentsController < Api::V1::ApiApplicationController
 
-  before_action :authenticate_api_user!
+  before_action :authenticate_api_user!, except: [:webhook]
 
   def webhook
   	Stripe.api_key = ENV["STRIPE_API_KEY"]
