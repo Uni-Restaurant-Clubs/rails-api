@@ -21,11 +21,19 @@ class Api::V1::PaymentsController < Api::V1::ApiApplicationController
       	)
     	rescue JSON::ParserError => e
         json = { error: true, message: "Invalid Payload" }.to_json
+        Airbrake.notify("Stripe webhook fail", {
+          error: e,
+          message: "Invalid Payload"
+        })
         render json: json, status: 400
 
     	rescue Stripe::SignatureVerificationError => e
         json = { error: true,
                  message: "Webhook signature verification failed." }.to_json
+        Airbrake.notify("Stripe webhook fail", {
+          error: e,
+          message: "Webhook signature verification failed"
+        })
         render json: json, status: 404
     	end
   	else

@@ -31,6 +31,11 @@ class StripePayments
   end
 
   def self.handleEvent(event, data)
+    Airbrake.notify("Stripe event happened: #{event['type']}", {
+      event: event,
+      data: data,
+      event_type: event['type']
+    })
 
   	# Get the type of webhook event sent
   	event_type = event['type']
