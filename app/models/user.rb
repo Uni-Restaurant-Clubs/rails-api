@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :identities, dependent: :destroy
   has_many :log_events, dependent: :destroy
+  has_many :check_ins, dependent: :destroy
 
   validates :email, email: {mode: :strict, require_fqdn: true}
   validates_uniqueness_of :passwordless_email_code, :allow_blank => true

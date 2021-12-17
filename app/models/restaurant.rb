@@ -3,6 +3,8 @@ class Restaurant < ApplicationRecord
   has_one :address, dependent: :destroy
 
   has_many :reviews, dependent: :destroy
+  has_many :feature_periods, dependent: :destroy
+  has_many :check_ins, dependent: :destroy
   has_many :images, dependent: :destroy
   has_many :creator_review_offers, dependent: :destroy
   has_many :restaurant_category_restaurants, dependent: :destroy

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_02_195800) do
+ActiveRecord::Schema.define(version: 2021_12_17_171026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -97,6 +97,19 @@ ActiveRecord::Schema.define(version: 2021_12_02_195800) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "check_ins", force: :cascade do |t|
+    t.string "lat"
+    t.string "lng"
+    t.integer "restaurant_id"
+    t.integer "feature_period"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["feature_period"], name: "index_check_ins_on_feature_period"
+    t.index ["restaurant_id"], name: "index_check_ins_on_restaurant_id"
+    t.index ["user_id"], name: "index_check_ins_on_user_id"
+  end
+
   create_table "content_creators", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -171,6 +184,23 @@ ActiveRecord::Schema.define(version: 2021_12_02_195800) do
     t.index ["content_creator_id"], name: "index_creator_review_offers_on_content_creator_id"
     t.index ["restaurant_id"], name: "index_creator_review_offers_on_restaurant_id"
     t.index ["token"], name: "index_creator_review_offers_on_token", unique: true
+  end
+
+  create_table "feature_periods", force: :cascade do |t|
+    t.integer "discount_type"
+    t.integer "discount_number"
+    t.integer "status"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.text "disclaimers"
+    t.text "perks"
+    t.text "notes"
+    t.integer "restaurant_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["discount_type"], name: "index_feature_periods_on_discount_type"
+    t.index ["restaurant_id"], name: "index_feature_periods_on_restaurant_id"
+    t.index ["status"], name: "index_feature_periods_on_status"
   end
 
   create_table "identities", force: :cascade do |t|
