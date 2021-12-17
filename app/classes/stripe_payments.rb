@@ -27,6 +27,11 @@ class StripePayments
   		}],
 		})
 
+    # add for discounts
+      #discounts: [{
+      #  coupon: 'WsRHmlKa',
+      #}],
+
     return session
   end
 
