@@ -4,7 +4,7 @@ class Api::V1::PaymentsController < Api::V1::ApiApplicationController
 
   before_action :authenticate_api_user!
 
-  def handle_webhook
+  def webhook
   	Stripe.api_key = ENV["STRIPE_API_KEY"]
   	webhook_secret = ENV['STRIPE_WEBHOOK_SECRET']
 
