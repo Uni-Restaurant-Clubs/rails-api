@@ -26,6 +26,8 @@ class Restaurant < ApplicationRecord
                  archived: 6,
                  "review did not happen": 7,
                  "confirming review happened": 8 }
+  enum restaurant_replied_through: { email: 0, phone: 1, instagram: 2,
+                             facebook_messenger: 3  }
   enum operational_status: { unknown: 0, "temporarily closed" => 1,
                              "permanently closed" => 2,
                              "currently active" => 3 }
