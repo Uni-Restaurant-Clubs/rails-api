@@ -159,6 +159,8 @@ ActiveAdmin.register Restaurant do
             row :address do |restaurant|
               restaurant.address.try(:full_address)
             end
+            row :photographer
+            row :writer
           end
         end
       end
@@ -196,7 +198,7 @@ ActiveAdmin.register Restaurant do
           attributes_table_for restaurant do
             row :accepted_at
             row :unschedule_restaurant_review do |restaurant|
-              button_to "Unschedule Restaurant Review so that it can be Rescheduled",
+              button_to "Unschedule Review so can be Rescheduled",
                 unschedule_restaurant_review_admin_restaurant_path(restaurant.id),
                 action: :post,
                 :data => {:confirm => 'Are you sure you want to UNSCHEDULE the restaurant review? This will set status to accepted and remove scheduled_review_date_and_time so that the restaurant can be RESCHEDULED again'}
@@ -207,12 +209,6 @@ ActiveAdmin.register Restaurant do
             row :option_1
             row :option_2
             row :option_3
-            row :create_review do |restaurant|
-              button_to "Create a review for this restaurant",
-                create_review_admin_restaurant_path(restaurant.id),
-                action: :post,
-                :data => {:confirm => 'Are you sure you want to create a review for this restaurant?'}
-            end
             row :send_review_offer_emails_to_creators do |restaurant|
               button_to "Send review offer emails to creators",
                 send_review_offer_emails_admin_restaurant_path(restaurant.id),
@@ -221,16 +217,18 @@ ActiveAdmin.register Restaurant do
             end
             row :initial_offer_sent_to_creators
             row :offer_sent_to_everyone
-            row :writer_confirmed
-            row :photographer_confirmed
+          end
+        end
+      end
+      column do
+        panel "Confirmations" do
+          attributes_table_for restaurant do
             row :restaurant_confirmed_final_time
             row :confirmed_with_restaurant_three_days_before
             row :confirmed_with_creators_day_before
             row :confirmed_with_restaurant_day_of_review
             row :confirmed_with_writer_day_of_review
             row :confirmed_with_photographer_day_of_review
-            row :photographer
-            row :writer
           end
         end
       end
@@ -241,6 +239,12 @@ ActiveAdmin.register Restaurant do
             row :date_photos_received
             row :writer_handed_in_article
             row :date_article_received
+            row :create_review do |restaurant|
+              button_to "Create a review for this restaurant",
+                create_review_admin_restaurant_path(restaurant.id),
+                action: :post,
+                :data => {:confirm => 'Are you sure you want to create a review for this restaurant?'}
+            end
           end
         end
       end
