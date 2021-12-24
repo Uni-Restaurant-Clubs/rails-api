@@ -24,8 +24,8 @@ ActiveAdmin.register Restaurant do
                 :photographer_handed_in_photos, :date_photos_received,
                 :writer_handed_in_article,
                 :confirmed_with_restaurant_three_days_before,
-                :confirmed_with_creators_day_before,
-                :instagram_username, :cellphone_number,
+                :confirmed_with_creators_day_before, :preferred_contact_method,
+                :instagram_username, :cellphone_number, :contacted_by,
                 :restaurant_replied_through, :date_we_contacted_them,
                 :date_restaurant_replied, :facebook_username, :did_we_phone_them,
                 :did_we_instagram_message_them, :did_we_facebook_message_them,
@@ -169,6 +169,7 @@ ActiveAdmin.register Restaurant do
         panel "Contact Info" do
           attributes_table_for restaurant do
             row :manager_info
+            row :preferred_contact_method
             row :primary_phone_number
             row :cellphone_number
             row :primary_email
@@ -180,6 +181,7 @@ ActiveAdmin.register Restaurant do
         end
         panel 'Outreach' do
           attributes_table_for restaurant do
+            row :contacted_by
             row :follow_up_reason
             row :did_we_phone_them
             row :did_we_instagram_message_them
@@ -254,57 +256,80 @@ ActiveAdmin.register Restaurant do
 
   form do |f|
     f.semantic_errors *f.object.errors.keys
-    f.inputs 'Details' do
-      f.input :name
-      f.input :description
-      f.input :is_franchise
-      f.input :status
-      f.input :follow_up_reason
-      f.input :operational_status
-      f.input :starred
-      f.input :urc_rating
-      f.input :notes
-      f.input :manager_info
-      f.input :primary_phone_number
-      f.input :cellphone_number
-      f.input :primary_email
-      f.input :other_contact_info
-      f.input :website_url
-      f.input :instagram_username
-      f.input :facebook_username
-      f.input :did_we_phone_them
-      f.input :did_we_instagram_message_them
-      f.input :did_we_facebook_message_them
-      f.input :did_we_email_them
-      f.input :did_we_contact_them_through_website
-      f.input :date_we_contacted_them, as: :date_time_picker
-      f.input :date_restaurant_replied, as: :date_time_picker
-      f.input :restaurant_replied_through
-      f.input :accepted_at, as: :date_time_picker
-      f.input :option_1, as: :date_time_picker
-      f.input :option_2, as: :date_time_picker
-      f.input :option_3, as: :date_time_picker
-      f.input :initial_offer_sent_to_creators
-      f.input :writer_confirmed
-      f.input :photographer_confirmed
-      f.input :restaurant_confirmed_final_time
-      f.input :scheduled_review_date_and_time, as: :date_time_picker
-      f.input :confirmed_with_restaurant_three_days_before
-      f.input :confirmed_with_creators_day_before
-      f.input :confirmed_with_restaurant_day_of_review
-      f.input :confirmed_with_writer_day_of_review
-      f.input :confirmed_with_photographer_day_of_review
-      f.input :photographer_handed_in_photos
-      f.input :date_photos_received, as: :date_time_picker
-      f.input :writer_handed_in_article
-      f.input :date_article_received, as: :date_time_picker
-      f.input :photographer
-      f.input :writer
+    columns do
+      column do
+        f.inputs "Basic Info" do
+          f.input :name
+          f.input :status
+          f.input :notes
+          f.input :operational_status
+          f.input :starred
+          f.input :urc_rating
+          f.input :is_franchise
+          f.input :description
+          f.input :photographer
+          f.input :writer
+        end
+      end
+      column do
+        f.inputs "Contact Info" do
+          f.input :manager_info
+          f.input :preferred_contact_method
+          f.input :primary_phone_number
+          f.input :cellphone_number
+          f.input :primary_email
+          f.input :other_contact_info
+          f.input :website_url
+          f.input :instagram_username
+          f.input :facebook_username
+        end
+      end
     end
-    f.inputs 'Address' do
-      f.has_many :address, heading: false,
-                              remove_record: false do |a|
-        a.input :instructions
+    columns do
+      column do
+        f.inputs "Outreach" do
+          f.input :contacted_by
+          f.input :follow_up_reason
+          f.input :did_we_phone_them
+          f.input :did_we_instagram_message_them
+          f.input :did_we_facebook_message_them
+          f.input :did_we_email_them
+          f.input :did_we_contact_them_through_website
+          f.input :date_we_contacted_them, as: :date_time_picker
+          f.input :date_restaurant_replied, as: :date_time_picker
+          f.input :restaurant_replied_through
+        end
+      end
+      column do
+        f.inputs "Review Scheduling" do
+          f.input :accepted_at, as: :date_time_picker
+          f.input :scheduled_review_date_and_time, as: :date_time_picker
+          f.input :option_1, as: :date_time_picker
+          f.input :option_2, as: :date_time_picker
+          f.input :option_3, as: :date_time_picker
+          f.input :initial_offer_sent_to_creators
+          f.input :offer_sent_to_everyone
+        end
+      end
+    end
+    columns do
+      column do
+        f.inputs "Confirmations" do
+          f.input :restaurant_confirmed_final_time
+          f.input :confirmed_with_restaurant_three_days_before
+          f.input :confirmed_with_creators_day_before
+          f.input :confirmed_with_restaurant_day_of_review
+          f.input :confirmed_with_writer_day_of_review
+          f.input :confirmed_with_photographer_day_of_review
+        end
+      end
+      column do
+        f.inputs "After review is finished" do
+          f.input :photographer_handed_in_photos
+          f.input :date_photos_received, as: :date_time_picker
+          f.input :writer_handed_in_article
+          f.input :date_article_received, as: :date_time_picker
+        end
       end
     end
     f.actions

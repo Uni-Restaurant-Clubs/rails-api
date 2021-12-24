@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_21_201236) do
+ActiveRecord::Schema.define(version: 2021_12_24_205905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -354,6 +354,9 @@ ActiveRecord::Schema.define(version: 2021_12_21_201236) do
     t.boolean "did_we_facebook_message_them"
     t.boolean "did_we_email_them", default: false
     t.boolean "did_we_contact_them_through_website", default: false
+    t.integer "contacted_by"
+    t.integer "preferred_contact_method"
+    t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
     t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"
     t.index ["did_we_facebook_message_them"], name: "index_restaurants_on_did_we_facebook_message_them"
@@ -364,6 +367,7 @@ ActiveRecord::Schema.define(version: 2021_12_21_201236) do
     t.index ["just_reviewed_emails_sent"], name: "index_restaurants_on_just_reviewed_emails_sent"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
     t.index ["photographer_id"], name: "index_restaurants_on_photographer_id"
+    t.index ["preferred_contact_method"], name: "index_restaurants_on_preferred_contact_method"
     t.index ["restaurant_replied_through"], name: "index_restaurants_on_restaurant_replied_through"
     t.index ["starred"], name: "index_restaurants_on_starred"
     t.index ["status"], name: "index_restaurants_on_status"
