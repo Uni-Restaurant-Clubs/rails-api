@@ -1,5 +1,6 @@
 ActiveAdmin.register Restaurant do
 
+
   controller do
     def find_collection(options = {})
       super.brooklyn.reorder(yelp_rating: :desc, yelp_review_count: :desc)
@@ -98,7 +99,7 @@ ActiveAdmin.register Restaurant do
     end
   end
 
-  index :download_links => false do
+  index download_links: proc{ current_admin_user.email == "monty@unirestaurantclubs.com" } do
     selectable_column
     id_column
     column :name
