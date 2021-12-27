@@ -1,4 +1,4 @@
-class CreateFeaturePeriods < ActiveRecord::Migration[6.1]
+class CreateNewFeaturePeriods < ActiveRecord::Migration[6.1]
   def change
     create_table :feature_periods do |t|
       t.integer :discount_type
