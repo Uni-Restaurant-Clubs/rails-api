@@ -3,11 +3,11 @@ class FeaturePeriod < ApplicationRecord
   belongs_to :restaurant
 
   scope :has_started, -> do
-    where('start_date <': TimeHelpers.now)
+    where("start_date < ?", TimeHelpers.now)
   end
 
   scope :has_not_ended, -> do
-    where('end_date >': TimeHelpers.now)
+    where("end_date > ?", TimeHelpers.now)
   end
 
   scope :currently_featured, ->{ has_started.has_not_ended }

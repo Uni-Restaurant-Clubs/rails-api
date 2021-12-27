@@ -12,7 +12,8 @@ amazon:
   access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: us-east-2
-  bucket: urc-uploaded-images-<%= Rails.env %>
+  bucket: urc-uploaded-images-production
+  #bucket: urc-uploaded-images-<%= Rails.env %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

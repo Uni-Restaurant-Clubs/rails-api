@@ -12,6 +12,7 @@ ActiveAdmin.register FeaturePeriod do
   index download_links: proc{ current_admin_user.email == "monty@unirestaurantclubs.com" } do
     selectable_column
     id_column
+    column :restaurant
     column :discount_type
     column :discount_number
     column :status
@@ -20,7 +21,6 @@ ActiveAdmin.register FeaturePeriod do
     column :disclaimers
     column :perks
     column :notes
-    column :restaurant
     actions
   end
 
@@ -50,6 +50,7 @@ ActiveAdmin.register FeaturePeriod do
       f.input :perks
       f.input :notes
     end
+    f.actions
   end
 
 end
