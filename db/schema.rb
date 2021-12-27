@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_17_171026) do
+ActiveRecord::Schema.define(version: 2021_12_24_205905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -343,11 +343,32 @@ ActiveRecord::Schema.define(version: 2021_12_17_171026) do
     t.boolean "initial_offers_sent_to_creators", default: false
     t.boolean "confirmed_with_restaurant_three_days_before", default: false
     t.boolean "confirmed_with_creators_day_before", default: false
+    t.string "instagram_username"
+    t.string "cellphone_number"
+    t.integer "restaurant_replied_through"
+    t.datetime "date_we_contacted_them"
+    t.datetime "date_restaurant_replied"
+    t.string "facebook_username"
+    t.boolean "did_we_phone_them", default: false
+    t.boolean "did_we_instagram_message_them", default: false
+    t.boolean "did_we_facebook_message_them"
+    t.boolean "did_we_email_them", default: false
+    t.boolean "did_we_contact_them_through_website", default: false
+    t.integer "contacted_by"
+    t.integer "preferred_contact_method"
+    t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
+    t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
+    t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"
+    t.index ["did_we_facebook_message_them"], name: "index_restaurants_on_did_we_facebook_message_them"
+    t.index ["did_we_instagram_message_them"], name: "index_restaurants_on_did_we_instagram_message_them"
+    t.index ["did_we_phone_them"], name: "index_restaurants_on_did_we_phone_them"
     t.index ["follow_up_reason"], name: "index_restaurants_on_follow_up_reason"
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["just_reviewed_emails_sent"], name: "index_restaurants_on_just_reviewed_emails_sent"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
     t.index ["photographer_id"], name: "index_restaurants_on_photographer_id"
+    t.index ["preferred_contact_method"], name: "index_restaurants_on_preferred_contact_method"
+    t.index ["restaurant_replied_through"], name: "index_restaurants_on_restaurant_replied_through"
     t.index ["starred"], name: "index_restaurants_on_starred"
     t.index ["status"], name: "index_restaurants_on_status"
     t.index ["urc_rating"], name: "index_restaurants_on_urc_rating"

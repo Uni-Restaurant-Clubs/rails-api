@@ -28,6 +28,13 @@ class Restaurant < ApplicationRecord
                  archived: 6,
                  "review did not happen": 7,
                  "confirming review happened": 8 }
+  enum contacted_by: { manar: 0, sandra: 1, by_other: 2 }
+  enum preferred_contact_method: {
+    by_email: 0, by_restaurant_phone: 1, by_cellphone: 2, by_instagram: 3,
+    by_facebook_messenger: 4, by_sms: 5
+  }
+  enum restaurant_replied_through: { email: 0, phone: 1, instagram: 2,
+                             facebook_messenger: 3  }
   enum operational_status: { unknown: 0, "temporarily closed" => 1,
                              "permanently closed" => 2,
                              "currently active" => 3 }
