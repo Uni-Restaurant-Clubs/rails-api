@@ -1,3 +1,5 @@
+include ActionView::Helpers::NumberHelper
+
 class FeaturePeriod < ApplicationRecord
   has_many :check_ins, dependent: :destroy
   belongs_to :restaurant
@@ -14,6 +16,15 @@ class FeaturePeriod < ApplicationRecord
 
   enum discount_type: { dollar: 0, percentage: 1, items: 2 }
   enum status: { feature_not_live: 0, feature_live: 1 }
+
+  def readable_deal
+    if discount_type == "dollar"
+      return number_to_currency(discount_number.to_f/100, strip_insignificant_zeros: true)
+      #return "$#{(discount_number.to_f / 100).round(2)}"
+    elsif discount_type == "percentage"
+      return "#{discount_number.to_s}%"
+    end
+  end
 
   def self.create_from_restaurant(restaurant)
     if self.unscoped.where(restaurant_id: restaurant.id).any?

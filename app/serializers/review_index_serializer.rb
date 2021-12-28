@@ -27,7 +27,11 @@ class ReviewIndexSerializer < ActiveModel::Serializer
 
   class FeaturePeriodSerializer < ActiveModel::Serializer
     attributes :discount_type, :discount_number, :status, :start_date, :end_date,
-      :disclaimers, :perks
+      :disclaimers, :perks, :deal
+
+    def deal
+      object.readable_deal
+    end
   end
 
   class RestaurantSerializer < ActiveModel::Serializer

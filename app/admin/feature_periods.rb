@@ -14,7 +14,9 @@ ActiveAdmin.register FeaturePeriod do
     id_column
     column :restaurant
     column :discount_type
-    column :discount_number
+    column :discount_number do |feature_period|
+      feature_period.readable_deal
+    end
     column :status
     column :start_date
     column :end_date
@@ -27,7 +29,9 @@ ActiveAdmin.register FeaturePeriod do
   show do |restaurant|
     attributes_table_for restaurant do
       row :discount_type
-      row :discount_number
+      row :discount_number do |feature_period|
+        feature_period.readable_deal
+      end
       row :status
       row :start_date
       row :end_date
@@ -42,7 +46,7 @@ ActiveAdmin.register FeaturePeriod do
     f.semantic_errors *f.object.errors.keys
     f.inputs do
       f.input :discount_type
-      f.input :discount_number
+      f.input :discount_number, label: "If dollar amount, add total cents. Example: for $20.50, the amount entered should be 2000 since $20.50 is 2000 cents"
       f.input :status
       f.input :start_date, as: :date_time_picker
       f.input :end_date, as: :date_time_picker
