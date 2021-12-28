@@ -1,11 +1,15 @@
 class ReviewSerializer < ActiveModel::Serializer
   attributes :id, :reviewed_at, :article, :photos, :article_title,
-             :featured_photo
+             :featured_photo, :featuring_info
 
   belongs_to :writer
   belongs_to :photographer
   belongs_to :restaurant
-  belongs_to :university
+
+  def featuring_info
+    feature = object.restaurant&.feature_periods.currently_featured&.feature_live&.last
+    FeaturePeriodSerializer.new(feature) if feature
+  end
 
   def article_title
     object.article_title&.capitalize
@@ -49,12 +53,17 @@ class ReviewSerializer < ActiveModel::Serializer
 
   end
 
-  class UniversitySerializer < ActiveModel::Serializer
-    attributes :name
-  end
-
   class RestaurantSerializer < ActiveModel::Serializer
     attributes :name, :id
+  end
+
+  class FeaturePeriodSerializer < ActiveModel::Serializer
+    attributes :discount_type, :discount_number, :status, :start_date, :end_date,
+      :disclaimers, :perks, :deal
+
+    def deal
+      object.readable_deal
+    end
   end
 
 end
