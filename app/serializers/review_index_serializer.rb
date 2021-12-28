@@ -9,7 +9,7 @@ class ReviewIndexSerializer < ActiveModel::Serializer
   end
 
   def featuring_info
-    feature = object.restaurant&.feature_periods.currently_featured&.first
+    feature = object.restaurant&.feature_periods.currently_featured&.feature_live&.last
     FeaturePeriodSerializer.new(feature) if feature
   end
 
