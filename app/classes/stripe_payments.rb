@@ -2,6 +2,23 @@ require 'stripe'
 
 class StripePayments
 
+  def self.retreive_customer(user)
+    return false unless user.stripe_customer_id
+		Stripe.api_key = ENV["STRIPE_API_KEY"]
+    Stripe::Customer.retrieve(
+      id: user.stripe_customer_id,
+      expand: ["subscriptions"])
+  end
+
+  def self.user_has_active_subscription(user)
+    customer = self.retreive_customer(user)
+    active = false
+    customer.subscriptions.data.each do |subscription|
+      active = true if subscription.status = "active"
+    end
+    return active
+  end
+
   def self.create_checkout_session(price_id, user)
     return nil unless price_id && user
 
