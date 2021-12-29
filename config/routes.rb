@@ -38,6 +38,8 @@ Rails.application.routes.draw do
       end
       resources :users, only: [:create] do
           collection do
+            get 'current_user', to: "users#get_current_user"
+
             # START PASSWORDLESS SIGNIN
             post 'passwordless_signin_email', to: "users#passwordless_signin_email",
                  as: :passwordless_signin_email

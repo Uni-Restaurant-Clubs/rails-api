@@ -12,6 +12,7 @@ class StripePayments
 
   def self.user_has_active_subscription(user)
     customer = self.retreive_customer(user)
+    return false unless customer
     active = false
     customer.subscriptions.data.each do |subscription|
       active = true if subscription.status = "active"

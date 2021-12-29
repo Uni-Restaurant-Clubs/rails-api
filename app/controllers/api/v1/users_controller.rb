@@ -1,6 +1,15 @@
 class Api::V1::UsersController < Api::V1::ApiApplicationController
 
   before_action :authenticate_api_user!, only: [:send_confirm_uni_email]
+  before_action :check_for_api_user, only: [:get_current_user]
+
+  def get_current_user
+    if @current_user
+      render json: @current_user, status: 200, serializer: CurrentUserSerializer
+    else
+      render json: nil, status: 200
+    end
+  end
 
   def create
     user_data = {
