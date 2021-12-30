@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       post 'contact' => 'contact#contact_form'
 
       resources :sessions, only: [:create, :destroy]
+      resources :feature_periods, only: [:show]
       resources :reviews, only: [:show, :index]
       resources :log_events, only: [] do
         collection do

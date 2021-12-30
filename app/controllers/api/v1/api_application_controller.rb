@@ -23,6 +23,14 @@ class Api::V1::ApiApplicationController < ApplicationController
     end
   end
 
+  def check_subscription!
+    if !StripePayments.user_has_active_subscription(@current_user)
+      message = "Active subscription required"
+      json = { error: true, message: message }.to_json
+      render json: json, status: 401 and return
+    end
+  end
+
   def check_for_api_user
     token = request.headers['Authorization'].split(' ').last rescue nil
     session = Session.find_by(token: token)
