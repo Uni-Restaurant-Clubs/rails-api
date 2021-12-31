@@ -35,10 +35,10 @@ gem 'google-api-client', '~> 0.53.0'
 gem 'sidekiq', '~> 6.3', '>= 6.3.1'
 gem 'chartkick', '~> 4.1', '>= 4.1.2'
 gem 'groupdate', '~> 5.2', '>= 5.2.2'
+gem 'geocoder', '~> 1.7'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'geocoder', '~> 1.3', '>= 1.3.7'
 gem 'activeadmin', '~> 2.9'
 gem 'devise', '~> 4.8'
 gem 'httparty', '~> 0.18.1'
