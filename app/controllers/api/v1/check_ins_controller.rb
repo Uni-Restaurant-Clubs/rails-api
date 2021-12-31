@@ -36,8 +36,7 @@ class Api::V1::CheckInsController < Api::V1::ApiApplicationController
   private
 
     def check_in_params
-      params.require(:check_in)
-        .permit(:feature_period_id, :latitude, :longitude)
+        params.permit(:feature_period_id, :latitude, :longitude)
             .to_h.deep_transform_keys!(&:underscore)
     end
 
