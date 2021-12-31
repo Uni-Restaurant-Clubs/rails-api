@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :sessions, only: [:create, :destroy]
       resources :feature_periods, only: [:show]
       resources :reviews, only: [:show, :index]
+      resources :check_ins, only: [:create]
       resources :log_events, only: [] do
         collection do
           post 'track', to: "log_events#track"

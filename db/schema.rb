@@ -98,16 +98,18 @@ ActiveRecord::Schema.define(version: 2021_12_27_170441) do
   end
 
   create_table "check_ins", force: :cascade do |t|
-    t.string "lat"
-    t.string "lng"
+    t.string "latitude"
+    t.string "longitude"
     t.integer "restaurant_id"
-    t.integer "feature_period"
+    t.integer "feature_period_id"
+    t.boolean "user_is_at_restaurant", default: false
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["feature_period"], name: "index_check_ins_on_feature_period"
+    t.index ["feature_period_id"], name: "index_check_ins_on_feature_period_id"
     t.index ["restaurant_id"], name: "index_check_ins_on_restaurant_id"
     t.index ["user_id"], name: "index_check_ins_on_user_id"
+    t.index ["user_is_at_restaurant"], name: "index_check_ins_on_user_is_at_restaurant"
   end
 
   create_table "content_creators", force: :cascade do |t|
