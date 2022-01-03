@@ -9,7 +9,7 @@ class Api::V1::CheckInsController < Api::V1::ApiApplicationController
     data = check_in_params
     data[:user_id] = @current_user.id
     feature_period = FeaturePeriod.find_by(id: data[:feature_period_id])
-    restaurant = Restaurant.find_by(id: feature_period&.id)
+    restaurant = Restaurant.find_by(id: feature_period&.restaurant_id)
 
     error = false
 
