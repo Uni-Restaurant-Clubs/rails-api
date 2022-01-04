@@ -8,7 +8,11 @@ class Address < ApplicationRecord
   #before_save :geocode, :reverse_geocode, if: :address_changed
 
   def full_address
-    "#{address_1} #{address_2} #{address_3}, #{city}, #{state}, #{zipcode}"
+    address = address_1
+    address += " #{address_2}" if address_2.present?
+    address += " #{address_3}" if address_3.present?
+    address += ", #{city}, #{state}, #{zipcode}"
+    address
   end
 
   def city_state

@@ -14,7 +14,12 @@ class FeaturePeriodSerializer < ActiveModel::Serializer
   end
 
   class RestaurantSerializer < ActiveModel::Serializer
-    attributes :name, :id
+    attributes :name, :id, :full_address
+
+    def full_address
+      object.address&.full_address
+    end
+
   end
 
   class ReviewSerializer < ActiveModel::Serializer

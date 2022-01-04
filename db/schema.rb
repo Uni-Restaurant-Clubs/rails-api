@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_27_170441) do
+ActiveRecord::Schema.define(version: 2022_01_04_212105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -269,9 +269,11 @@ ActiveRecord::Schema.define(version: 2021_12_27_170441) do
     t.text "properties"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "feature_period_id"
     t.index ["category"], name: "index_log_events_on_category"
     t.index ["content_creator_id"], name: "index_log_events_on_content_creator_id"
     t.index ["event_name"], name: "index_log_events_on_event_name"
+    t.index ["feature_period_id"], name: "index_log_events_on_feature_period_id"
     t.index ["label"], name: "index_log_events_on_label"
     t.index ["restaurant_id"], name: "index_log_events_on_restaurant_id"
     t.index ["user_id"], name: "index_log_events_on_user_id"

@@ -2,6 +2,7 @@ class LogEvent < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :restaurant, optional: true
   belongs_to :content_creator, optional: true
+  belongs_to :feature_period, optional: true
 
   validates  :event_name, presence: true
 
