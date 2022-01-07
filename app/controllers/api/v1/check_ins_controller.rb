@@ -28,6 +28,14 @@ class Api::V1::CheckInsController < Api::V1::ApiApplicationController
     if check_in.save
       render json: check_in, status: 200, serializer: CheckInSerializer
     else
+      Airbrake.notify("Check in could not be created", {
+        errors: check_in.errors.full_messages,
+        restaurant_id: restaurant.id,
+        restaurant_name: restaurant.name,
+        feature_period_id: feature_period.id,
+        current_user_email: @current_user&.email
+      })
+
       json = { error: true, message: "" }.to_json
       render json: json, status: 400
     end
