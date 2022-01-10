@@ -36,11 +36,17 @@ class CreatorMailer < ApplicationMailer
 
   def review_offer_email
     @offer = params[:offer]
+    @everyone = params[:everyone]
     @restaurant = @offer.restaurant
     @creator = @offer.content_creator
 
+    if @everyone
+      subject = "SCRAMBLE! There is a review offer up for grabs! #{@restaurant.name}"
+    else
+      subject = "We have a new restaurant offer for you! #{@restaurant.name}"
+    end
     mail to: @creator.email, bcc: "monty@unirestaurantclub.com",
-      subject: "We have a new restaurant offer for you! #{@restaurant.name}"
+      subject: subject
   end
 
   def send_review_time_scheduled_email

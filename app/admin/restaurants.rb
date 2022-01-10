@@ -326,8 +326,6 @@ ActiveAdmin.register Restaurant do
           f.input :option_1, as: :date_time_picker
           f.input :option_2, as: :date_time_picker
           f.input :option_3, as: :date_time_picker
-          f.input :initial_offer_sent_to_creators
-          f.input :offer_sent_to_everyone
         end
       end
     end

@@ -34,7 +34,7 @@ class CreatorReviewOffer < ApplicationRecord
     option_one_response || option_two_response || option_three_response
   end
 
-  def self.create_and_send_for_role(rest, role, creator_id)
+  def self.create_and_send_for_role(rest, role, creator_id, everyone=false)
     data = {
       restaurant_id: rest.id,
       option_one: rest.option_1,
@@ -47,7 +47,8 @@ class CreatorReviewOffer < ApplicationRecord
     }
     begin
       offer = self.create!(data)
-      CreatorMailer.with(offer: offer).review_offer_email.deliver_now
+      CreatorMailer.with(offer: offer, everyone: everyone)
+                   .review_offer_email.deliver_now
       return offer
     rescue Exception => e
       creator_email = ContentCreator.find_by(id: creator_id)&.email
@@ -63,13 +64,13 @@ class CreatorReviewOffer < ApplicationRecord
     end
   end
 
-  def self.create_and_send_email_for_creator(restaurant, creator)
+  def self.create_and_send_email_for_creator(restaurant, creator, everyone=false)
     roles = []
     roles << "writer" if creator.is_writer
     roles << "photographer" if creator.is_photographer
     rest = restaurant
     roles.each do |role|
-      self.create_and_send_for_role(rest, role, creator.id)
+      self.create_and_send_for_role(rest, role, creator.id, everyone)
     end
   end
 
@@ -149,7 +150,7 @@ class CreatorReviewOffer < ApplicationRecord
                                     status: "active")
     creators.each do |creator|
       unless creator_ids.include?(creator.id)
-        self.create_and_send_email_for_creator(restaurant, creator)
+        self.create_and_send_email_for_creator(restaurant, creator, true)
       end
     end
     AdminMailer.with(offer: offer, reason: reason)

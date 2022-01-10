@@ -2,12 +2,18 @@
   Hello
   = "#{@creator.name},"
 %br
-%p
-  We have a new restaurant for you to review!
-%p
-  = link_to "Click here to view details and confirm", edit_creator_review_offer_url(@offer.token)
-%br
-%p
-  24 hour deadline!
-%p
-  Please note if you do not reply within 24 hours we will have to send the offer to another person in order to make sure we meet the restaurant’s deadline.
+- if !@everyone
+  %p
+    We have a new restaurant for you to review!
+  %p
+    = link_to "Click here to view details and confirm", edit_creator_review_offer_url(@offer.token)
+  %br
+  %p
+    24 hour deadline!
+  %p
+    Please note if you do not reply within 24 hours we will have to send the offer to another person in order to make sure we meet the restaurant’s deadline.
+- if @everyone
+  %p
+    SCRAMBLE! First person who claims the offer gets to review the restaurant!
+  %p
+    = link_to "Click here to view details and claim it", edit_creator_review_offer_url(@offer.token)
