@@ -11,12 +11,12 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
   end
 
   def index
-    reviews = Review.newest_first.all
+    reviews = Review.quality_first.order("RANDOM()")
     if !reviews
       json = { error: true, message: "No reviews found" }.to_json
       render json: json, status: 404
     else
-      render json: reviews, status: 200, each_serializer: ReviewIndexSerializer
+      render json: reviews.order(:quality_ranking), status: 200, each_serializer: ReviewIndexSerializer
     end
   end
 

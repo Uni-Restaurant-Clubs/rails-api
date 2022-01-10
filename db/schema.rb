@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_04_212105) do
+ActiveRecord::Schema.define(version: 2022_01_09_215809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -408,7 +408,9 @@ ActiveRecord::Schema.define(version: 2022_01_04_212105) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "status", default: 0
+    t.integer "quality_ranking", default: 1
     t.index ["photographer_id"], name: "index_reviews_on_photographer_id"
+    t.index ["quality_ranking"], name: "index_reviews_on_quality_ranking"
     t.index ["restaurant_id"], name: "index_reviews_on_restaurant_id"
     t.index ["status"], name: "index_reviews_on_status"
     t.index ["university_id"], name: "index_reviews_on_university_id"

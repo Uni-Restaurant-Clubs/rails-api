@@ -17,7 +17,7 @@ ActiveAdmin.register Review do
     permitted = [
                   :restaurant_id, :university_id, :writer_id, :photographer_id,
                   :reviewed_at, :full_article, :medium_article, :small_article,
-                  :article_title, :status,
+                  :article_title, :status, :quality_ranking,
                   images_attributes: [
                     :id, :title, :photo, :featured, :image_type
                   ]
@@ -30,7 +30,7 @@ ActiveAdmin.register Review do
     id_column
     column :restaurant
     column :status
-    column :university
+    column :quality_ranking
     column :writer
     column :photographer
     column :reviewed_at
@@ -46,7 +46,7 @@ ActiveAdmin.register Review do
     attributes_table do
       row :restaurant
       row :status
-      row :university
+      row :quality_ranking
       row :writer
       row :photographer
       row :reviewed_at
@@ -74,9 +74,9 @@ ActiveAdmin.register Review do
     f.inputs 'Details' do
       f.input :restaurant
       f.input :status
+      f.input :quality_ranking, :as => :select, :collection => 1..10
       f.input :writer
       f.input :photographer
-      f.input :university
       f.input :reviewed_at, as: :date_time_picker
       f.input :article_title
       f.input :full_article, as: :quill_editor
