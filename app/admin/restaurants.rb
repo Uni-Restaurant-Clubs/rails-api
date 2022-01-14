@@ -213,6 +213,7 @@ ActiveAdmin.register Restaurant do
         panel "Review Scheduling" do
           attributes_table_for restaurant do
             row :accepted_at
+            row :last_time_a_review_related_date_was_updated
             row :unschedule_restaurant_review do |restaurant|
               button_to "Unschedule Review so can be Rescheduled",
                 unschedule_restaurant_review_admin_restaurant_path(restaurant.id),
@@ -321,7 +322,6 @@ ActiveAdmin.register Restaurant do
       end
       column do
         f.inputs "Review Scheduling" do
-          f.input :accepted_at, as: :date_time_picker
           f.input :scheduled_review_date_and_time, as: :date_time_picker
           f.input :option_1, as: :date_time_picker
           f.input :option_2, as: :date_time_picker

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_09_215809) do
+ActiveRecord::Schema.define(version: 2022_01_14_195903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -360,6 +360,7 @@ ActiveRecord::Schema.define(version: 2022_01_09_215809) do
     t.boolean "did_we_contact_them_through_website", default: false
     t.integer "contacted_by"
     t.integer "preferred_contact_method"
+    t.datetime "last_time_a_review_related_date_was_updated"
     t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
     t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"

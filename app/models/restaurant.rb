@@ -15,7 +15,7 @@ class Restaurant < ApplicationRecord
   belongs_to :photographer, class_name: 'ContentCreator', foreign_key: 'photographer_id', optional: true
 
   before_save :check_if_review_scheduled
-  before_save :notify_admins_if_related_to_reviewing
+  before_save :notify_admins_and_update_last_changed_field_if_related_to_reviewing
 
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
@@ -57,6 +57,9 @@ class Restaurant < ApplicationRecord
   scope :has_article, -> { where(writer_handed_in_article: true) }
   scope :doesnt_have_photos, -> { where(photographer_handed_in_photos: false) }
   scope :doesnt_have_article, -> { where(writer_handed_in_article: false) }
+  scope :active_review_dates, -> do
+    where("last_time_a_review_related_date_was_updated > ?",  (TimeHelpers.now - 2.weeks))
+  end
   scope :scheduled_in_past, -> do
     where("scheduled_review_date_and_time < ?",  TimeHelpers.now)
   end
@@ -106,6 +109,14 @@ class Restaurant < ApplicationRecord
   scope :scheduled_but_not_for_next_three_days, -> do
     self.not_scheduled_today.not_scheduled_tomorrow.not_scheduled_in_next_three_days
         .review_scheduled
+  end
+
+  def self.inactive_review_dates
+    less_than_two_weeks_ids = self.where("last_time_a_review_related_date_was_updated < ?",
+                                     (TimeHelpers.now - 2.weeks)).pluck(:id)
+    nil_records_ids = self.where(last_time_a_review_related_date_was_updated: nil)
+                      .pluck(:id)
+    return self.where(id: less_than_two_weeks_ids.concat(nil_records_ids))
   end
 
   def send_non_selected_emails_to_all_non_selected_responded_to_offers
@@ -281,12 +292,27 @@ class Restaurant < ApplicationRecord
 
   def organized_changed_review_values
     changed_values = {}
-    fields = ["scheduled_review_date_and_time", "option_1", "option_2", "option_3"]
+    fields = ["status", "scheduled_review_date_and_time",
+              "option_1", "option_2", "option_3"]
+
     fields.each do |field|
       if self.send("#{field}_changed?")
         changed_fields = self.send("#{field}_change")
-        value_before = TimeHelpers.to_human(changed_fields[0])
-        value_after = TimeHelpers.to_human(changed_fields[1])
+        next if field == "status" &&
+          (changed_fields[1] != "accepted" &&
+          changed_fields[1] != "review scheduled")
+
+        if field == "status"
+          # Handle status being changed to accepted or review scheduled
+          if changed_fields[1] == "accepted" && self.accepted_at.nil?
+            self.accepted_at = TimeHelpers.now
+          end
+          value_before = changed_fields[0]
+          value_after = changed_fields[1]
+        else
+          value_before = TimeHelpers.to_human(changed_fields[0])
+          value_after = TimeHelpers.to_human(changed_fields[1])
+        end
         changed_values[field] = [value_before, value_after]
       end
     end
@@ -295,9 +321,10 @@ class Restaurant < ApplicationRecord
 
   private
 
-  def notify_admins_if_related_to_reviewing
+  def notify_admins_and_update_last_changed_field_if_related_to_reviewing
     changed_values = organized_changed_review_values
     if changed_values.length > 0
+      self.last_time_a_review_related_date_was_updated = TimeHelpers.now
       begin
         AdminMailer.with(restaurant: self, changed_values: changed_values)
                    .review_times_have_been_updated_for_restaurant.deliver_later

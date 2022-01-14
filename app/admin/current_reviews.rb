@@ -154,8 +154,26 @@ ActiveAdmin.register_page "Reviews in progress" do
     end
     columns do
       column do
-        panel "Accepted and Needing a Confirmed Review Time" do
-          table_for Restaurant.brooklyn.accepted do
+        panel "(ACTIVE) Accepted and Needing a Confirmed Review Time" do
+          table_for Restaurant.brooklyn.accepted.active_review_dates do
+            column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
+            column("Accepted at") { |rest| rest.accepted_at }
+            column("Initial Offer Sent to Creators?") do |rest|
+              rest.initial_offer_sent_to_creators
+            end
+            column("Writer Confirmed?") { |rest| rest.writer_confirmed }
+            column("Photographer Confirmed?") { |rest| rest.photographer_confirmed }
+            column("Final datetime confirmed with restaurant") do |rest|
+              rest.scheduled_review_date_and_time.present?
+            end
+          end
+        end
+      end
+    end
+    columns do
+      column do
+        panel "(INACTIVE) Accepted and Needing a Confirmed Review Time" do
+          table_for Restaurant.brooklyn.accepted.inactive_review_dates do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Accepted at") { |rest| rest.accepted_at }
             column("Initial Offer Sent to Creators?") do |rest|
