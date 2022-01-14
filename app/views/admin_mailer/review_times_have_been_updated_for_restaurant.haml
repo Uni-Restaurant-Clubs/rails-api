@@ -1,0 +1,21 @@
+%p Hey Kirsys,
+%br
+%p Heads up! Looks like some restaurant review info has been changed.
+%br
+%p
+  Restaurant Name:
+  %b= @restaurant.name
+%p
+  Restaurant ID:
+  = @restaurant.id
+
+%p Changed info:
+- @changed_values.each do |key, value|
+  %b= "#{key}: "
+  %ul
+    %li
+      Value before:
+      = value[0] || "blank"
+    %li
+      Value now:
+      = value[1] || "blank"

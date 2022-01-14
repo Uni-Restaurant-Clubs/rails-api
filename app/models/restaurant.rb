@@ -15,6 +15,7 @@ class Restaurant < ApplicationRecord
   belongs_to :photographer, class_name: 'ContentCreator', foreign_key: 'photographer_id', optional: true
 
   before_save :check_if_review_scheduled
+  before_save :notify_admins_if_related_to_reviewing
 
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
@@ -278,7 +279,38 @@ class Restaurant < ApplicationRecord
     end
   end
 
+  def organized_changed_review_values
+    changed_values = {}
+    fields = ["scheduled_review_date_and_time", "option_1", "option_2", "option_3"]
+    fields.each do |field|
+      if self.send("#{field}_changed?")
+        changed_fields = self.send("#{field}_change")
+        value_before = TimeHelpers.to_human(changed_fields[0])
+        value_after = TimeHelpers.to_human(changed_fields[1])
+        changed_values[field] = [value_before, value_after]
+      end
+    end
+    return changed_values
+  end
+
   private
+
+  def notify_admins_if_related_to_reviewing
+    changed_values = organized_changed_review_values
+    if changed_values.length > 0
+      begin
+        AdminMailer.with(restaurant: self, changed_values: changed_values)
+                   .review_times_have_been_updated_for_restaurant.deliver_later
+      rescue Exception => e
+        Airbrake.notify("A review info changed email could not be sent", {
+          error: e,
+          restaurant_id: self.id,
+          restaurant_name: self.name,
+          changed_values: changed_values
+        })
+      end
+    end
+  end
 
   def check_if_review_scheduled
     if scheduled_review_date_and_time &&
