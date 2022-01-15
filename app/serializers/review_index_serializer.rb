@@ -18,7 +18,7 @@ class ReviewIndexSerializer < ActiveModel::Serializer
     if photo
       {
         name: photo.title,
-        photo: photo.resize_to_fit(1000).try(:processed).try(:url)
+        photo: photo.resize_to_fit(200).try(:processed).try(:url)
       }
     else
       { name: "", photo: "" }
