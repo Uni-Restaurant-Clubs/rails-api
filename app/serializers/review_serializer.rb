@@ -1,6 +1,6 @@
 class ReviewSerializer < ActiveModel::Serializer
   attributes :id, :reviewed_at, :article, :photos, :article_title,
-             :featured_photo, :featuring_info
+             :featured_photo, :featuring_info, :thumbnail_photos
 
   belongs_to :writer
   belongs_to :photographer
@@ -13,6 +13,16 @@ class ReviewSerializer < ActiveModel::Serializer
 
   def article_title
     object.article_title&.capitalize
+  end
+
+  def thumbnail_photos
+    object.images.map do |image|
+      {
+        id: image.id,
+        name: image.title,
+        photo: image.resize_to_fit(150).try(:processed).try(:url)
+      }
+    end
   end
 
   def photos
