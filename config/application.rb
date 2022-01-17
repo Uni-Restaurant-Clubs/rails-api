@@ -21,6 +21,8 @@ Bundler.require(*Rails.groups)
 
 module UniRestaurantClubs
   class Application < Rails::Application
+    config.active_storage.service_urls_expire_in = 1.week # Defaut: 5.minutes
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
