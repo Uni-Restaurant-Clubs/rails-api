@@ -59,7 +59,7 @@ ActiveAdmin.register_page "Dashboard" do
     end
     columns do
       column do
-        panel "Reviews in 3 days", class: "reviews-in-three-days" do
+        panel "Reviews in 2 days", class: "reviews-in-three-days" do
           table_for Restaurant.brooklyn.review_scheduled.scheduled_in_two_days do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column :confirmed_with_restaurant_three_days_before
