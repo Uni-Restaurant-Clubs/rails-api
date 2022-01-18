@@ -64,6 +64,23 @@ class Restaurant < ApplicationRecord
     where("scheduled_review_date_and_time < ?",  TimeHelpers.now)
   end
 
+  scope :not_reviewed_or_scheduled, -> do
+    where.not(status: ["review scheduled",
+                       "reviewed",
+                       "review did not happen",
+                       "confirming review happened"])
+  end
+
+  scope :has_three_options, -> do
+    where.not(option_1: nil).where.not(option_2: nil).where.not(option_3: nil)
+  end
+  scope :three_options_nil, -> do
+    where(option_1: nil, option_2: nil, option_3: nil)
+  end
+  scope :has_date_options_and_not_reviewed_or_scheduled, -> do
+    self.has_three_options.not_reviewed_or_scheduled
+  end
+
   scope :reviewed_without_content, -> do
     reviewed.where(photographer_handed_in_photos: false)
     .or(self.reviewed.where(writer_handed_in_article: false))
