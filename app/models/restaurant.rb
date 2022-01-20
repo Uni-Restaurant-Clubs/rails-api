@@ -19,6 +19,7 @@ class Restaurant < ApplicationRecord
 
   validates_presence_of [:name, :status]
   validates_uniqueness_of :yelp_id, allow_nil: true
+  validates_uniqueness_of :scheduling_token, :allow_blank => true
 
   enum status: { "not contacted" => 0,
                  "contacted needs follow up" => 1,
@@ -184,6 +185,35 @@ class Restaurant < ApplicationRecord
           restaurant_name: self.name
         })
       end
+    end
+    return response, error
+  end
+
+  def self.create_new_token(token_name="scheduling_token")
+    loop do
+      token = SecureRandom.hex(15)
+      break token unless self.exists?(token_name => token)
+    end
+  end
+
+  def create_scheduling_form_url
+    self.scheduling_token = Restaurant.create_new_token
+    self.scheduling_token_created_at = TimeHelpers.now
+    url_base = ENV["FRONTEND_WEB_URL"]
+    path = "/reviews/scheduling_info_form"
+    query = "?token=#{self.scheduling_token}"
+    self.scheduling_form_url = url_base + path + query
+    if self.save
+      response = "Scheduling URL Created!"
+      error = false
+    else
+      Airbrake.notify("Could not create a scheduling url", {
+        errors: self.errors.full_messages,
+        restaurant_id: self.id,
+        restaurant_name: self.name
+      })
+      response = self.errors.full_messages
+      error = true
     end
     return response, error
   end

@@ -19,11 +19,18 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create, :destroy]
       resources :feature_periods, only: [:show]
-      resources :reviews, only: [:show, :index]
+      resources :reviews, only: [:show, :index] do
+        post 'scheduling_info', to: "reviews#create_scheduling_info"
+      end
       resources :check_ins, only: [:create]
       resources :log_events, only: [] do
         collection do
           post 'track', to: "log_events#track"
+        end
+      end
+      resources :restaurants, only: [] do
+        member do
+          get 'info_for_scheduling_form', to: "restaurants#info_for_scheduling_form"
         end
       end
       resources :review_happened_confirmations, only: [] do

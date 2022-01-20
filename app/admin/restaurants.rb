@@ -59,6 +59,19 @@ ActiveAdmin.register Restaurant do
     restaurants.brooklyn.where(:is_franchise => true)
   end
 
+  member_action :create_scheduling_form_url, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      response, error = resource.create_scheduling_form_url
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to admin_restaurant_path(resource.id), notice: response
+      end
+    end
+  end
+
   member_action :create_review, method: :post do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
@@ -204,6 +217,20 @@ ActiveAdmin.register Restaurant do
             row :date_we_contacted_them
             row :date_restaurant_replied
             row :restaurant_replied_through
+            row :submitted_scheduling_form_at do |res|
+              TimeHelpers.to_human(res.submitted_scheduling_form_at)
+            end
+            row :scheduling_form_url
+            row :scheduling_form_url_created_at do |restaurant|
+              TimeHelpers.to_human(restaurant.scheduling_token_created_at) ||
+                "never created"
+            end
+            row :create_scheduling_form_url do |restaurant|
+              button_to "Create a Scheduling Form URL for this restaurant",
+                create_scheduling_form_url_admin_restaurant_path(restaurant.id),
+                action: :post,
+                :data => {:confirm => 'Are you sure you want to create a scheduling form URL for this restaurant?'}
+            end
           end
         end
       end
