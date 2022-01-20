@@ -2,7 +2,7 @@ class Api::V1::RestaurantsController < Api::V1::ApiApplicationController
 
   def info_for_scheduling_form
     token = params[:id]
-    restaurant = Restaurant.find_by(token: token)
+    restaurant = Restaurant.find_by(scheduling_token: token)
     error = false
 
     if !token

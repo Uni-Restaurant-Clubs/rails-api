@@ -201,7 +201,7 @@ class Restaurant < ApplicationRecord
     self.scheduling_token_created_at = TimeHelpers.now
     url_base = ENV["FRONTEND_WEB_URL"]
     path = "/reviews/scheduling_info_form"
-    query = "?token=#{self.scheduling_token}"
+    query = "/#{self.scheduling_token}"
     self.scheduling_form_url = url_base + path + query
     if self.save
       response = "Scheduling URL Created!"
