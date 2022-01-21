@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_14_195903) do
+ActiveRecord::Schema.define(version: 2022_01_21_190307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_195903) do
     t.string "phone"
     t.string "linkedin_url"
     t.string "facebook_url"
-    t.string "instagram_url"
+    t.string "instagram_handle"
     t.string "website_url"
     t.text "bio"
     t.string "drive_folder_url"
@@ -361,6 +361,10 @@ ActiveRecord::Schema.define(version: 2022_01_14_195903) do
     t.integer "contacted_by"
     t.integer "preferred_contact_method"
     t.datetime "last_time_a_review_related_date_was_updated"
+    t.string "scheduling_form_url"
+    t.string "scheduling_token"
+    t.datetime "scheduling_token_created_at"
+    t.datetime "submitted_scheduling_form_at"
     t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
     t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"
@@ -374,6 +378,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_195903) do
     t.index ["photographer_id"], name: "index_restaurants_on_photographer_id"
     t.index ["preferred_contact_method"], name: "index_restaurants_on_preferred_contact_method"
     t.index ["restaurant_replied_through"], name: "index_restaurants_on_restaurant_replied_through"
+    t.index ["scheduling_token"], name: "index_restaurants_on_scheduling_token", unique: true
     t.index ["starred"], name: "index_restaurants_on_starred"
     t.index ["status"], name: "index_restaurants_on_status"
     t.index ["urc_rating"], name: "index_restaurants_on_urc_rating"
