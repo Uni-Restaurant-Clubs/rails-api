@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_20_042914) do
+ActiveRecord::Schema.define(version: 2022_01_21_190308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2022_01_20_042914) do
     t.string "phone"
     t.string "linkedin_url"
     t.string "facebook_url"
-    t.string "instagram_url"
+    t.string "instagram_handle"
     t.string "website_url"
     t.text "bio"
     t.string "drive_folder_url"

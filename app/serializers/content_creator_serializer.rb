@@ -5,6 +5,14 @@ class ContentCreatorSerializer < ActiveModel::Serializer
 
   has_many :reviews
 
+  def instagram_url
+    if object.instagram_handle.present?
+      return "https://www.instagram.com/#{object.instagram_handle}"
+    else
+      return nil
+    end
+  end
+
   def photo
     if object.image
       object.image.resize_to_fit(1000).try(:processed).try(:url)
