@@ -196,6 +196,13 @@ class Restaurant < ApplicationRecord
     end
   end
 
+  def reset_outreach_email_fields
+    self.outreach_email_sent_at = nil
+    self.outreach_email_intro_line = nil
+    self.outreach_email_sent_by_admin_user_id = nil
+    self.save!
+  end
+
   def send_initial_outreach_email(admin_user_id)
     response, error = self.create_scheduling_form_url
     return response, error if error
@@ -236,8 +243,8 @@ class Restaurant < ApplicationRecord
         response = "Could not update restaurant when sending outreach email. Tech team is looking into it."
         error = true
       end
-      return response, error
     end
+    return response, error
 
   end
 

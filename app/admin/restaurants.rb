@@ -237,16 +237,15 @@ ActiveAdmin.register Restaurant do
             end
             row :outreach_email_intro_line
             row :outreach_email_sent_at do |res|
-              TimeHelpers.to_human(rest.outreach_email_sent_at)
+              TimeHelpers.to_human(res.outreach_email_sent_at)
             end
             row :admin_who_sent_outreach_email do |res|
               admin_id = res.outreach_email_sent_by_admin_user_id
-              return nil unless admin_id
-              AdminUser.find_by(id: admin_id)&.email
+              AdminUser.find_by(id: admin_id)&.email if admin_id
             end
             row :send_initial_outreach_email do |restaurant|
               button_to "Send initial outreach email",
-                send_initial_outreach_admin_restaurant_path(restaurant.id),
+                send_initial_outreach_email_admin_restaurant_path(restaurant.id),
                 action: :post,
                 :data => {:confirm => 'Are you sure you want to send the initial outreach email for this restaurant?'}
             end

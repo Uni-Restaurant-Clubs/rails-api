@@ -1,0 +1,9 @@
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+%p
+  = @restaurant.outreach_email_intro_line
+%br
+= sanitize @first_text
+= sanitize @second_text

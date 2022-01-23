@@ -1,4 +1,13 @@
 class RestaurantMailer < ApplicationMailer
+
+  def send_outreach_email
+    @restaurant = params[:restaurant]
+    @first_text = TextContent.find_by(name: "restaurant outreach email first text")&.text
+    @second_text = TextContent.find_by(name: "restaurant outreach email second text")&.text
+    mail to: @restaurant&.primary_email, bcc: "monty@unirestaurantclub.com",
+      subject: "Local restaurant club wants to do a feature on #{@restaurant.name}!"
+  end
+
   def just_reviewed_email
     @restaurant = params[:restaurant]
     @name = @restaurant.name
