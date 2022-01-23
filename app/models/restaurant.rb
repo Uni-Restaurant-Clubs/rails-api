@@ -196,6 +196,51 @@ class Restaurant < ApplicationRecord
     end
   end
 
+  def send_initial_outreach_email(admin_user_id)
+    response, error = self.create_scheduling_form_url
+    return response, error if error
+
+    if outreach_email_sent_at
+      response = "initial outreach email already sent"
+      error = true
+    elsif !primary_email
+      response = "Restaurant does not have an email address. You need to add one first."
+      error = true
+    elsif !outreach_email_intro_line
+      response = "You need to add an outreach email intro line first"
+      error = true
+    else
+      self.outreach_email_sent_at = TimeHelpers.now
+      self.outreach_email_sent_by_admin_user_id = admin_user_id
+      if self.save
+        begin
+          RestaurantMailer.with(restaurant: self)
+                 .send_outreach_email.deliver_now
+          response = "Outreach email sent!"
+          error = false
+        rescue Exception => e
+          Airbrake.notify("Restaurant outreach email couldn't be sent", {
+            error: e,
+            restaurant_id: self.id,
+            restaurant_name: self.name
+          })
+          response = "Outreach email couldn't be sent. Tech team is looking into the issue."
+          error = false
+        end
+      else
+        Airbrake.notify("Could not update restaurant when sending outreach email", {
+          errors: self.errors.full_messages,
+          restaurant_id: self.id,
+          restaurant_name: self.name
+        })
+        response = "Could not update restaurant when sending outreach email. Tech team is looking into it."
+        error = true
+      end
+      return response, error
+    end
+
+  end
+
   def create_scheduling_form_url
     self.scheduling_token = Restaurant.create_new_token
     self.scheduling_token_created_at = TimeHelpers.now

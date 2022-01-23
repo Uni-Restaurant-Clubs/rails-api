@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_21_190308) do
+ActiveRecord::Schema.define(version: 2022_01_23_194415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -365,6 +365,9 @@ ActiveRecord::Schema.define(version: 2022_01_21_190308) do
     t.string "scheduling_token"
     t.datetime "scheduling_token_created_at"
     t.datetime "submitted_scheduling_form_at"
+    t.datetime "outreach_email_sent_at"
+    t.string "outreach_email_intro_line"
+    t.integer "outreach_email_sent_by_admin_user_id"
     t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
     t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"
@@ -375,6 +378,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_190308) do
     t.index ["is_franchise"], name: "index_restaurants_on_is_franchise"
     t.index ["just_reviewed_emails_sent"], name: "index_restaurants_on_just_reviewed_emails_sent"
     t.index ["operational_status"], name: "index_restaurants_on_operational_status"
+    t.index ["outreach_email_sent_by_admin_user_id"], name: "index_restaurants_on_outreach_email_sent_by_admin_user_id"
     t.index ["photographer_id"], name: "index_restaurants_on_photographer_id"
     t.index ["preferred_contact_method"], name: "index_restaurants_on_preferred_contact_method"
     t.index ["restaurant_replied_through"], name: "index_restaurants_on_restaurant_replied_through"

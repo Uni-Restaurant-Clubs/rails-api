@@ -22,7 +22,7 @@ ActiveAdmin.register Restaurant do
                 :confirmed_with_writer_day_of_review,
                 :confirmed_with_photographer_day_of_review,
                 :photographer_handed_in_photos, :date_photos_received,
-                :writer_handed_in_article,
+                :writer_handed_in_article, :outreach_email_intro_line,
                 :confirmed_with_restaurant_three_days_before,
                 :confirmed_with_creators_day_before, :preferred_contact_method,
                 :instagram_username, :cellphone_number, :contacted_by,
@@ -57,6 +57,19 @@ ActiveAdmin.register Restaurant do
   end
   scope :franchise do |restaurants|
     restaurants.brooklyn.where(:is_franchise => true)
+  end
+
+  member_action :send_initial_outreach_email, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      response, error = resource.send_initial_outreach_email(current_admin_user.id)
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to admin_restaurant_path(resource.id), notice: response
+      end
+    end
   end
 
   member_action :create_scheduling_form_url, method: :post do
@@ -210,9 +223,6 @@ ActiveAdmin.register Restaurant do
             row :contacted_by
             row :follow_up_reason
             row :did_we_phone_them
-            row :did_we_instagram_message_them
-            row :did_we_facebook_message_them
-            row :did_we_email_them
             row :did_we_contact_them_through_website
             row :date_we_contacted_them
             row :date_restaurant_replied
@@ -224,6 +234,21 @@ ActiveAdmin.register Restaurant do
             row :scheduling_form_url_created_at do |restaurant|
               TimeHelpers.to_human(restaurant.scheduling_token_created_at) ||
                 "never created"
+            end
+            row :outreach_email_intro_line
+            row :outreach_email_sent_at do |res|
+              TimeHelpers.to_human(rest.outreach_email_sent_at)
+            end
+            row :admin_who_sent_outreach_email do |res|
+              admin_id = res.outreach_email_sent_by_admin_user_id
+              return nil unless admin_id
+              AdminUser.find_by(id: admin_id)&.email
+            end
+            row :send_initial_outreach_email do |restaurant|
+              button_to "Send initial outreach email",
+                send_initial_outreach_admin_restaurant_path(restaurant.id),
+                action: :post,
+                :data => {:confirm => 'Are you sure you want to send the initial outreach email for this restaurant?'}
             end
             row :create_scheduling_form_url do |restaurant|
               button_to "Create a Scheduling Form URL for this restaurant",
@@ -338,13 +363,11 @@ ActiveAdmin.register Restaurant do
           f.input :contacted_by
           f.input :follow_up_reason
           f.input :did_we_phone_them
-          f.input :did_we_instagram_message_them
-          f.input :did_we_facebook_message_them
-          f.input :did_we_email_them
           f.input :did_we_contact_them_through_website
           f.input :date_we_contacted_them, as: :date_time_picker
           f.input :date_restaurant_replied, as: :date_time_picker
           f.input :restaurant_replied_through
+          f.input :outreach_email_intro_line, label: 'Outreach email into line. Example: "Your pasta looks amazing!" or "Your smoothies look great!"'
         end
       end
       column do
