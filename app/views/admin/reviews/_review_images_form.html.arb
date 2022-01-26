@@ -1,0 +1,34 @@
+active_admin_form_for resource,
+  url: update_review_admin_review_path(resource),
+  method: :post,
+  html: { multipart: true } do |f|
+  f.semantic_errors *f.object.errors.keys
+  f.inputs 'Upload multiple images' do
+    f.input :images, as: :file, input_html: { multiple: true }
+  end
+  f.inputs 'Details' do
+    f.input :restaurant
+    f.input :status
+    f.input :quality_ranking, :as => :select, :collection => 1..10
+    f.input :writer
+    f.input :photographer
+    f.input :reviewed_at, as: :date_time_picker
+    f.input :article_title
+    f.input :full_article, as: :quill_editor
+    f.input :medium_article, as: :quill_editor
+    f.input :small_article, as: :quill_editor
+
+  end
+  f.inputs 'Image' do
+    f.has_many :images, heading: false,
+                            remove_record: true do |a|
+      a.input :title
+      a.input :featured
+      a.input :image_type, :input_html => { :value => "review" }, as: :hidden
+      a.input :photo, as: :file, hint: a.template.image_tag(url_for(a.object.resize_to_fit(300)))
+
+    end
+  end
+  f.actions
+end
+

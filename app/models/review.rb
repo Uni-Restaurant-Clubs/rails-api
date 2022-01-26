@@ -25,6 +25,64 @@ class Review < ApplicationRecord
     self.images.featured.first
   end
 
+  def upload_multiple_images(images)
+    error = false
+    response = "Images uploaded!"
+    images.each do |image|
+      image_data = {
+        photo: image,
+        image_type: "review",
+        review_id: self.id
+      }
+      image = Image.new(image_data)
+      if !image.save
+        error = true
+        response = image.errors.full_messages
+        Airbrake.notify("A review image could not be uploaded", {
+          errors: image.errors.full_messages,
+          review_id: self.id,
+          restaurant_id: self.restaurant.id,
+          restaurant_name: self.restaurant.name
+        })
+      end
+    end
+    return response, error
+  end
+
+  def review_params
+    [
+      :restaurant_id, :university_id, :writer_id, :photographer_id,
+      :reviewed_at, :full_article, :medium_article, :small_article,
+      :article_title, :status, :quality_ranking, images: [],
+      images_attributes: [
+        :id, :title, :photo, :featured, :image_type
+      ]
+    ]
+  end
+
+  def update_from_active_admin(params, admin_user)
+    data = params.permit(review_params).to_h.deep_symbolize_keys
+    if data[:images].any?
+      response, error = upload_multiple_images(data[:images])
+      return response, error if error
+    end
+    data.delete(:images)
+
+    error = false
+    response = "review updated!"
+    if !self.update(data)
+      error = true
+      response = self.errors.full_messages
+      Airbrake.notify("A review could not be updated in active admin", {
+        errors: self.errors.full_messages,
+        review_id: self.id,
+        restaurant_id: self.restaurant.id,
+        restaurant_name: self.restaurant.name
+      })
+    end
+    return response, error
+  end
+
   def self.create_from_restaurant(restaurant)
     if self.unscoped.where(restaurant_id: restaurant.id).any?
       response = "A review has already been created for this restaurant"

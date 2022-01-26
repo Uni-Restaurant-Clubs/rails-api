@@ -13,16 +13,18 @@ ActiveAdmin.register Review do
 
   actions :all, :except => [:destroy, :new, :create]
 
-  permit_params do
-    permitted = [
-                  :restaurant_id, :university_id, :writer_id, :photographer_id,
-                  :reviewed_at, :full_article, :medium_article, :small_article,
-                  :article_title, :status, :quality_ranking,
-                  images_attributes: [
-                    :id, :title, :photo, :featured, :image_type
-                  ]
-                ]
-    permitted
+  member_action :update_review, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      review_params = params.require(:review)
+      response, error = resource.update_from_active_admin(review_params, current_admin_user.id)
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to admin_review_path(resource.id), notice: response
+      end
+    end
   end
 
   index do
@@ -69,31 +71,6 @@ ActiveAdmin.register Review do
     end
   end
 
-  form do |f|
-    f.semantic_errors *f.object.errors.keys
-    f.inputs 'Details' do
-      f.input :restaurant
-      f.input :status
-      f.input :quality_ranking, :as => :select, :collection => 1..10
-      f.input :writer
-      f.input :photographer
-      f.input :reviewed_at, as: :date_time_picker
-      f.input :article_title
-      f.input :full_article, as: :quill_editor
-      f.input :medium_article, as: :quill_editor
-      f.input :small_article, as: :quill_editor
-    end
-    f.inputs 'Image' do
-      f.has_many :images, heading: false,
-                              remove_record: true do |a|
-        a.input :title
-        a.input :featured
-        a.input :image_type, :input_html => { :value => "review" }, as: :hidden
-        a.input :photo, as: :file, hint: a.template.image_tag(url_for(a.object.resize_to_fit(300)))
-
-      end
-    end
-    f.actions
-  end
+  form partial: 'review_images_form'
 
 end
