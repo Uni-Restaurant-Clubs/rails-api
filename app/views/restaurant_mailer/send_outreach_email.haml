@@ -4,6 +4,16 @@
 %br
 %p
   = @restaurant.outreach_email_intro_line
-%br
 = sanitize @first_text
+%img(height="350" src="https://urc-public-images.s3.us-east-2.amazonaws.com/outreach_email_photo_1.jpeg")
+%img(height="350" src="https://urc-public-images.s3.us-east-2.amazonaws.com/outreach_email_photo_2.jpeg")
+%img(height="350"src="https://urc-public-images.s3.us-east-2.amazonaws.com/outreach_email_photo_3_shortened.jpg")
 = sanitize @second_text
+%br
+%a{href: @restaurant.scheduling_form_url}
+  %img(height="75"src="https://urc-public-images.s3.us-east-2.amazonaws.com/Screen+Shot+2022-01-25+at+2.40.19+PM.png")
+%br
+%br
+%p Not ready to schedule?
+%p If you have any questions or concerns, then please email us back and we will respond right away!
+%p We could even hop on a quick phone call with you to discuss details.

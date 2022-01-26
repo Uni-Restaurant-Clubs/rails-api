@@ -207,7 +207,7 @@ class Restaurant < ApplicationRecord
     response, error = self.create_scheduling_form_url
     return response, error if error
 
-    if outreach_email_sent_at
+    if false #outreach_email_sent_at
       response = "initial outreach email already sent"
       error = true
     elsif !primary_email

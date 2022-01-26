@@ -323,6 +323,24 @@ ActiveAdmin.register Restaurant do
         end
       end
     end
+    columns do
+      column do
+        panel "Creator Review Offer Responses" do
+          table_for restaurant.creator_review_offers.order(:responded_at) do
+            column "Creator" do |offer|
+              offer.content_creator.name
+            end
+            column :responded_at
+            column :option_one_response
+            column :option_two_response
+            column :option_three_response
+            column :not_available_for_any_options
+            column :does_not_want_to_review_this_restaurant
+            column :does_not_want_to_review_reason
+          end
+        end
+      end
+    end
   end
 
   form do |f|
