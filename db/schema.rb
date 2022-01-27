@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_23_194415) do
+ActiveRecord::Schema.define(version: 2022_01_27_193123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -80,6 +80,15 @@ ActiveRecord::Schema.define(version: 2022_01_23_194415) do
     t.index ["city"], name: "index_addresses_on_city"
     t.index ["country"], name: "index_addresses_on_country"
     t.index ["restaurant_id"], name: "index_addresses_on_restaurant_id"
+  end
+
+  create_table "admin_user_roles", force: :cascade do |t|
+    t.integer "admin_user_id"
+    t.integer "role_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_user_id"], name: "index_admin_user_roles_on_admin_user_id"
+    t.index ["role_id"], name: "index_admin_user_roles_on_role_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -425,6 +434,14 @@ ActiveRecord::Schema.define(version: 2022_01_23_194415) do
     t.index ["status"], name: "index_reviews_on_status"
     t.index ["university_id"], name: "index_reviews_on_university_id"
     t.index ["writer_id"], name: "index_reviews_on_writer_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_roles_on_name"
   end
 
   create_table "sessions", force: :cascade do |t|
