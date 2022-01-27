@@ -37,7 +37,6 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
         json = { error: true,
                  message: "Oops something went wrong. Please try again soon." }.to_json
         render json: json, status: 400
-      end
     end
 
   end

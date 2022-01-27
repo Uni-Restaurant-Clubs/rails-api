@@ -6,4 +6,10 @@ class AdminUser < ApplicationRecord
 
   has_many :admin_user_roles
   has_many :roles, through: :admin_user_roles
+
+  accepts_nested_attributes_for :admin_user_roles, :allow_destroy => true
+
+  def name
+    "#{first_name} #{last_name}"
+  end
 end

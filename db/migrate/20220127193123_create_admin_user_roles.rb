@@ -8,5 +8,6 @@ class CreateAdminUserRoles < ActiveRecord::Migration[6.1]
     end
     add_index :admin_user_roles, :admin_user_id
     add_index :admin_user_roles, :role_id
+    add_index :admin_user_roles, [:admin_user_id, :role_id], unique: true
   end
 end

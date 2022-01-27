@@ -5,6 +5,7 @@ class Ability
 
   def initialize(user)
     can :manage, :all
+
     return unless user.present?
 
     # Define abilities for the passed in user here. For example:
