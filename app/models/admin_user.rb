@@ -9,6 +9,13 @@ class AdminUser < ApplicationRecord
 
   accepts_nested_attributes_for :admin_user_roles, :allow_destroy => true
 
+  def restaurant_reviews_admin?
+    roles.find_by(name: "restaurant_reviews_admin")
+  end
+
+  def super_admin?
+    roles.find_by(name: "super_admin")
+  end
   def name
     "#{first_name} #{last_name}"
   end

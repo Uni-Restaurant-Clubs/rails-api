@@ -2,11 +2,18 @@
 
 class Ability
   include CanCan::Ability
+  include AdminUserAbility
 
   def initialize(user)
+    #can :manage, :all
+    return unless user.present?
+    can :read, ActiveAdmin::Page, name: "Dashboard"
+
+    return unless user.restaurant_reviews_admin?
+
+    return unless user.super_admin?
     can :manage, :all
 
-    return unless user.present?
 
     # Define abilities for the passed in user here. For example:
     #

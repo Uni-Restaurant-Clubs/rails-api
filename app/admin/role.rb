@@ -5,6 +5,17 @@ ActiveAdmin.register Role do
       admin_user_roles_attributes: [:id, :admin_user_id, :role_id]]
   end
 
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :description
+    column :roles do |role|
+      role.admin_users
+    end
+    actions
+  end
+
   show do
     attributes_table do
       row :name
