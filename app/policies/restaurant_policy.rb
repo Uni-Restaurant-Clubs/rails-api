@@ -53,4 +53,39 @@ class RestaurantPolicy < ApplicationPolicy
     false
   end
 
+  def create_review?
+    return true if @user.super_admin?
+    false
+  end
+
+  def create_scheduling_form_url?
+    return true if @user.super_admin?
+    return true if @user.restaurant_reviews_admin?
+    false
+  end
+
+  def send_initial_outreach_email?
+    return true if @user.super_admin?
+    return true if @user.restaurant_reviews_admin?
+    false
+  end
+
+  def create_feature_period?
+    return true if @user.super_admin?
+    return true if @user.restaurant_promotions_admin?
+    false
+  end
+
+  def send_review_offer_emails?
+    return true if @user.super_admin?
+    return true if @user.creators_admin?
+    false
+  end
+
+  def unschedule_restaurant_review?
+    return true if @user.super_admin?
+    return true if @user.restaurant_reviews_admin?
+    false
+  end
+
 end

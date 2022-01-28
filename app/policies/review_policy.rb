@@ -48,4 +48,10 @@ class ReviewPolicy < ApplicationPolicy
     false
   end
 
+  def update_review?
+    return true if @user.super_admin?
+    return true if @user.creators_admin?
+    false
+  end
+
 end
