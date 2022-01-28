@@ -62,11 +62,11 @@ class Review < ApplicationRecord
 
   def update_from_active_admin(params, admin_user)
     data = params.permit(review_params).to_h.deep_symbolize_keys
-    if data[:images].any?
+    if data[:images] && data[:images].any?
       response, error = upload_multiple_images(data[:images])
+      data.delete(:images)
       return response, error if error
     end
-    data.delete(:images)
 
     error = false
     response = "review updated!"
