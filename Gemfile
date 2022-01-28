@@ -38,6 +38,7 @@ gem 'groupdate', '~> 5.2', '>= 5.2.2'
 gem 'geocoder', '~> 1.7'
 gem 'active_storage_validations', '~> 0.9.6'
 gem 'cancancan', '~> 3.3'
+gem 'pundit', '~> 1.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false

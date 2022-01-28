@@ -1,4 +1,4 @@
-ActiveAdmin.register_page "scheduled reviews" do
+ActiveAdmin.register_page "Scheduled Reviews" do
   menu priority: 3, label: "Scheduled Reviews"
   content title: "Scheduled Reviews" do
     columns do
