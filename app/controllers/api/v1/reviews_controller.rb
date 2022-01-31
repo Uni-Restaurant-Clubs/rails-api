@@ -7,6 +7,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
     error = false
     airbrake_error = nil
     status = 200
+    restaurant = Restaurant.find_by(scheduling_token: data["token"])
     if !code["success"]
       error = "Oops there was an issue and we are working on resolving it."
       airbrake_issue = "Recaptcha did not work for contact form"
@@ -19,9 +20,12 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       error = ["Three date time options are required"]
       airbrake_issue = "Info for required fields missing"
 
-      #TODO add more validations to make sure restaurant exists and that
-      # they haven't replied already
-      # validate token
+    elsif !restaurant
+      error = ["restaurant not found"]
+      airbrake_issue = "restaurant not found for schedule form submit"
+    elsif !restaurant.submitted_scheduling_form_at
+      error = ["restaurant already submitted"]
+      airbrake_issue = "restaurant already submitted scheduling form"
     end
 
     if error
@@ -33,12 +37,28 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       json = { error: true, message: error }.to_json
       render json: json, status: status
     else
-      # TODO: update info here
-        json = { error: true,
-                 message: "Oops something went wrong. Please try again soon." }.to_json
-        render json: json, status: 400
+      restaurant.submitted_scheduling_form_at = Time.now
+      restaurant.scheduling_token = nil
+      restaurant.status = "accepted"
+      restaurant.option_1 = TimeHelpers.keep_time_but_change_timezone(data["option_one"])
+      restaurant.option_2 = TimeHelpers.keep_time_but_change_timezone(data["option_two"])
+      restaurant.option_3 = TimeHelpers.keep_time_but_change_timezone(data["option_three"])
+      if restaurant.save
+        json = { error: false,
+                 message: "Scheduling info submitted! We will get back to you soon. Thank you!" }.to_json
+        render json: json, status: 200
+      else
+        status = 400
+        Airbrake.notify("restaurant could not be updated on scheduling form submit" , {
+          data: data,
+          restaurant_name: restaurant.name,
+          restaurant_id: restaurant.id
+        })
+        error = "oops there was an issue and we are looking into it"
+        json = { error: true, message: error }.to_json
+        render json: json, status: status
+      end
     end
-
   end
 
   def show
@@ -65,7 +85,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
 
     def scheduling_info_params
       params
-        .permit(:optionOne, :optionTwo, :optionThree, :recaptchaToken)
+        .permit(:optionOne, :optionTwo, :optionThree, :recaptchaToken, :token)
             .to_h.deep_transform_keys!(&:underscore)
     end
 

@@ -13,4 +13,8 @@ class TimeHelpers
   def self.now_to_human
     self.to_human(self.now)
   end
+
+  def self.keep_time_but_change_timezone(time_string)
+    DateTime.iso8601(time_string).asctime.in_time_zone("America/New_York")
+  end
 end
