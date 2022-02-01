@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_27_202229) do
+ActiveRecord::Schema.define(version: 2022_02_01_000530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -380,6 +380,8 @@ ActiveRecord::Schema.define(version: 2022_01_27_202229) do
     t.datetime "outreach_email_sent_at"
     t.string "outreach_email_intro_line"
     t.integer "outreach_email_sent_by_admin_user_id"
+    t.string "scheduling_phone_number"
+    t.text "scheduling_notes"
     t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
     t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"

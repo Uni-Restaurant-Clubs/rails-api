@@ -207,13 +207,13 @@ class Restaurant < ApplicationRecord
     response, error = self.create_scheduling_form_url
     return response, error if error
 
-    if false #outreach_email_sent_at
+    if outreach_email_sent_at
       response = "initial outreach email already sent"
       error = true
-    elsif !primary_email
+    elsif self.primary_email.blank?
       response = "Restaurant does not have an email address. You need to add one first."
       error = true
-    elsif !outreach_email_intro_line
+    elsif self.outreach_email_intro_line.blank?
       response = "You need to add an outreach email intro line first"
       error = true
     else

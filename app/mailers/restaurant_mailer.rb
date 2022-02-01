@@ -1,5 +1,12 @@
 class RestaurantMailer < ApplicationMailer
 
+  def restaurant_submitted_scheduling_info
+    @restaurant = params[:restaurant]
+    date = TimeHelpers.now_to_human
+    mail to: @restaurant.primary_email,
+      subject: "Scheduling info received! Thank you #{@restaurant.name}"
+  end
+
   def send_outreach_email
     @restaurant = params[:restaurant]
     @first_text = TextContent.find_by(name: "restaurant outreach email first text")&.text

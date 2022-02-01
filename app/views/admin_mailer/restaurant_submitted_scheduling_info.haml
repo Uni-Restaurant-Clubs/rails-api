@@ -1,0 +1,28 @@
+%p
+  Hello Team,
+%br
+%p A new restaurant just submitted scheduling info!
+%ul
+  %li
+    Restaurant name:
+    = @restaurant.name
+  %li
+    Restaurant link:
+    = admin_restaurant_url(@restaurant.id)
+  %li
+    Option 1:
+    = TimeHelpers.to_human(@restaurant.option_1)
+  %li
+    Option 2:
+    = TimeHelpers.to_human(@restaurant.option_2)
+  %li
+    Option 2:
+    = TimeHelpers.to_human(@restaurant.option_3)
+  - if @restaurant.scheduling_phone_number
+    %li
+      Phone Number:
+      = @restaurant.scheduling_phone_number
+  - if @restaurant.scheduling_notes
+    %li
+      Notes:
+      = @restaurant.scheduling_notes

@@ -23,7 +23,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
     elsif !restaurant
       error = ["restaurant not found"]
       airbrake_issue = "restaurant not found for schedule form submit"
-    elsif !restaurant.submitted_scheduling_form_at
+    elsif restaurant.submitted_scheduling_form_at
       error = ["restaurant already submitted"]
       airbrake_issue = "restaurant already submitted scheduling form"
     end
@@ -43,7 +43,13 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       restaurant.option_1 = TimeHelpers.keep_time_but_change_timezone(data["option_one"])
       restaurant.option_2 = TimeHelpers.keep_time_but_change_timezone(data["option_two"])
       restaurant.option_3 = TimeHelpers.keep_time_but_change_timezone(data["option_three"])
+      restaurant.scheduling_phone_number = data["scheduling_phone_number"]
+      restaurant.scheduling_notes = data["scheduling_notes"]
       if restaurant.save
+        # send email to team
+        AdminMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
+        RestaurantMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
+        # send email to restaurant
         json = { error: false,
                  message: "Scheduling info submitted! We will get back to you soon. Thank you!" }.to_json
         render json: json, status: 200
@@ -85,7 +91,8 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
 
     def scheduling_info_params
       params
-        .permit(:optionOne, :optionTwo, :optionThree, :recaptchaToken, :token)
+        .permit(:optionOne, :optionTwo, :optionThree, :recaptchaToken, :token,
+                :schedulingPhoneNumber, :schedulingNotes)
             .to_h.deep_transform_keys!(&:underscore)
     end
 

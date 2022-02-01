@@ -2,13 +2,19 @@ class AdminMailer < ApplicationMailer
 
   default to: "hello@unirestaurantclub.com"
 
+  def restaurant_submitted_scheduling_info
+    @restaurant = params[:restaurant]
+    date = TimeHelpers.now_to_human
+    mail to: "scheduling@unirestaurantclub.com",
+      subject: "New scheduling info submitted for #{@restaurant.name}"
+  end
+
   def review_times_have_been_updated_for_restaurant
     @changed_values = params[:changed_values]
     @restaurant = params[:restaurant]
     date = TimeHelpers.now_to_human
-    mail to: "kirsys@unirestaurantclub.com",
-      subject: "Review info changed for #{@restaurant.name} on #{date}",
-      bcc: "monty@unirestaurantclub.com"
+    mail to: "scheduling@unirestaurantclub.com",
+      subject: "Review info changed for #{@restaurant.name} on #{date}"
   end
 
   def sent_offers_to_all_creators_email

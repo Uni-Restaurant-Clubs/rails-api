@@ -1,0 +1,29 @@
+%p
+  Hello
+  = @restaurant.name
+  ,
+%br
+%p Thank you for submitted your scheduling info!
+%p We received the following information:
+%ul
+  %li
+    Time option 1:
+    = TimeHelpers.to_human(@restaurant.option_1)
+  %li
+    Time option 2:
+    = TimeHelpers.to_human(@restaurant.option_2)
+  %li
+    Time option 3:
+    = TimeHelpers.to_human(@restaurant.option_3)
+  - if @restaurant.scheduling_phone_number
+    %li
+      Phone Number:
+      = @restaurant.scheduling_phone_number
+  - if @restaurant.scheduling_notes
+    %li
+      Notes:
+      = @restaurant.scheduling_notes
+%p
+  We will now organize with our writers and creators and get back to you shortly with a final time.
+%p
+  If you have any questions or concerns then please reply to this email and we will get back to you right away.
