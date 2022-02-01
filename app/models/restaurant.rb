@@ -249,23 +249,27 @@ class Restaurant < ApplicationRecord
   end
 
   def create_scheduling_form_url
-    self.scheduling_token = Restaurant.create_new_token
-    self.scheduling_token_created_at = TimeHelpers.now
-    url_base = ENV["FRONTEND_WEB_URL"]
-    path = "/reviews/scheduling_info_form"
-    query = "/#{self.scheduling_token}"
-    self.scheduling_form_url = url_base + path + query
-    if self.save
-      response = "Scheduling URL Created!"
-      error = false
+    if self.scheduling_form_url
+      return "Scheduling form url was already created before!", false
     else
-      Airbrake.notify("Could not create a scheduling url", {
-        errors: self.errors.full_messages,
-        restaurant_id: self.id,
-        restaurant_name: self.name
-      })
-      response = self.errors.full_messages
-      error = true
+      self.scheduling_token = Restaurant.create_new_token
+      self.scheduling_token_created_at = TimeHelpers.now
+      url_base = ENV["FRONTEND_WEB_URL"]
+      path = "/reviews/scheduling_info_form"
+      query = "/#{self.scheduling_token}"
+      self.scheduling_form_url = url_base + path + query
+      if self.save
+        response = "Scheduling URL Created!"
+        error = false
+      else
+        Airbrake.notify("Could not create a scheduling url", {
+          errors: self.errors.full_messages,
+          restaurant_id: self.id,
+          restaurant_name: self.name
+        })
+        response = self.errors.full_messages
+        error = true
+      end
     end
     return response, error
   end
