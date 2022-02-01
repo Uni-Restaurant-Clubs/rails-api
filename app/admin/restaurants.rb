@@ -277,6 +277,8 @@ ActiveAdmin.register Restaurant do
             row :option_1
             row :option_2
             row :option_3
+            row :scheduling_phone_number
+            row :scheduling_notes
             row :send_review_offer_emails_to_creators do |restaurant|
               button_to "Send review offer emails to creators",
                 send_review_offer_emails_admin_restaurant_path(restaurant.id),
