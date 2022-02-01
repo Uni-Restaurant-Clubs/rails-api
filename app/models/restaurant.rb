@@ -296,8 +296,6 @@ class Restaurant < ApplicationRecord
       # send email to restaurant
       RestaurantMailer.with(info: matching_info)
                .send_review_time_scheduled_email.deliver_later
-      RestaurantMailer.with(info: matching_info)
-               .no_charge_confirmation_email.deliver_later
       # send email to admin
       AdminMailer.with(info: matching_info)
                .send_review_time_scheduled_email.deliver_later
