@@ -322,10 +322,7 @@ class Restaurant < ApplicationRecord
   end
 
   def self.send_daily_update_emails(time=nil)
-    emails = ["monty@unirestaurantclub.com"]
-    emails << "kirsys@unirestaurantclub.com"
-    emails << "manar@unirestaurantclub.com"
-    emails << "sandra@unirestaurantclub.com"
+    emails = ["hello@unirestaurantclub.com"]
     data = DailySummaryEmail.get_data
     AdminMailer.with(emails: emails, data: data)
                .send_daily_summary_email.deliver_now
