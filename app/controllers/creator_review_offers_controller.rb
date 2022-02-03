@@ -19,7 +19,10 @@ class CreatorReviewOffersController < ApplicationController
 
   def update
     @offer = CreatorReviewOffer.find_by(id: params[:id])
-    if @offer.restaurant&.scheduled_review_date_and_time
+    if !@offer
+      error = "This offer is no longer valid."
+      @error = true
+    elsif @offer.restaurant&.scheduled_review_date_and_time
       error = "This offer is no longer valid. Looks like a match has already been found."
       @error = true
     elsif @offer
