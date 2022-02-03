@@ -15,6 +15,6 @@ class TimeHelpers
   end
 
   def self.keep_time_but_change_timezone(time_string)
-    DateTime.iso8601(time_string).asctime.in_time_zone("America/New_York")
+    DateTime.parse(time_string).asctime.in_time_zone("America/New_York")
   end
 end
