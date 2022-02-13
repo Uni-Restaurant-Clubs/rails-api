@@ -1,0 +1,14 @@
+%p
+  Hello
+  = "#{@restaurant.name},"
+%br
+%p I hope you are doing well. Thank you again for letting us feature your restaurant!
+%p Your review is now live and our members are loving your photos and article.
+%a{href: "#{ENV['FRONTEND_WEB_URL']}/reviews/#{@review.id}"}
+  SEE YOUR PHOTOS AND ARTICLE HERE
+%p
+%a{href: "#{ENV['FRONTEND_WEB_URL']}/reviews/#{@review.id}"}
+  %img(height="500"src="#{@featured_photo_url}")
+%p We look forward to continue working with you. Please expect another exciting email coming soon!
+
+

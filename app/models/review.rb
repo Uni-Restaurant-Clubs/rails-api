@@ -25,6 +25,51 @@ class Review < ApplicationRecord
     self.images.featured.first
   end
 
+  def send_review_is_up_email(admin_user_id)
+
+    if review_is_up_email_sent_at
+      response = "review is up email already sent"
+      error = true
+    elsif self.restaurant&.primary_email.blank?
+      response = "Restaurant does not have an email address. You need to add one first."
+      error = true
+    elsif self.images.where(featured: true).empty?
+      response = "Review has to have a featured photo"
+      error = true
+    else
+      self.review_is_up_email_sent_at = TimeHelpers.now
+      self.review_is_up_email_sent_by_admin_user_id = admin_user_id
+      if self.save
+        begin
+          RestaurantMailer.with(review: self)
+                 .send_review_is_up_email.deliver_now
+          response = "Review is up email sent!"
+          error = false
+        rescue Exception => e
+          Airbrake.notify("Review is up email couldn't be sent", {
+            error: e,
+            review_id: self.id,
+            restaurant_id: self.restaurant.id,
+            restaurant_name: self.restaurant.name
+          })
+          response = "Review is up email couldn't be sent. Tech team is looking into the issue."
+          error = false
+        end
+      else
+        Airbrake.notify("Could not update review when sending review is up email", {
+          errors: self.errors.full_messages,
+            review_id: self.id,
+            restaurant_id: self.restaurant.id,
+            restaurant_name: self.restaurant.name
+        })
+        response = "Could not update restaurant when sending outreach email. Tech team is looking into it."
+        error = true
+      end
+    end
+    return response, error
+
+  end
+
   def upload_multiple_images(images)
     error = false
     response = "Images uploaded!"

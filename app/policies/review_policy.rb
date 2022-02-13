@@ -54,4 +54,10 @@ class ReviewPolicy < ApplicationPolicy
     false
   end
 
+  def send_review_is_up_email?
+    return true if @user.super_admin?
+    return true if @user.restaurant_reviews_admin?
+    false
+  end
+
 end

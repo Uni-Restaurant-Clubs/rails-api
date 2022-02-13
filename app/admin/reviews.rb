@@ -13,6 +13,19 @@ ActiveAdmin.register Review do
 
   actions :all, :except => [:destroy, :new, :create]
 
+  member_action :send_review_is_up_email, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      response, error = resource.send_review_is_up_email(current_admin_user.id)
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to admin_review_path(resource.id), notice: response
+      end
+    end
+  end
+
   member_action :update_review, method: :post do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
@@ -48,6 +61,13 @@ ActiveAdmin.register Review do
     attributes_table do
       row :restaurant
       row :status
+      row :review_is_up_email_sent_at
+      row :review_is_up_email_sent_by_admin_user_id do |review|
+        if review.review_is_up_email_sent_by_admin_user_id
+          admin_user = AdminUser.find_by(id: review.review_is_up_email_sent_by_admin_user_id)
+          link_to admin_user.name, admin_admin_user_path(admin_user.id)
+        end
+      end
       row :quality_ranking
       row :writer
       row :photographer
@@ -56,6 +76,13 @@ ActiveAdmin.register Review do
       row (:full_article) { |review| raw(review.full_article) }
       row (:medium_article) { |review| raw(review.medium_article) }
       row (:small_article) { |review| raw(review.small_article) }
+      row :send_review_is_up_email do |review|
+        button_to "Send review is up email",
+          send_review_is_up_email_admin_review_path(review.id),
+          action: :post,
+          :data => {:confirm => 'Are you sure you want to send the review is up email for this restaurant?'}
+      end
+
       table_for review.images do
         column "Title" do |image|
           image.title

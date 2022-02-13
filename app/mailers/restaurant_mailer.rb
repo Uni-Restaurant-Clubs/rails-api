@@ -1,5 +1,15 @@
 class RestaurantMailer < ApplicationMailer
 
+  def send_review_is_up_email
+    @review = params[:review]
+    @restaurant = @review.restaurant
+    @name = @restaurant.name
+    @featured_photo_url = @review.images.where(featured: true).first.photo.url
+
+    mail to: @restaurant&.primary_email, bcc: "monty@unirestaurantclub.com",
+      subject: "Your photos and article are now live! #{@restaurant.name}"
+  end
+
   def restaurant_submitted_scheduling_info
     @restaurant = params[:restaurant]
     date = TimeHelpers.now_to_human
