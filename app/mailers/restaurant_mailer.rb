@@ -1,5 +1,13 @@
 class RestaurantMailer < ApplicationMailer
 
+  def send_initial_promotion_email
+    @restaurant = params[:restaurant]
+    @name = @restaurant.name
+
+    mail to: @restaurant&.primary_email, bcc: "monty@unirestaurantclub.com",
+      subject: "We want to promote #{@restaurant.name}!"
+  end
+
   def send_review_is_up_email
     @review = params[:review]
     @restaurant = @review.restaurant
