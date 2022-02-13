@@ -1,6 +1,7 @@
 class Restaurant < ApplicationRecord
 
   has_one :address, dependent: :destroy
+  has_one :promotion_info, dependent: :destroy
 
   has_many :reviews, dependent: :destroy
   has_many :feature_periods, dependent: :destroy
