@@ -82,6 +82,19 @@ ActiveAdmin.register_page "Dashboard" do
     end
     columns do
       column do
+        panel "Instagram post must be posted for these restaurants today" do
+          two_days_ago = TimeHelpers.now - 2.days
+          table_for Review.where.not(review_is_up_email_sent_at: nil)
+                    .where(promotion_intro_email_sent: false)
+                    .where('review_is_up_email_sent_at < ?', two_days_ago) do
+
+            column("Name") { |rev| link_to(rev.restaurant.name, admin_restaurant_path(rev.restaurant.id)) }
+          end
+        end
+      end
+    end
+    columns do
+      column do
         panel 'Unique Daily User Visits' do
           line_chart ChartData.unique_user_page_views_by_day
         end

@@ -86,3 +86,10 @@
 
       %td= rest.writer&.name
       %td= rest.photographer&.name
+%h3 Reviews needing Instagram post
+%table
+  %tr
+    %th(style="width: 150px; text-align: left;") Restaurant
+  - @reviews_needing_instagram_post.all.each do |review|
+    %tr
+      %td= review.restaurant&.name
