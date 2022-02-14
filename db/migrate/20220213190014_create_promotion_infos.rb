@@ -11,5 +11,6 @@ class CreatePromotionInfos < ActiveRecord::Migration[6.1]
     end
     add_index :promotion_infos, :restaurant_id
     add_index :promotion_infos, :restaurant_status
+    add_column :reviews, :promotion_intro_email_sent, :boolean, default: false
   end
 end

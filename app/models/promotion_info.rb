@@ -16,13 +16,14 @@ class PromotionInfo < ApplicationRecord
   # create a method that is called from a cron job to send promotion initial
   # emails out to any restaurants where a your review is up email was sent 2
   # days before
-  def self.send_initial_promotion_email_out(restaurant)
+  def self.send_initial_promotion_email_out(review)
+    restaurant = review.restaurant
     promotion_info = restaurant.promotion_info
-    if promotion_info&.promotion_intro_email_sent_at.present?
+
+    if promotion_info&.promotion_intro_email_sent_at.present? ||
+        review.promotion_intro_email_sent
       return false
     else
-      # send email
-      # wrap in begin, exception
       begin
         RestaurantMailer.with(restaurant: restaurant)
                         .send_initial_promotion_email.deliver_now
@@ -34,12 +35,13 @@ class PromotionInfo < ApplicationRecord
             restaurant_status: :sent_promotional_intro_email
           }
           promotion_info = PromotionalInfo.new(promotion_info_data)
-          if promotion_info.save
-
+          if promotion_info.save && review.save
+            return true
           else
-            Airbrake.notify("A promotion info could not have been created", {
+            Airbrake.notify("A promotion info or review could not have been created or updated while sending promotion intro email", {
               error: e,
-              errors: promotion_info.errors.full_messages,
+              promotion_info_errors: promotion_info.errors.full_messages,
+              review_errors: review.errors.full_messages,
               restaurant_id: restaurant.id,
               restaurant_name: restaurant.name
             })
@@ -59,18 +61,12 @@ class PromotionInfo < ApplicationRecord
     # find all restaurants where review is up email was sent more than 2 days ago
     # and an initial promotion email has not been sent out yet
     two_days_ago = TimeHelpers.now - 2.days
-    restaurant_ids = Review.where.not(review_is_up_email_sent_at: nil)
-                          .where('review_is_up_email_sent_at < ?', two_days_ago)
-                          .pluck(:restaurant_id)
+    reviews = Review.where.not(review_is_up_email_sent_at: nil)
+                    .where(promotion_intro_email_sent: false)
+                    .where('review_is_up_email_sent_at < ?', two_days_ago)
 
-    promotion_info_restaurant_ids = self.where(restaurant_id: restaurant_ids)
-                                    .where.not(promotion_intro_email_sent_at: nil)
-                                    .pluck(:restaurant_id)
-
-    left_over_restaurant_ids = restaurant_ids - promotion_info_restaurant_ids
-    restaurants = Restaurant.where(id: left_over_restaurant_ids)
-    restaurants.each do |restaurant|
-      self.send_initial_promotion_email_out(restaurant)
+    reviews.each do |review|
+      self.send_initial_promotion_email_out(review)
     end
   end
 end

@@ -447,6 +447,7 @@ ActiveRecord::Schema.define(version: 2022_02_13_190014) do
     t.integer "quality_ranking", default: 1
     t.datetime "review_is_up_email_sent_at"
     t.integer "review_is_up_email_sent_by_admin_user_id"
+    t.boolean "promotion_intro_email_sent", default: false
     t.index ["photographer_id"], name: "index_reviews_on_photographer_id"
     t.index ["quality_ranking"], name: "index_reviews_on_quality_ranking"
     t.index ["restaurant_id"], name: "index_reviews_on_restaurant_id"
