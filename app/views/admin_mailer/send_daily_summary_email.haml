@@ -90,6 +90,6 @@
 %table
   %tr
     %th(style="width: 150px; text-align: left;") Restaurant
-  - @reviews_needing_instagram_post.all.each do |review|
+  - @data[:reviews_needing_instagram_posts].all.each do |review|
     %tr
       %td= review.restaurant&.name

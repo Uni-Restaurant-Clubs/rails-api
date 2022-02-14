@@ -4,6 +4,15 @@ class DailySummaryEmail
     data = {}
 
     restaurants = Restaurant.brooklyn
+    ########## INSTAGRAM POSTS NEEDING TO BE POSTED ###################
+
+    reviews_needing_instagram_posts = Review.where
+                    .not(review_is_up_email_sent_at: nil)
+                    .where(promotion_intro_email_sent: false)
+                    .where('review_is_up_email_sent_at < ?', two_days_ago)
+
+    data[:reviews_needing_instagram_posts] = reviews_needing_instagram_posts
+
     ########## TODAYS REVIEWS ###################
     reviews = restaurants.review_scheduled.scheduled_today
     data[:todays_reviews] = {

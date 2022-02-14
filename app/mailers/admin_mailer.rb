@@ -36,11 +36,6 @@ class AdminMailer < ApplicationMailer
     @emails = params[:emails]
     @data = params[:data]
 
-    @reviews_needing_instagram_post = Review.where
-                    .not(review_is_up_email_sent_at: nil)
-                    .where(promotion_intro_email_sent: false)
-                    .where('review_is_up_email_sent_at < ?', two_days_ago)
-
     time = Time.now
     date = "#{time.day}/#{time.month}/#{time.year}"
 
