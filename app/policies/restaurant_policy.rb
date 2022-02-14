@@ -70,12 +70,6 @@ class RestaurantPolicy < ApplicationPolicy
     false
   end
 
-  def create_feature_period?
-    return true if @user.super_admin?
-    return true if @user.restaurant_promotions_admin?
-    false
-  end
-
   def send_review_offer_emails?
     return true if @user.super_admin?
     return true if @user.creators_admin?

@@ -48,4 +48,10 @@ class PromotionInfoPolicy < ApplicationPolicy
     false
   end
 
+  def create_feature_period?
+    return true if @user.super_admin?
+    return true if @user.restaurant_promotions_admin?
+    false
+  end
+
 end

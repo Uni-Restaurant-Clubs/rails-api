@@ -14,4 +14,9 @@ namespace :restaurants do
     CreatorMatching.check_for_no_answers
   end
 
+  desc "Send Promotion Intro emails out to restaurants that receied 'review is up' email 2 days ago"
+  task send_promotion_intro_emails: :environment do
+    PromotionInfo.send_initial_promotion_emails_out
+  end
+
 end

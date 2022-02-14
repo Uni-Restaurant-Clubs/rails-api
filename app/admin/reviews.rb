@@ -68,6 +68,16 @@ ActiveAdmin.register Review do
           link_to admin_user.name, admin_admin_user_path(admin_user.id)
         end
       end
+      row :send_review_is_up_email do |review|
+        if review.review_is_up_email_sent_at
+          "Email already sent"
+        else
+          button_to "Send review is up email",
+            send_review_is_up_email_admin_review_path(review.id),
+            action: :post,
+            :data => {:confirm => 'Are you sure you want to send the review is up email for this restaurant?'}
+        end
+      end
       row :quality_ranking
       row :writer
       row :photographer
@@ -76,12 +86,6 @@ ActiveAdmin.register Review do
       row (:full_article) { |review| raw(review.full_article) }
       row (:medium_article) { |review| raw(review.medium_article) }
       row (:small_article) { |review| raw(review.small_article) }
-      row :send_review_is_up_email do |review|
-        button_to "Send review is up email",
-          send_review_is_up_email_admin_review_path(review.id),
-          action: :post,
-          :data => {:confirm => 'Are you sure you want to send the review is up email for this restaurant?'}
-      end
 
       table_for review.images do
         column "Title" do |image|

@@ -25,6 +25,7 @@ class PromotionInfo < ApplicationRecord
       return false
     else
       begin
+        puts "Sending promoting intro email to #{restaurant.name}"
         RestaurantMailer.with(restaurant: restaurant)
                         .send_initial_promotion_email.deliver_now
 
@@ -34,7 +35,8 @@ class PromotionInfo < ApplicationRecord
             promotion_intro_email_sent_at: Time.now,
             restaurant_status: :sent_promotional_intro_email
           }
-          promotion_info = PromotionalInfo.new(promotion_info_data)
+          promotion_info = PromotionInfo.new(promotion_info_data)
+          review.promotion_intro_email_sent = true
           if promotion_info.save && review.save
             return true
           else

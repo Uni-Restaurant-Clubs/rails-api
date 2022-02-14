@@ -98,19 +98,6 @@ ActiveAdmin.register Restaurant do
     end
   end
 
-  member_action :create_feature_period, method: :post do
-    if !current_admin_user
-      redirect_to resource_path(resource), alert: "Not Authorized"
-    else
-      response, error, review = FeaturePeriod.create_from_restaurant(resource)
-      if error
-        redirect_to resource_path(resource), alert: response
-      else
-        redirect_to admin_feature_period_path(review.id), notice: response
-      end
-    end
-  end
-
   member_action :send_review_offer_emails, method: :post do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
@@ -309,17 +296,19 @@ ActiveAdmin.register Restaurant do
             row :date_photos_received
             row :writer_handed_in_article
             row :date_article_received
-            row :create_review do |restaurant|
-              button_to "Create a review for this restaurant",
-                create_review_admin_restaurant_path(restaurant.id),
-                action: :post,
-                :data => {:confirm => 'Are you sure you want to create a review for this restaurant?'}
+            row :review do |restaurant|
+              review = restaurant.reviews.first
+              if !review
+                button_to "Create a review for this restaurant",
+                  create_review_admin_restaurant_path(restaurant.id),
+                  action: :post,
+                  :data => {:confirm => 'Are you sure you want to create a review for this restaurant?'}
+              else
+                link_to "review", admin_review_path(review.id)
+              end
             end
-            row :create_feature_period do |restaurant|
-              button_to "Create feature period for restaurant",
-                create_feature_period_admin_restaurant_path(restaurant.id),
-                action: :post,
-                :data => {:confirm => 'Are you sure you want to create a feature period for this restaurant?'}
+            row :promotion_info do |restaurant|
+              link_to "Promotion Info", admin_promotion_info_path(restaurant.promotion_info&.id) if restaurant.promotion_info
             end
           end
         end
