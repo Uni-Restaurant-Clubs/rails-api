@@ -1,5 +1,47 @@
-%p
-  Hello
-  = "#{@restaurant.name},"
-%br
+%div(style="line-height:1.5 !important;")
+  %p
+    Hello
+    = "#{@restaurant.name},"
+  %br
+  %p
+    %strong(style="color:#e06666;font-size:1.4em;") We want to promote you!
+  %p
+    %strong We enjoyed your restaurant so much
+    that we would now love to promote your restaurant,
+    %strong NO CHARGE TO YOU,
+    for a whole month!
+  %p
+  %br
+  %img(width="500"src="https://urc-public-images.s3.us-east-2.amazonaws.com/promotion-email-banner-1.png")
+  %br
+  %br
+  = sanitize @first_text
+  %br
+  %img(width="500"src="https://urc-public-images.s3.us-east-2.amazonaws.com/sales-banner.png")
+  %br
+  %br
+  %p How do we keep track of members going to your restaurant?
 
+  %p
+    %strong Our members will “check in” through our app
+    to prove to you that they are a member.
+  %p
+    This also allows us to track how many members went to your restaurant.
+  %p View a demo video here of how the member will use the app:
+  %br
+  %img(width="250" src="https://urc-public-images.s3.us-east-2.amazonaws.com/demo-video-shortened-gif.gif")
+  %br
+  %br
+  %p What happens after the month is over?
+  %p
+    %strong We will create a report for you
+    which shows how many of our members were at your restaurant plus social media statistics from paid ads.
+  %br
+  %p
+    Well that’s the basic idea!
+    %strong Please let us know if you are interested
+    or if you have any questions.
+  %p
+    We’re also very happy to jump on a quick phone call if you’d like to discuss details.
+  %br
+  %p We look forward to hearing from you and hopefully having the opportunity to promote you!!

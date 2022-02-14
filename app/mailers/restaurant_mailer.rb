@@ -3,6 +3,7 @@ class RestaurantMailer < ApplicationMailer
   def send_initial_promotion_email
     @restaurant = params[:restaurant]
     @name = @restaurant.name
+    @first_text = TextContent.find_by(name: "promotion intro email first part")&.text
 
     mail to: @restaurant&.primary_email, bcc: "monty@unirestaurantclub.com",
       subject: "We want to promote #{@restaurant.name}!"
