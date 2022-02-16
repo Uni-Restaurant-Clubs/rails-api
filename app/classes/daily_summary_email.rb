@@ -6,6 +6,7 @@ class DailySummaryEmail
     restaurants = Restaurant.brooklyn
     ########## INSTAGRAM POSTS NEEDING TO BE POSTED ###################
 
+    two_days_ago = TimeHelpers.now - 2.days
     reviews_needing_instagram_posts = Review.where
                     .not(review_is_up_email_sent_at: nil)
                     .where(promotion_intro_email_sent: false)
