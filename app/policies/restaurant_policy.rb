@@ -55,6 +55,7 @@ class RestaurantPolicy < ApplicationPolicy
 
   def create_review?
     return true if @user.super_admin?
+    return true if @user.restaurant_reviews_admin?
     false
   end
 
