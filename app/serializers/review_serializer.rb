@@ -64,7 +64,13 @@ class ReviewSerializer < ActiveModel::Serializer
   end
 
   class RestaurantSerializer < ActiveModel::Serializer
-    attributes :name, :id
+    attributes :name, :id, :address, :description, :yelp_url, :website_url,
+               :yelp_rating, :yelp_review_count
+
+    def address
+      object.address.full_address
+    end
+
   end
 
   class FeaturePeriodSerializer < ActiveModel::Serializer
