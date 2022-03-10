@@ -7,10 +7,12 @@ class PromotionInfo < ApplicationRecord
   enum restaurant_status: {
     sent_promotional_intro_email: 0,
     not_interested: 1,
-    interested_and_need_to_talk_details: 2,
+    interested: 2,
     ready_to_be_featured: 3,
     being_featured: 4,
-    previously_featured: 5
+    previously_featured: 5,
+    review_completed_email_sent: 6,
+    need_to_send_promo_intro_email: 7,
   }
 
   # create a method that is called from a cron job to send promotion initial

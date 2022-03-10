@@ -62,6 +62,13 @@ class Restaurant < ApplicationRecord
   scope :active_review_dates, -> do
     where("last_time_a_review_related_date_was_updated > ?",  (TimeHelpers.now - 2.weeks))
   end
+  scope :review_is_up_email_not_sent, -> do
+    joins(:reviews).where(:reviews => {:review_is_up_email_sent_at => nil})
+  end
+  scope :review_is_up_email_sent, -> do
+    joins(:reviews).where.not(:reviews => {:review_is_up_email_sent_at => nil})
+  end
+
   scope :scheduled_in_past, -> do
     where("scheduled_review_date_and_time < ?",  TimeHelpers.now)
   end

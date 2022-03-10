@@ -4,6 +4,36 @@ ActiveAdmin.register PromotionInfo do
     [:restaurant_status, :notes, :restaurant_responded_at]
   end
 
+  scope :all do |infos|
+    infos
+  end
+  scope :need_to_send_promo_intro_email do |infos|
+    infos.where(restaurant_status: :need_to_send_promo_intro_email)
+  end
+  scope :sent_promotional_intro_email do |infos|
+    infos.where(restaurant_status: :sent_promotional_intro_email)
+  end
+  scope :sent_promotional_intro_email_more_than_seven_days_ago do |infos|
+    infos.where(restaurant_status: :sent_promotional_intro_email)
+      .where("promotion_intro_email_sent_at < ?",  (TimeHelpers.now - 7.days))
+  end
+
+  scope :interested do |infos|
+    infos.where(restaurant_status: :interested)
+  end
+  scope :ready_to_be_featured do |infos|
+    infos.where(restaurant_status: :ready_to_be_featured)
+  end
+  scope :being_featured do |infos|
+    infos.where(restaurant_status: :being_featured)
+  end
+  scope :previously_featured do |infos|
+    infos.where(restaurant_status: :previously_featured)
+  end
+  scope :not_interested do |infos|
+    infos.where(restaurant_status: :not_interested)
+  end
+
   member_action :create_feature_period, method: :post do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
