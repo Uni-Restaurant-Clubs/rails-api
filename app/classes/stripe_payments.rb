@@ -43,6 +43,9 @@ class StripePayments
     		quantity: 1,
     		price: price_id,
   		}],
+      subscription_data: {
+        trial_end: (Time.now + 1.month).to_i
+      }
 		})
 
     # add for discounts
