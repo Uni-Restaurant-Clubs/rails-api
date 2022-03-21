@@ -1,6 +1,6 @@
 class FeaturePeriodSerializer < ActiveModel::Serializer
 
-  attributes :id, :disclaimers, :perks, :deal, :review
+  attributes :id, :disclaimers, :perks, :deal, :review, :two_for_one_item
 
   belongs_to :restaurant
 

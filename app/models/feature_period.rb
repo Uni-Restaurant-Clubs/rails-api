@@ -14,7 +14,7 @@ class FeaturePeriod < ApplicationRecord
 
   scope :currently_featured, ->{ has_started.has_not_ended }
 
-  enum discount_type: { dollar: 0, percentage: 1, items: 2 }
+  enum discount_type: { dollar: 0, percentage: 1, "2 for 1" => 2 }
   enum status: { feature_not_live: 0, feature_live: 1 }
 
   def readable_deal

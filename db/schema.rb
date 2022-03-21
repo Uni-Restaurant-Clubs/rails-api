@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_13_190014) do
+ActiveRecord::Schema.define(version: 2022_03_21_081200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -212,6 +212,7 @@ ActiveRecord::Schema.define(version: 2022_02_13_190014) do
     t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "two_for_one_item"
     t.index ["discount_type"], name: "index_feature_periods_on_discount_type"
     t.index ["restaurant_id"], name: "index_feature_periods_on_restaurant_id"
     t.index ["status"], name: "index_feature_periods_on_status"

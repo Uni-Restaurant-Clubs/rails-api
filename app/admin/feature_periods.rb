@@ -3,7 +3,7 @@ ActiveAdmin.register FeaturePeriod do
   permit_params do
     permitted = [
       :discount_type, :discount_number, :status, :start_date, :end_date,
-      :disclaimers, :perks, :notes, :restaurant_id
+      :disclaimers, :perks, :notes, :restaurant_id, :two_for_one_item
     ]
     #permitted << :other if params[:action] == 'create' && current_user.admin?
     permitted
@@ -14,6 +14,7 @@ ActiveAdmin.register FeaturePeriod do
     id_column
     column :restaurant
     column :discount_type
+    column :two_for_one_item
     column :discount_number do |feature_period|
       feature_period.readable_deal
     end
@@ -29,6 +30,7 @@ ActiveAdmin.register FeaturePeriod do
   show do |restaurant|
     attributes_table_for restaurant do
       row :discount_type
+      row :two_for_one_item
       row :discount_number do |feature_period|
         feature_period.readable_deal
       end
@@ -46,6 +48,7 @@ ActiveAdmin.register FeaturePeriod do
     f.semantic_errors *f.object.errors.keys
     f.inputs do
       f.input :discount_type
+      f.input :two_for_one_item, label: "2 for 1 item. Example put 'drinks' and it will show '2 for 1 drinks!' to the members"
       f.input :discount_number, label: "If dollar amount, add total cents. Example: for $20.50, the amount entered should be 2000 since $20.50 is 2000 cents"
       f.input :status
       f.input :start_date, as: :date_time_picker
