@@ -27,7 +27,7 @@ class ReviewIndexSerializer < ActiveModel::Serializer
 
   class FeaturePeriodSerializer < ActiveModel::Serializer
     attributes :discount_type, :discount_number, :status, :start_date, :end_date,
-      :disclaimers, :perks, :deal, :two_for_one_deal
+      :disclaimers, :perks, :deal, :two_for_one_item
 
     def deal
       object.readable_deal
