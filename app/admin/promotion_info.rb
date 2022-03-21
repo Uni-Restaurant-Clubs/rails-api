@@ -12,6 +12,7 @@ ActiveAdmin.register PromotionInfo do
   end
   scope :sent_promotional_intro_email do |infos|
     infos.where(restaurant_status: :sent_promotional_intro_email)
+      .where("promotion_intro_email_sent_at > ?",  (TimeHelpers.now - 7.days))
   end
   scope :sent_promotional_intro_email_more_than_seven_days_ago do |infos|
     infos.where(restaurant_status: :sent_promotional_intro_email)
