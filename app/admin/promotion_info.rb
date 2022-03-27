@@ -7,6 +7,12 @@ ActiveAdmin.register PromotionInfo do
   scope :all do |infos|
     infos
   end
+  scope :need_to_send_review_is_up_email do |infos|
+    infos.where(restaurant_status: :need_to_send_review_is_up_email)
+  end
+  scope :need_to_post_to_instagram do |infos|
+    infos.where(restaurant_status: :need_to_post_to_instagram)
+  end
   scope :need_to_send_promo_intro_email do |infos|
     infos.where(restaurant_status: :need_to_send_promo_intro_email)
   end
@@ -68,8 +74,10 @@ ActiveAdmin.register PromotionInfo do
       end
 
       row :restaurant_status
+      row :review_is_up_email_sent_at
       row :promotion_intro_email_sent_at
       row :restaurant_responded_at
+      row :follow_up_email_sent_at
       row :create_feature_period do |restaurant|
         button_to "Create feature period for restaurant",
           create_feature_period_admin_promotion_info_path(restaurant.id),
@@ -85,6 +93,10 @@ ActiveAdmin.register PromotionInfo do
     f.inputs "details" do
       f.semantic_errors *f.object.errors.keys
       f.input :restaurant_status
+      f.input :review_is_up_email_sent_at, as: :date_time_picker
+      f.input :promotion_intro_email_sent_at, as: :date_time_picker
+      f.input :restaurant_responded_at, as: :date_time_picker
+      f.input :follow_up_email_sent_at, as: :date_time_picker
       f.input :notes
     end
     f.actions

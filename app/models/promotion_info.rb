@@ -13,6 +13,8 @@ class PromotionInfo < ApplicationRecord
     previously_featured: 5,
     review_completed_email_sent: 6,
     need_to_send_promo_intro_email: 7,
+    need_to_send_review_is_up_email: 8,
+    need_to_post_to_instagram: 9
   }
 
   # create a method that is called from a cron job to send promotion initial

@@ -205,13 +205,22 @@ class Restaurant < ApplicationRecord
   end
 
   def create_promotion_info
-    pi = PromotionInfo.new(restaurant_id: self.id) if !self.promotion_info
-    if pi.save
-      response = "Promotion Info created!"
-      error = nil
+    if self.promotion_info
+      response = "restaurant already has a promotion info"
+      error = response
     else
-      response = "Promotion Info could not be created."
-      error = pi.errors.full_messages
+      pi_data = {
+        restaurant_id: self.id,
+        restaurant_status: :need_to_send_review_is_up_email
+      }
+      pi = PromotionInfo.new(pi_data)
+      if pi.save
+        response = "Promotion Info created!"
+        error = nil
+      else
+        response = "Promotion Info could not be created."
+        error = pi.errors.full_messages
+      end
     end
 
     return response, error

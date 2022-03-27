@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_21_081200) do
+ActiveRecord::Schema.define(version: 2022_03_27_124514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -301,6 +301,8 @@ ActiveRecord::Schema.define(version: 2022_03_21_081200) do
     t.text "notes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "follow_up_email_sent_at"
+    t.datetime "review_is_up_email_sent_at"
     t.index ["restaurant_id"], name: "index_promotion_infos_on_restaurant_id"
     t.index ["restaurant_status"], name: "index_promotion_infos_on_restaurant_status"
   end
