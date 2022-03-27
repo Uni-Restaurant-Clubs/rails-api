@@ -53,6 +53,12 @@ class RestaurantPolicy < ApplicationPolicy
     false
   end
 
+  def create_promotion_info?
+    return true if @user.super_admin?
+    return true if @user.restaurant_promotions_admin?
+    false
+  end
+
   def create_review?
     return true if @user.super_admin?
     return true if @user.restaurant_reviews_admin?

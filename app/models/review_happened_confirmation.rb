@@ -19,11 +19,6 @@ class ReviewHappenedConfirmation < ApplicationRecord
         writer = restaurant.writer
         photographer = restaurant.photographer
 
-        # create promotion info for restaurant
-        # if doesn't have one yet
-        if !restaurant.promotion_info
-          PromotionInfo.create!(restaurant_id: restaurant.id)
-        end
         if !restaurant.just_reviewed_emails_sent
           CreatorMailer.with(restaurant: restaurant, creator: writer)
             .just_reviewed_email.deliver_later

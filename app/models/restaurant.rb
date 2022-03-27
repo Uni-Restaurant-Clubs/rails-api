@@ -204,6 +204,19 @@ class Restaurant < ApplicationRecord
     return response, error
   end
 
+  def create_promotion_info
+    pi = PromotionInfo.new(restaurant_id: self.id) if !self.promotion_info
+    if pi.save
+      response = "Promotion Info created!"
+      error = nil
+    else
+      response = "Promotion Info could not be created."
+      error = pi.errors.full_messages
+    end
+
+    return response, error
+  end
+
   def self.create_new_token(token_name="scheduling_token")
     loop do
       token = SecureRandom.hex(15)

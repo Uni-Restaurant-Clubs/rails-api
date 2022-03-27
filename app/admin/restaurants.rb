@@ -85,6 +85,19 @@ ActiveAdmin.register Restaurant do
     end
   end
 
+  member_action :create_promotion_info, method: :post do
+    if !current_admin_user
+      redirect_to resource_path(resource), alert: "Not Authorized"
+    else
+      response, error, review = resource.create_promotion_info
+      if error
+        redirect_to resource_path(resource), alert: response
+      else
+        redirect_to admin_restaurant_path(resource.id), notice: response
+      end
+    end
+  end
+
   member_action :create_review, method: :post do
     if !current_admin_user
       redirect_to resource_path(resource), alert: "Not Authorized"
@@ -308,7 +321,15 @@ ActiveAdmin.register Restaurant do
               end
             end
             row :promotion_info do |restaurant|
-              link_to "Promotion Info", admin_promotion_info_path(restaurant.promotion_info&.id) if restaurant.promotion_info
+              promotion_info = restaurant.promotion_info
+              if !promotion_info
+                button_to "Create a Promotion Info for this restaurant",
+                  create_promotion_info_admin_restaurant_path(restaurant.id),
+                  action: :post,
+                  :data => {:confirm => 'Are you sure you want to create a promotion info for this restaurant?'}
+              else
+                link_to "Promotion Info", admin_promotion_info_path(restaurant.promotion_info&.id)
+              end
             end
           end
         end

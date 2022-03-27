@@ -1,5 +1,6 @@
 ActiveAdmin.register_page "Completed Reviews" do
   menu priority: 4, label: "Completed Reviews"
+
   content title: "Completed Reviews" do
     columns do
       column do
@@ -74,6 +75,17 @@ ActiveAdmin.register_page "Completed Reviews" do
                 link_to("Review", admin_review_path(rest.reviews.first))
               end
             end
+            column("Promotion Info") do |restaurant|
+              promotion_info = restaurant.promotion_info
+              if !promotion_info
+                button_to "Create a Promotion Info for this restaurant",
+                  create_promotion_info_admin_restaurant_path(restaurant.id),
+                  action: :post,
+                  :data => {:confirm => 'Are you sure you want to create a promotion info for this restaurant?'}
+              else
+                link_to "Promotion Info", admin_promotion_info_path(restaurant.promotion_info&.id)
+              end
+            end
           end
         end
       end
@@ -99,6 +111,17 @@ ActiveAdmin.register_page "Completed Reviews" do
             column("Review") do |rest|
               if rest.reviews.any?
                 link_to("Review", admin_review_path(rest.reviews.first))
+              end
+            end
+            column("Promotion Info") do |restaurant|
+              promotion_info = restaurant.promotion_info
+              if !promotion_info
+                button_to "Create a Promotion Info for this restaurant",
+                  create_promotion_info_admin_restaurant_path(restaurant.id),
+                  action: :post,
+                  :data => {:confirm => 'Are you sure you want to create a promotion info for this restaurant?'}
+              else
+                link_to "Promotion Info", admin_promotion_info_path(restaurant.promotion_info&.id)
               end
             end
           end
