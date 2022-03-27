@@ -52,6 +52,8 @@ class Restaurant < ApplicationRecord
 
   accepts_nested_attributes_for :address, :allow_destroy => true
 
+  scope :does_not_have_promotion_info, -> { where.missing(:promotion_info) }
+
   scope :brooklyn, lambda { joins(:address).where(address: { city: "Brooklyn" }) }
   scope :franchise, lambda { where(is_franchise: true) }
   scope :not_franchise, lambda { where(is_franchise: false) }
@@ -135,6 +137,11 @@ class Restaurant < ApplicationRecord
   scope :scheduled_but_not_for_next_three_days, -> do
     self.not_scheduled_today.not_scheduled_tomorrow.not_scheduled_in_next_three_days
         .review_scheduled
+  end
+
+  def self.has_promotion_info
+    ids = PromotionInfo.where.not(restaurant_id: nil).pluck(:restaurant_id)
+    self.where(id: ids)
   end
 
   def self.inactive_review_dates
