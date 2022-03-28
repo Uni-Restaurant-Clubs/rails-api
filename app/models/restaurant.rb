@@ -144,6 +144,14 @@ class Restaurant < ApplicationRecord
     self.where(id: ids)
   end
 
+  def self.has_completed_reviews_needing_promotion_info
+    self.brooklyn.reviewed_with_content.does_not_have_promotion_info
+  end
+
+  def self.has_completed_reviews_and_promotion_info_created
+    self.has_promotion_info.brooklyn.reviewed_with_content
+  end
+
   def self.inactive_review_dates
     less_than_two_weeks_ids = self.where("last_time_a_review_related_date_was_updated < ?",
                                      (TimeHelpers.now - 2.weeks)).pluck(:id)

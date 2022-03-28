@@ -55,7 +55,7 @@ ActiveAdmin.register_page "Completed Reviews" do
     columns do
       column do
         panel "Completed Reviews Needing to create Promotion Info" do
-          table_for Restaurant.brooklyn.reviewed_with_content.does_not_have_promotion_info do
+          table_for Restaurant.has_completed_reviews_needing_promotion_info do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Reviewed at") do |rest|
               rest.scheduled_review_date_and_time
@@ -93,7 +93,7 @@ ActiveAdmin.register_page "Completed Reviews" do
     columns do
       column do
         panel "Completed Reviews and Promotion Info created" do
-          table_for Restaurant.has_promotion_info.brooklyn.reviewed_with_content do
+          table_for Restaurant.has_completed_reviews_and_promotion_info_created do
             column("Name") { |rest| link_to(rest.name, admin_restaurant_path(rest)) }
             column("Reviewed at") do |rest|
               rest.scheduled_review_date_and_time

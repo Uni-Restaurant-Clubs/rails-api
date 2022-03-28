@@ -14,6 +14,36 @@ class DailySummaryEmail
 
     data[:reviews_needing_instagram_posts] = reviews_needing_instagram_posts
 
+
+    ###################################################
+    ##### PROMOTIONONS
+    ###################################################
+
+    ###### COMPLETED REVIEWS NEEDING A PROMOTION INFO ##########
+    needing_promotion_info = Restaurant.has_completed_reviews_needing_promotion_info
+
+    ###### PROMOTION INFO statuses ##########
+    need_to_send_review_is_up_email = PromotionInfo.where(restaurant_status: :need_to_send_review_is_up_email)
+    need_to_post_to_instagram = PromotionInfo.where(restaurant_status: :need_to_post_to_instagram)
+    need_to_send_promo_intro_email = PromotionInfo.where(restaurant_status: :need_to_send_promo_intro_email)
+    sent_promotional_intro_email = PromotionInfo.where(restaurant_status: :sent_promotional_intro_email)
+    interested = PromotionInfo.where(restaurant_status: :interested)
+    ready_to_be_featured = PromotionInfo.where(restaurant_status: :ready_to_be_featured)
+
+    data[:promotion_info] = {
+      needing_promotion_info: needing_promotion_info,
+      need_to_send_review_is_up_email: need_to_send_review_is_up_email,
+      need_to_post_to_instagram: need_to_post_to_instagram,
+      need_to_send_promo_intro_email: need_to_send_promo_intro_email,
+      sent_promotional_intro_email: sent_promotional_intro_email,
+      interested: interested,
+      ready_to_be_featured: ready_to_be_featured
+    }
+
+    ###################################################
+    ##### REVIEWS
+    ###################################################
+
     ########## TODAYS REVIEWS ###################
     reviews = restaurants.review_scheduled.scheduled_today
     data[:todays_reviews] = {

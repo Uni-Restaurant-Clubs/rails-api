@@ -43,6 +43,32 @@
   %b= @data[:newly_applied_creators][:last_7_day_count]
 %br
 %br
+%h3 Promotions (needing to do)
+%p(style="margin-top: 5px;height: 30px;")
+  Create promotion info:
+  %b= @data[:promotion_info][:needing_promotion_info].count
+%p(style="margin-top: 5px;height: 30px;")
+  Send review is up email:
+  %b= @data[:promotion_info][:need_to_send_review_is_up_email].count
+%p(style="margin-top: 5px;height: 30px;")
+  Post to instagram:
+  %b= @data[:promotion_info][:need_to_post_to_instagram].count
+%p(style="margin-top: 5px;height: 30px;")
+  Send promo intro email:
+  %b= @data[:promotion_info][:need_to_send_promo_intro_email].count
+%p(style="margin-top: 5px;height: 30px;")
+  Waiting for reply:
+  %b= @data[:promotion_info][:sent_promotional_intro_email].count
+%p(style="margin-top: 5px;height: 30px;")
+  Interested and Need to Prepare to be featured:
+  %b= @data[:promotion_info][:interested].count
+%p(style="margin-top: 5px;height: 30px;")
+  Ready to be featured:
+  %b= @data[:promotion_info][:ready_to_be_featured].count
+%br
+%br
+%br
+%h2 Reviews
 %br
 %h3 Today's Reviews
 %table(style="padding: 10px; border: 5px solid red;")
@@ -86,10 +112,18 @@
 
       %td= rest.writer&.name
       %td= rest.photographer&.name
-%h3 Reviews needing Instagram post
-%table
-  %tr
-    %th(style="width: 150px; text-align: left;") Restaurant
-  - @data[:reviews_needing_instagram_posts].all.each do |review|
-    %tr
-      %td= review.restaurant&.name
+%br
+%br
+- @data[:promotion_info].keys.each do |field|
+  - if @data[:promotion_info][field].any?
+    %h3
+      = field.to_s.humanize
+    %table(style="padding: 10px; border: 5px solid black;")
+      %tr
+        %th(style="width: 150px; text-align: left;") Restaurant
+      - @data[:promotion_info][field].all.each do |rest|
+        %tr
+          - if field == :needing_promotion_info
+            %td= rest.name
+          - else
+            %td= rest.restaurant.name
