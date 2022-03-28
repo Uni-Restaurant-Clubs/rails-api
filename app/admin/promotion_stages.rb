@@ -27,12 +27,21 @@ ActiveAdmin.register_page "Promotion Stages" do
     end
     columns do
       column do
-        panel "Sent promotional intro email and waiting for reply" do
-          table_for PromotionInfo.where(restaurant_status: :sent_promotional_intro_email) do
+        panel "Sent promotional intro email within last 7 days" do
+          table_for PromotionInfo.sent_promotional_intro_email_within_last_seven_days do
             column("Name") { |pi| link_to(pi.restaurant.name, admin_promotion_info_path(pi)) }
           end
         end
       end
+      column do
+        panel "Sent promotional intro email more than 7 days ago and need to follow up" do
+          table_for PromotionInfo.sent_promotion_intro_email_more_than_seven_days_ago do
+            column("Name") { |pi| link_to(pi.restaurant.name, admin_promotion_info_path(pi)) }
+          end
+        end
+      end
+    end
+    columns do
       column do
         panel "Interested and need to get ready" do
           table_for PromotionInfo.where(restaurant_status: :interested) do

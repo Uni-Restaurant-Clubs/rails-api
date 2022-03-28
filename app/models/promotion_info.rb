@@ -16,6 +16,16 @@ class PromotionInfo < ApplicationRecord
     need_to_post_to_instagram: 9
   }
 
+  def self.sent_promotion_intro_email_more_than_seven_days_ago
+    self.where(restaurant_status: :sent_promotional_intro_email)
+      .where("promotion_intro_email_sent_at < ?",  (TimeHelpers.now - 7.days))
+  end
+
+  def self.sent_promotional_intro_email_within_last_seven_days
+    self.where(restaurant_status: :sent_promotional_intro_email)
+      .where("promotion_intro_email_sent_at > ?",  (TimeHelpers.now - 7.days))
+  end
+
   # create a method that is called from a cron job to send promotion initial
   # emails out to any restaurants where a your review is up email was sent 2
   # days before
