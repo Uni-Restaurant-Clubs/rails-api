@@ -11,7 +11,6 @@ class PromotionInfo < ApplicationRecord
     ready_to_be_featured: 3,
     being_featured: 4,
     previously_featured: 5,
-    review_completed_email_sent: 6,
     need_to_send_promo_intro_email: 7,
     need_to_send_review_is_up_email: 8,
     need_to_post_to_instagram: 9

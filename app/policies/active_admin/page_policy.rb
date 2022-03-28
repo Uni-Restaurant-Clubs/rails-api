@@ -16,6 +16,8 @@ module ActiveAdmin
         return true if @user.restaurant_reviews_admin?
         return true if @user.restaurant_promotions_admin?
         return true if @user.creators_admin?
+      when "Promotion Stages"
+        return true if @user.restaurant_promotions_admin?
       else
         false
       end
