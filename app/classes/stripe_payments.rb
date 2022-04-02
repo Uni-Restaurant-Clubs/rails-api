@@ -44,7 +44,7 @@ class StripePayments
     		price: price_id,
   		}],
       subscription_data: {
-        trial_end: (Time.now + 1.month).to_i
+        trial_end: (TimeHelpers.now.end_of_day + 30.days).to_i
       }
 		})
 

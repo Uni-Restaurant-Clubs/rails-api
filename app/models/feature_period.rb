@@ -22,7 +22,9 @@ class FeaturePeriod < ApplicationRecord
       return number_to_currency(discount_number.to_f/100, strip_insignificant_zeros: true)
       #return "$#{(discount_number.to_f / 100).round(2)}"
     elsif discount_type == "percentage"
-      return "#{discount_number.to_s}%"
+      return "#{discount_number.to_s}% off!"
+    elsif discount_type == "2 for 1"
+      return "2 for 1 #{two_for_one_item}!"
     end
   end
 
