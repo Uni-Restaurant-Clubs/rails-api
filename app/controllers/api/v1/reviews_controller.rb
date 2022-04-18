@@ -50,7 +50,9 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
         AdminMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
         RestaurantMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
         # send email to restaurant
+        promotion_token = Restaurant.create_new_token("promotion_form_token")
         json = { error: false,
+                 promotionToken: promotion_token,
                  message: "Scheduling info submitted! We will get back to you soon. Thank you!" }.to_json
         render json: json, status: 200
       else
