@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_18_185451) do
+ActiveRecord::Schema.define(version: 2022_04_19_192917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -303,6 +303,7 @@ ActiveRecord::Schema.define(version: 2022_04_18_185451) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "follow_up_email_sent_at"
     t.datetime "review_is_up_email_sent_at"
+    t.datetime "form_step_one_completed_at"
     t.index ["restaurant_id"], name: "index_promotion_infos_on_restaurant_id"
     t.index ["restaurant_status"], name: "index_promotion_infos_on_restaurant_status"
   end
@@ -398,7 +399,6 @@ ActiveRecord::Schema.define(version: 2022_04_18_185451) do
     t.string "scheduling_phone_number"
     t.text "scheduling_notes"
     t.string "promotion_form_token"
-    t.datetime "promotion_form_step_one_completed_at"
     t.boolean "selected_not_interested_in_promotion"
     t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
