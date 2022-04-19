@@ -37,6 +37,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       json = { error: true, message: error }.to_json
       render json: json, status: status
     else
+=begin
       restaurant.submitted_scheduling_form_at = Time.now
       restaurant.scheduling_token = nil
       restaurant.status = "accepted"
@@ -45,14 +46,15 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       restaurant.option_3 = TimeHelpers.keep_time_but_change_timezone(data["option_three"])
       restaurant.scheduling_phone_number = data["scheduling_phone_number"]
       restaurant.scheduling_notes = data["scheduling_notes"]
+=end
+      restaurant.promotion_form_token = Restaurant.create_new_token("promotion_form_token")
       if restaurant.save
         # send email to team
-        AdminMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
-        RestaurantMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
+        #AdminMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
+        #RestaurantMailer.with(restaurant: restaurant).restaurant_submitted_scheduling_info.deliver_later
         # send email to restaurant
-        promotion_token = Restaurant.create_new_token("promotion_form_token")
         json = { error: false,
-                 promotionToken: promotion_token,
+                 promotionToken: restaurant.promotion_form_token,
                  message: "Scheduling info submitted! We will get back to you soon. Thank you!" }.to_json
         render json: json, status: 200
       else
