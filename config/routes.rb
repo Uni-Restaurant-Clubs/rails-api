@@ -19,6 +19,11 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create, :destroy]
       resources :feature_periods, only: [:show]
+      resources :promotions, only: [] do
+        collection do
+          post 'interested', to: "promotions#is_interested"
+        end
+      end
       resources :reviews, only: [:show, :index] do
         collection do
           post 'scheduling_info', to: "reviews#create_scheduling_info"
