@@ -73,6 +73,10 @@ ActiveAdmin.register PromotionInfo do
       end
 
       row :restaurant_status
+      row "Date they clicked I'm interested button" do |prom|
+        TimeHelpers.to_human(prom.form_step_one_completed_at)
+      end
+
       row :review_is_up_email_sent_at
       row :promotion_intro_email_sent_at
       row :restaurant_responded_at
