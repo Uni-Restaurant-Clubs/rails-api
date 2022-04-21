@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       resources :promotions, only: [] do
         collection do
           post 'interested', to: "promotions#is_interested"
+          post 'not_interested', to: "promotions#not_interested"
         end
       end
       resources :reviews, only: [:show, :index] do

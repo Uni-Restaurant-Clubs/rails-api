@@ -320,6 +320,9 @@ ActiveAdmin.register Restaurant do
                 link_to "review", admin_review_path(review.id)
               end
             end
+            row "date when they selected not interested in promotion" do |prom|
+              TimeHelpers.to_human(prom.selected_not_interested_in_promotion_at)
+            end
             row :promotion_info do |restaurant|
               promotion_info = restaurant.promotion_info
               if !promotion_info

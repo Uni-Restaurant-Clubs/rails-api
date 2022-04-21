@@ -399,7 +399,7 @@ ActiveRecord::Schema.define(version: 2022_04_19_192917) do
     t.string "scheduling_phone_number"
     t.text "scheduling_notes"
     t.string "promotion_form_token"
-    t.boolean "selected_not_interested_in_promotion"
+    t.datetime "selected_not_interested_in_promotion_at"
     t.index ["contacted_by"], name: "index_restaurants_on_contacted_by"
     t.index ["did_we_contact_them_through_website"], name: "index_restaurants_on_did_we_contact_them_through_website"
     t.index ["did_we_email_them"], name: "index_restaurants_on_did_we_email_them"
