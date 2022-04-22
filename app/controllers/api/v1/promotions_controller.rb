@@ -50,7 +50,17 @@ class Api::V1::PromotionsController < Api::V1::ApiApplicationController
       else
         promotion_info.form_step_one_completed_at = TimeHelpers.now
         if promotion_info.save
-          #TODO send an email to admin saying that a restaurant is interested
+          begin
+            AdminMailer.with(restaurant: restaurant)
+                       .restaurant_interested_in_promotion
+                       .deliver_later
+          rescue Exception => e
+            Airbrake.notify("Restaurant interested in being promoted email could not be sent", {
+              error: e,
+              restaurant_id: restaurant.id,
+              restaurant_name: restaurant.name
+            })
+          end
         else
           status = 400
           error = "Promotion info could not be created after interested in being promoted"

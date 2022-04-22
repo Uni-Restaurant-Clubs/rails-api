@@ -1,0 +1,12 @@
+%p
+  Hello Team,
+%br
+%p A new restaurant said they are interested in being promoted!
+%ul
+  %li
+    Restaurant name:
+    = @restaurant.name
+  %li
+    Restaurant link:
+    = admin_restaurant_url(@restaurant.id)
+

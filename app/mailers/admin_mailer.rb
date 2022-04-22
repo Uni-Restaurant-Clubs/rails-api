@@ -2,6 +2,12 @@ class AdminMailer < ApplicationMailer
 
   default to: "hello@unirestaurantclub.com"
 
+  def restaurant_interested_in_promotion
+    @restaurant = params[:restaurant]
+    mail to: "hello@unirestaurantclub.com",
+      subject: "New promotion interest!!!: #{@restaurant.name}"
+  end
+
   def restaurant_submitted_scheduling_info
     @restaurant = params[:restaurant]
     date = TimeHelpers.now_to_human
