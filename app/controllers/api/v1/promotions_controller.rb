@@ -73,7 +73,7 @@ class Api::V1::PromotionsController < Api::V1::ApiApplicationController
     else
       promotion_info = PromotionInfo.find_or_initialize_by(restaurant_id: restaurant.id)
       if promotion_info.form_step_one_completed_at?
-        status = 400
+        status = 200
         error = "Restaurant already said that they were interested"
       else
         promotion_info.form_step_one_completed_at = TimeHelpers.now
