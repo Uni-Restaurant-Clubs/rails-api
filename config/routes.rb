@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         collection do
           post 'interested', to: "promotions#is_interested"
           post 'not_interested', to: "promotions#not_interested"
+          get 'info_for_form/:token', to: "promotions#info_for_form"
         end
       end
       resources :reviews, only: [:show, :index] do
