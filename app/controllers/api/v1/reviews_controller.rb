@@ -16,6 +16,10 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
       error = "Oops there was an issue and we are working on resolving it."
       airbrake_issue = "Recaptcha code less than 0.5 for contact form"
 
+    elsif !data[:discount]
+      error = ["Discount is required"]
+      airbrake_issue = "Info for required fields missing"
+
     elsif !data[:option_one] || !data[:option_two] || !data[:option_three]
       error = ["Three date time options are required"]
       airbrake_issue = "Info for required fields missing"
@@ -39,6 +43,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
     else
       restaurant.submitted_scheduling_form_at = Time.now
       restaurant.scheduling_token = nil
+      restaurant.offered_discount = data[:discount]
       restaurant.status = "accepted"
       restaurant.option_1 = TimeHelpers.keep_time_but_change_timezone(data["option_one"])
       restaurant.option_2 = TimeHelpers.keep_time_but_change_timezone(data["option_two"])
@@ -91,7 +96,7 @@ class Api::V1::ReviewsController < Api::V1::ApiApplicationController
 
     def scheduling_info_params
       params
-        .permit(:optionOne, :optionTwo, :optionThree, :recaptchaToken, :token,
+        .permit(:discount, :optionOne, :optionTwo, :optionThree, :recaptchaToken, :token,
                 :schedulingPhoneNumber, :schedulingNotes)
             .to_h.deep_transform_keys!(&:underscore)
     end

@@ -274,6 +274,7 @@ ActiveAdmin.register Restaurant do
             row :scheduled_review_date_and_time
             row :restaurant_event_url
             row :creators_event_url
+            row :offered_discount
             row :option_1
             row :option_2
             row :option_3
